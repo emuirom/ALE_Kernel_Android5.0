@@ -1,15 +1,4 @@
-/*
- **************************************************************************************
- *
- *       Filename:   vpp_hal.c
- *    Description:   source file
- *
- *        Version:  1.0
- *        Created:  2011-08-10 16:20:00
- *
- *       Revision:  initial draft;
- **************************************************************************************
- */
+
 
 //**********************************************************************
 //#include <mach/platform.h>
@@ -23,6 +12,7 @@
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 S_VPP_REGS_TYPE *pVoReg = NULL;
+
 
 u8 __iomem *s_xl_mmio = NULL;
 
@@ -198,6 +188,7 @@ void hal_set_clk_gate_en(unsigned int u32Data)
 
     return;
 }
+
 
 /*
 **************************************************************************
@@ -498,6 +489,7 @@ void  hal_set_regupNoRatio(HAL_LAYER_E enLayer)
     return;
 }
 
+
 void  hal_set_read_mode(HAL_LAYER_E enLayer,
                                         HAL_DATARMODE_E enLRMode,
                                         HAL_DATARMODE_E enCRMode)
@@ -630,6 +622,7 @@ void hal_set_wbc_wr_mode(HAL_LAYER_E enLayer, unsigned int u32Data)
 
     return;
 }
+
 
 /* HAL set coef or lut read update */
 void  hal_set_layer_para_upd(HAL_LAYER_E enLayer,
@@ -771,6 +764,7 @@ void hal_set_zme_ratio(void)
     return;
 }
 
+
 void hal_set_regup(HAL_LAYER_E enLayer)
 {
     U_VHDUPD VHDUPD;
@@ -798,6 +792,7 @@ void hal_set_regup(HAL_LAYER_E enLayer)
 
     return;
 }
+
 
 void hal_set_zme_fir_enable(HAL_LAYER_E enLayer, HAL_ZMEMODE_E enMode, unsigned int bEnable)
 {
@@ -936,6 +931,7 @@ void hal_set_hfir_order(HAL_LAYER_E enLayer, unsigned int uHfirOrder)
     return;
 }
 
+
 void hal_set_zme_vertap(HAL_LAYER_E enLayer, HAL_ZMEMODE_E enMode, unsigned int uVerTap)
 {
     U_VHDVSP VHDVSP;
@@ -979,6 +975,7 @@ void hal_set_zme_vertap(HAL_LAYER_E enLayer, HAL_ZMEMODE_E enMode, unsigned int 
 
     return;
 }
+
 
 void hal_set_zme_ver_type(HAL_LAYER_E enLayer, unsigned int uVerType,unsigned int w,unsigned int h)
 {
@@ -1153,6 +1150,7 @@ void hal_set_zme_reso(HAL_LAYER_E enLayer, HAL_RECT_S stZmeReso)
 
     return;
 }
+
 
 //=============================================================================//
 // DIE CFG
@@ -1465,6 +1463,7 @@ void hal_set_die_scale(HAL_LAYER_E enLayer, unsigned char u8Data)
     return;
 }
 
+
 void hal_set_die_ck_gain(HAL_LAYER_E enLayer, unsigned char u8CkId, unsigned int dData)
 {
     U_VHDDIECHECK1 VHDDIECHECK1;
@@ -1770,6 +1769,7 @@ void hal_set_die_mf_max(HAL_LAYER_E enLayer, unsigned int u32LumMd, unsigned int
 
     return;
 }
+
 
 void hal_set_die_def_thd(HAL_LAYER_E enLayer)
 {
@@ -2148,6 +2148,7 @@ void hal_set_die_st_addr(HAL_LAYER_E enLayer, VPP_DIE_STMD_E enMd, unsigned int 
     return;
 }
 
+
 void hal_set_die_addr(HAL_LAYER_E enLayer, VPP_DIE_STMD_E enMd, unsigned int *pu32AddrCtrl, int nRepeat)
 {
     unsigned int u32AddrCtrltmp = 0;
@@ -2197,6 +2198,7 @@ void hal_set_die_addr(HAL_LAYER_E enLayer, VPP_DIE_STMD_E enMd, unsigned int *pu
 
     return;
 }
+
 
 void hal_set_die_chm_ccr_enable(HAL_LAYER_E enLayer, unsigned int u32En)
 {
@@ -2949,6 +2951,7 @@ void hal_set_wbc_addr(HAL_LAYER_E enLayer, unsigned int u32Addr)
     return;
 }
 
+
 void hal_set_wbc_stride(HAL_LAYER_E enLayer, unsigned short u16Str)
 {
     U_VHDWBC1STRD VHDWBC1STRD;
@@ -3264,6 +3267,7 @@ void hal_set_wr_out_std(unsigned char u8OsData)
     return;
 }
 
+
 void hal_set_acm_enable(HAL_ACMBLK_ID_E enAcmId, unsigned int bAcmEn)
 {
     U_VHDACM0 VHDACM0;
@@ -3334,6 +3338,7 @@ void hal_set_acm_coef(HAL_ACMBLK_ID_E enAcmId, HAL_ACMBLKINFO_S stCoef)
     VHDACM5.u32 = 0x0;
     VHDACM6.u32 = 0x0;
     VHDACM7.u32 = 0x0;
+
 
     if((enAcmId == HAL_ACMBLK_ID0)||(enAcmId == HAL_ACMBLK_ALL))
     {
@@ -3470,8 +3475,10 @@ void hal_set_time_out(HAL_LAYER_E enLayer, unsigned char u8TData)
         }
     }
 
+
     return;
 }
+
 
 void hal_set_acc_thd(HAL_LAYER_E enLayer, HAL_ACCTHD_S stAccThd)
 {
@@ -3524,6 +3531,7 @@ void hal_set_acc_tab(HAL_LAYER_E enLayer, unsigned int *upTable)
     memset(VHDACCHIGH, 0, sizeof(U_VHDACCHIGHN)*3);
     memset(VHDACCML, 0, sizeof(U_VHDACCMLN)*3);
     memset(VHDACCMH, 0, sizeof(U_VHDACCMHN)*3);
+
 
     BUG_ON( enLayer != HAL_LAYER_VIDEO1 );
 
@@ -3744,6 +3752,7 @@ void hal_set_layer_cscDcCoef(HAL_LAYER_E enLayer, HAL_INTFCSCDCCOEF_S *pstCscCoe
     return;
 }
 
+
 /*ÅäÖÃ²ãCSCÊ¹ÄÜ*/
 void hal_set_layer_csc(HAL_LAYER_E enLayer, unsigned int bCscEn)
 {
@@ -3770,6 +3779,7 @@ void hal_set_layer_csc(HAL_LAYER_E enLayer, unsigned int bCscEn)
 
     return;
 }
+
 
 //ÅäÖÃÔ´´°¿Ú
 void  hal_set_layer_in_rect(HAL_LAYER_E enLayer, RECT_S stRect)
@@ -3800,6 +3810,7 @@ void  hal_set_layer_in_rect(HAL_LAYER_E enLayer, RECT_S stRect)
 
     return;
 }
+
 
 //ÅäÖÃÊä³ö´°¿Ú
 void  hal_set_layer_out_rect(HAL_LAYER_E enLayer, RECT_S stRect)
@@ -3935,6 +3946,8 @@ void  hal_set_layer_rect(HAL_LAYER_E enLayer, HAL_RECT_S  stVideoRect)
             VHDVFPOS.bits.video_xfpos = stVideoRect.s32VX;
             VHDVFPOS.bits.video_yfpos = stVideoRect.s32VY;
             reg_write(&(pVoReg->VHDVFPOS.u32), VHDVFPOS.u32);
+
+
 
             break;
         }
@@ -4331,6 +4344,7 @@ void hal_set_mmu_enable(HAL_LAYER_E enLayer,VPP_DIE_MODE_E edie_mode,VPP_PIXELFO
     return;
 }
 
+
 void hal_set_mmu_ch_start_addr(unsigned int chnum,unsigned int startaddr)
 {
     U_MMU_CH_START_ADDR   MMU_CH_START_ADDR;
@@ -4438,6 +4452,7 @@ void hal_set_mmu_ch_addr(VPP_CONFIG_S *pVppConfig)
             hal_set_mmu_ch_end_addr(9,pVppConfig->vpp_die_addrinfo.lluma_addr+pVppConfig->sPTableInfo.in_size);
             hal_set_mmu_ch_end_addr(10,pVppConfig->vpp_out_img.buffer_bus_addr+pVppConfig->sPTableInfo.out_size);
 
+
         }
         else if(VPP_B_FIRST == pVppConfig->edie_fod)
         {
@@ -4496,6 +4511,7 @@ void hal_set_mmu_ch_addr(VPP_CONFIG_S *pVppConfig)
     }
     return;
 }
+
 
 void hal_set_mmu__start(unsigned int flag){
 

@@ -1,23 +1,5 @@
 
-/******************************************************************
-* Copyright (C), 2005-2007, HISILICON Tech. Co., Ltd.             *
-*                                                                 *
-* File name: watchpoint_common.c                                   *
-*                                                                 *
-* Description:                                                    *
-*      driver debug module source file                            *
-*                                                                 *
-* Author: m00176101                                               *
-*                                                                 *
-* Version: v0.1                                                   *
-*                                                                 *
-* Function List:                                                  *
-*                                                                 *
-* Date:                                                           *
-*                                                                 *
-* History:                                                        *
-*                                                                 *
-*******************************************************************/
+
 
 #define MERROR_LEVEL    1
 #define MWARNING_LEVEL  1

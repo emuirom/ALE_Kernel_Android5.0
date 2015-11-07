@@ -39,6 +39,7 @@
 #define HWLOG_TAG logger
 HWLOG_REGIST();
 
+
 extern struct huawei_log_tag __start_hwlog_tag, __stop_hwlog_tag;
 #define TAG_BUFF_SIZE (32*1024)
 #define MAX_NAME_LEN 20
@@ -55,6 +56,7 @@ struct logger_log_tag {
 
 static struct logger_log_tag* log_tag;
 
+
 typedef enum android_LogPriority {
     ANDROID_LOG_UNKNOWN = 0,
     ANDROID_LOG_DEFAULT,    /* only for SetMinPriority() */
@@ -66,6 +68,7 @@ typedef enum android_LogPriority {
    ANDROID_LOG_FATAL,
    ANDROID_LOG_SILENT,     /* only for SetMinPriority(); must be last */
 } android_LogPriority;
+
 
 /**
  * struct logger_log - represents a specific log, such as 'main' or 'radio'
@@ -97,6 +100,7 @@ struct logger_log {
 
 static LIST_HEAD(log_list);
 
+
 /**
  * struct logger_reader - a logging device open for reading
  * @log:	The associated log
@@ -121,6 +125,7 @@ static size_t logger_offset(struct logger_log *log, size_t n)
 {
 	return n & (log->size - 1);
 }
+
 
 /*
  * file_get_log - Given a file structure, return the associated log
@@ -492,6 +497,7 @@ static ssize_t do_write_log_from_user(struct logger_log *log,
 	return count;
 }
 
+
 /*
  * get_log_priority - get the log priority from iov structure
  *
@@ -858,6 +864,7 @@ static int check_tag_level_to_show(char* srcbuff, const char* name, int level)
 	return 1;
 }
 
+
 static ssize_t log_tag_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
 {
 	struct huawei_log_tag *t;
@@ -1140,6 +1147,7 @@ static void __exit logger_exit(void)
 		log_tag = NULL;
 	}
 }
+
 
 static struct logger_log *get_log_from_name(const char* name)
 {

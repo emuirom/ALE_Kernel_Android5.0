@@ -186,14 +186,11 @@ int mini_k3_isp_get_current_ccm_bgain(void);
 int mini_k3_isp_set_flash_mode(camera_flash flash_mode);
 int mini_k3_isp_get_flash_mode(void);
 
-/* added by ykf63300 */
 int mini_k3_isp_set_hflip(int flip);
 int mini_k3_isp_get_hflip(void);
 int mini_k3_isp_set_vflip(int flip);
 int mini_k3_isp_get_vflip(void);
-/* added by ykf63300 end*/
 
-/* added by ykf63300 2012-05-22*/
 int mini_k3_isp_get_focus_distance(void);
 int mini_k3_isp_get_current_vts(void);
 int mini_k3_isp_get_current_fps(void);
@@ -202,7 +199,6 @@ void mini_k3_isp_set_fps_lock(int);
 
 void mini_k3_isp_set_shoot_mode(camera_shoot_mode shoot_mode);
 
-/* Added by j00179721 for set PM mode */
 void mini_k3_isp_set_pm_mode(u8 pm_mode);
 
 int mini_k3_isp_get_sensor_aperture(void);
@@ -211,10 +207,8 @@ int mini_k3_isp_get_equivalent_focus(void);
 void mini_k3_isp_set_video_stabilization(int bStabilization);
 void mini_k3_isp_set_yuv_crop_pos(int point);
 void mini_k3_isp_get_yuv_crop_rect(mini_crop_rect_s *rect);
-/* add by c00220250 */
 void mini_k3_isp_set_process_mode(capture_type debug_type);
 /* add end */
-/* Added by c00144034 for ZSL */
 void mini_k3_isp_set_zsl_state(camera_zsl zsl_state);
 camera_zsl mini_k3_isp_get_zsl_state(void);
 void mini_k3_isp_set_zsl_proc(camera_zsl_proc zsl_proc);
@@ -239,6 +233,7 @@ void mini_k3_isp_unlock_ddr_freq(void);
 void mini_k3_isp_try_cpuidle_vote(void);
 void mini_k3_isp_cancel_cpuidle_vote(void);
 void mini_k3_isp_set_hw_3a_mode(int mode);
+
 
 int mini_isp_camera_init(void);
 void mini_isp_camera_exit(void);

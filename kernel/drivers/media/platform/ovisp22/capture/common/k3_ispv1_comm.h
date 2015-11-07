@@ -38,6 +38,7 @@
 		iowrite8_mutex((value), (isp_hw_data.base + (reg))) : \
 		iowrite8_mutex((value), (isp_hw_data.base + BIG_ENDIAN((reg)))))
 
+
 #define SETREG16(reg, value) \
 	do { \
 		SETREG8((reg), ((value) >> 8) & 0xff); \
@@ -52,6 +53,7 @@
 		SETREG8(reg + 3, ((value) >> 0) & 0xff);  \
 	} while (0)
 #endif
+
 
 /* isp memory layout */
 /* 1. PROGREM BUFFER(112KB): 0X0 ~ 0X01BFFF   */
@@ -91,7 +93,6 @@
 
 #define COMMAND_SET_SUCCESS     (0x1)
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 
 /*update command set id  for ISP 2.2*/
 #define CMD_I2C_GRP_WR                  (0x1)
@@ -110,7 +111,6 @@
 #define CMD_AUTOFOCUS_MODE              (0x13)
 #define CMD_ZOOM_IN_MODE                (0x14)
 #define CMD_DPC_OTP		        (0x21)
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 //#ifdef SUPPORT_ZSL_FLASH
 #define CMD_SET_RATIO                  (0x16)
 //#endif
@@ -196,6 +196,8 @@ extern u8 zsl_copy_flg;
 #define PROC_IMAGE_TRY_MAX_TIMES (7)            //max process times.
 #define PROC_IMAGE_ERR_BUF_OVERFLOW         (2)
 
+
+
 /* ISP_FUNCTION_CTRL */
 #define ISP_SECONDARY_NO_SCALE				(0)
 #define ISP_SECONDARY_SCALE_DOWN_ENABLE		(1 << 5)
@@ -237,7 +239,7 @@ extern u8 zsl_copy_flg;
 #define SENSOR_OUTPUT_MODE_MIRROR_ENABLE	(1)
 #define SENSOR_OUTPUT_MODE_MIRROR_DISABLE	(0)
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
+
 
 /* set format and capture format parameters */
 
@@ -323,7 +325,6 @@ extern u8 zsl_copy_flg;
 #define ISP_BASE_ADDR_LEFT_UV           (0x1e894)//(0x1e950)
 #define ISP_BASE_ADDR_RIGHT             (0x1e898)//(0x1e954)
 
-/* added by c00144034 for capture stream with preview */
 #define ISP_MAC_MEM_WIDTH3   			(0x1e888)
 #define ISP_MAC_MEMORY_WIDTH_RAW        ISP_MAC_MEM_WIDTH3
 #define ISP_MAC_OUTPUT_ADDR1			(0x1e890)
@@ -339,9 +340,9 @@ extern u8 zsl_copy_flg;
 #define ISP_MAC_OUTPUT_ADDR11			(0x1e8e8)
 #define ISP_MAC_OUTPUT_ADDR12			(0x1e8ec)
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
-/* Modified  by w00199382 for isp 2.2 , 2013/07/01, begin */
+
+
 #if 1 /* firmware 2013-02-01 new registers definitions */
 #define ISP_FIRST_FRAME_EXPOSURE        (0x1e910)//(0x1e978)
 #define ISP_SECOND_FRAME_EXPOSURE       (0x1e916)//(0x1e97c)
@@ -355,25 +356,19 @@ extern u8 zsl_copy_flg;
 #define ISP_SECOND_FRAME_GAIN          (0x1e91a)// (0x1e962)
 #define ISP_THIRD_FRAME_GAIN           (0x1e920)//(0x1e966)
 
-/* Modified  by w00199382 for isp 2.2 , 2013/07/01, end */
 
 /* ISP banding step parameters registers */
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 
 #define REG_ISP_BANDING_STEP_50HZ           (0x1c182)//(0x1c166)
 #define REG_ISP_BANDING_STEP_60HZ           (0x1c180)//(0x1c164)
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 /* firmware banding step parameters registers */
 #define ISP_BANDING_STEP_50HZ           (0x1e874)//(0x1e968)
 #define ISP_BANDING_STEP_60HZ           (0x1e876)//(0x1e96a)
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 
-/* added by y00215412 20120820 for preview ccm pre-gain */
 
-/* Modified  by w00199382 for isp 2.2 , 2013/1/18, begin */
 
 #if 0
 #define ISP_CMDSET_CCM_PREGAIN_ENABLE		(0x1e980) /* bit[0] ccm pre-gain; bit[1] awb offset. */
@@ -385,9 +380,7 @@ extern u8 zsl_copy_flg;
 #define REG_ISP_CCM_PREGAIN_B		(0x1c1c5)//(0x1c5ac)
 #define REG_ISP_CCM_PREGAIN_G		(0x1c1c6)//(0x1c5ad)
 #define REG_ISP_CCM_PREGAIN_R		(0x1c1c7)//(0x1c5ae)
-/* Modified  by w00199382 for isp 2.2 , 2013/1/18, end */
 
-/* added by y00215412 20130130 for AWB offset */
 #define ISP_CMDSET_AWB_OFFSET_B		(0x1e984)
 #define ISP_CMDSET_AWB_OFFSET_G		(0x1e985)
 #define ISP_CMDSET_AWB_OFFSET_R		(0x1e986)
@@ -397,7 +390,6 @@ extern u8 zsl_copy_flg;
 #define REG_ISP_AWB_OFFSET_GR		(0x1c1c0)
 #define REG_ISP_AWB_OFFSET_R		(0x1c1c1)
 
-/* added by y00215412 for dynamic y denoise changed  2012-11-7 start. */
 #define DNS_MAX_STEP		6
 
 #define ISP_YDENOISE_COFF_1X		0x02
@@ -415,7 +407,6 @@ extern u8 zsl_copy_flg;
 #define REG_ISP_RBSLDNS(x)		(0x6730c + (x))
 #define REG_ISP_BRDNS(x)		(0x65522 + (x)*2)
 #define REG_ISP_UVDNS(x)		(0x65c08 + (x))
-/* added by y00215412 for dynamic y denoise changed  2012-11-7 end. */
 #define REG_ISP_PRE_UVDNS_BASE                    0x65c00
 #define REG_ISP_PRE_RAWDNS_SIGMA_BASE     0x67300
 #define REG_ISP_PRE_RAWDNS_GSL_BASE         0x67306
@@ -442,6 +433,7 @@ extern u8 zsl_copy_flg;
 #define RED_CLIP_V_THRESHOLD_HIGH		160
 #define RED_CLIP_V_THRESHOLD_LOW		130
 
+
 /* cmd_set and capture_cmd register operation */
 #define CMD_SET_ISP_IN_FMT_SIZE(fmt, width, height) \
 	do { \
@@ -456,10 +448,12 @@ extern u8 zsl_copy_flg;
 		SETREG16(SENSOR_OUTPUT_HEIGHT, height); \
 	} while (0)
 
+
 #define CMD_SET_IDI_CTRL(idi)               \
     do {                                    \
         SETREG16(ISP_IDI_CONTROL,idi);      \
     } while (0)
+
 
 #define    	CMD_SET_ISP_IN_START_POS(x, y) \
 	do { \
@@ -537,7 +531,6 @@ extern u8 zsl_copy_flg;
                 BUG_ON(dcw_v > 3); \
                 SETREG16(ISP_RAW_YUV_DCW, (dcw_h)<<6 | (dcw_v)<<4);\
             } while (0)
-/* added by c00144034 for zsl begin */
 /* YUV DCW for second channel */
 #define CMD_SET_ISP_RAW_YUV_DCW2(dcw_h, dcw_v)\
                 do { \
@@ -545,7 +538,6 @@ extern u8 zsl_copy_flg;
                 BUG_ON(dcw_v > 3); \
                 SETREG16(ISP_RAW_YUV_DCW, (dcw_h)<<2 | (dcw_v)<<0);\
             } while (0)
-/* added by c00144034 for zsl end */
 
 #define CMD_SET_ISP_SCALE_DOWN_RATIO2(nscale_h, nscale_v) \
 	do { \
@@ -660,6 +652,7 @@ extern u8 zsl_copy_flg;
 		SETREG16(ISP_BRACKET_RATIO2, ratio2); \
 	} while (0)
 
+
 /* offline parameters */
 #define ISP_OFFLINE_INPUT_WIDTH                 (0x1e810)//(0x1e902)
 #define ISP_OFFLINE_INPUT_HEIGHT                (0x1e812)//(0x1e904)
@@ -767,7 +760,6 @@ extern u8 zsl_copy_flg;
 		SETREG16(ISP_OFFLINE_CROP_WIDTH, (width)); \
 		SETREG16(ISP_OFFLINE_CROP_HEIGHT, (height)); \
 	} while (0)
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
 /* hdr parameters */
 #define ISP_HDR_INPUT_WIDTH             (0x1e902)
@@ -879,13 +871,13 @@ extern u8 zsl_copy_flg;
 #define REG_ISP_BANDFILTER_EN           (0x1c140)
 #define REG_ISP_BANDFILTER_SHORT_EN     (0x1c141)
 
+
 /*Hdr_movie register definition */
 #define REG_ROI_MEM_WIDTH_1	(0X63b48)
 #define REG_FRAME_CTRL1		(0x63b78)
 #define REG_LINE_LENGTH_VC		(0X63c14)
 #define REG_HEIGHT_VC		(0x63c16)
 #define REG_EN_CTRL_VC		(0x63c34) /*bit[1:0]-vc_channel_sel, bit[2]-vc_ipi_sel,bit[3]-vc_35_en,bit[4]-vc_pack_en,bit[5]-roi_2_frames,bit[6]-dual_capture_en,bit[7]-roi_idi_en*/
-/* Added by w00199382 for isp 2.2 , 2013/1/8, begin */
 #define FRAME_CTRL1_BIT4	(1<<4)
 #define FRAME_CTRL1_BIT3	(1<<3)
 #define FRAME_CTRL1_BIT2	(1<<2)
@@ -900,31 +892,25 @@ extern u8 zsl_copy_flg;
 #define EN_CTRL_VC_BIT1		(1<<1)
 #define EN_CTRL_VC_BIT0		(1<<0)
 
-/* Added by w00199382 for isp 2.2 , 2013/1/8, begin */
 
 #define REG_ISP_AUTO_BANDING_DETEC_EN   (0x1c18b)
-/* Added by w00199382 for isp 2.2 , 2013/1/8, end */
 
 /* command set CMD_ZOOM_IN_MODE relative parameters */
 /* REG1 bit[0] : 1 for high quality, 0 for save power mode */
 #define HIGH_QUALITY_MODE               (0x1)
 #define SAVE_POWER_MODE                 (0x0)
 
-/* add by c00144034 for mirror begin */
 #define ZOOM_CENTER_CHANGED_ENABLE      (1 << 1)
 #define ZOOM_CENTER_CHANGED_DISABLE     (0 << 1)
 #define REG_ISP_ZOOM_CENTER_X           (0x1e854)
 #define REG_ISP_ZOOM_CENTER_Y           (0x1e856)
-/* add by c00144034 for mirror end */
 
-/* added by c00144034 for zsl begin */
 /* REG6 bit[7] : 1 for enable channel 2 zoom,0 for disable; */
 /* REG6 bit[0] : 1 for high quality, 0 for save power mode */
 #define CAP_YUV_ZOOM_ENABLE             (1 << 7)
 #define CAP_YUV_ZOOM_DISABLE            (0 << 7)
 #define CAP_YUV_ZOOM_HIGH_QUALITY_MODE  (1 << 0)
 #define CAP_YUV_ZOOM_SAVE_POWER_MODE    (0 << 0)
-/* added by c00144034 for zsl end */
 
 /* ISP registers */
 #define REG_ISP_TOP0                    (0x65000)
@@ -990,11 +976,9 @@ extern u8 zsl_copy_flg;
 #define REG_ISP_SCALE_UP_Y              (0x65026)
 #define REG_ISP_SCALE_UP_X              (0x65028)
 
-/* add  by w00199382 for isp 2.2 , 2013/1/7, begin */
 
 #define REG_ISP_SCALE_UP_COUNT_OF_FRAME (0x6502e)
 
-/* add  by w00199382 for isp 2.2 , 2013/1/7, end */
 
 /*
  * manual awb reg
@@ -1015,6 +999,7 @@ extern u8 zsl_copy_flg;
 #define REG_ISP_YUV_CROP_TOP            (0x650f2)
 #define REG_ISP_YUV_CROP_WIDTH          (0x650f4)
 #define REG_ISP_YUV_CROP_HEIGHT         (0x650f6)
+
 
 typedef enum {
 	FLASH_AWBTEST_POLICY_FIXED = 0,
@@ -1129,6 +1114,7 @@ typedef enum {
 #define ISP_COLD_BOOT_WAIT_EOF_ENABLE		(1<<0)
 #define ISP_COLD_BOOT_WAIT_EOF_DISABLE		(0<<0)
 
+
 #define ISP_SDE_ENABLE  			(1<<2)
 #define ISP_NEGATIVE_EFFECT_ENABLE  (1<<6)
 #define ISP_MONO_EFFECT_ENABLE  		(1<<5)
@@ -1137,17 +1123,15 @@ typedef enum {
 #define ISP_CONTRAST_ENABLE  			(1<<2)
 #define ISP_BRIGHTNESS_ENABLE  		(1<<2)
 #define ISP_SATURATION_ENABLE  		(1<<1)
-/* modify by zkf78283 begin */
 /*#define ISP_BRIGHTNESS_SIGN	  		(1<<3)*/
 #define ISP_BRIGHTNESS_SIGN_NEGATIVE	(1<<6)
-/* modify by zkf78283 end */
 
 #define ISP_INPUT_CHANNEL_DVP           0x0
 #define ISP_INPUT_CHANNEL_MAC           0x2
 #define ISP_INPUT_CHANNEL_MIPI1         0x4
 #define ISP_INPUT_CHANNEL_MIPI2         0x8
 
-/* added by y00215412 for hdr 2013-01-29 */
+
 #define REG_ISP_GAIN_EFFECT_MODE	(0x1d8d7)
 #define SENSOR_GAIN_EFFECT_NEXT	1
 #define SENSOR_GAIN_EFFECT_NEXT2	0
@@ -1166,7 +1150,7 @@ typedef enum {
 #define REG_ISP_BYTE_SWITCH             (0x63b35)
 #define REG_ISP_BYTE_SWITCH2            (0x63b46)
 
-/* modify by zkf78283 begin */
+
 /*#define REG_ISP_SDE_CTRL             (0x65b00)
 #define REG_ISP_SDE_U_SATURATION	 (0x65b03)
 #define REG_ISP_SDE_V_SATURATION	 (0x65b04)
@@ -1194,11 +1178,8 @@ typedef enum {
 #define REG_ISP_SDE_V_REG		 (0x65b18)
 #define REG_ISP_SDE_CTRL1A_HTHRE		(0x65b1a)
 #define REG_ISP_SDE_CTRL1B_HGAIN		(0x65b1b)
-/* modify by zkf78283 begin */
-/* Modified  by w00199382 for isp 2.2 , 2013/1/16, begin */
 
 #define REG_ISP_SDE_YOFFSET			(0x65b16)//(0x65b05)
-/* Modified  by w00199382 for isp 2.2 , 2013/1/16, end */
 
 #define REG_ISP_SDE_YGAIN			(0x65b06)
 #define REG_ISP_SDE_YBRIGHT			(0x65b07)
@@ -1266,6 +1247,7 @@ r_rb_switch: switch R and B for RGB565
 		SETREG8(REG_ISP_BYTE_SWITCH2, 0x04) : \
 		SETREG8(REG_ISP_BYTE_SWITCH2, 0x0)
 
+
 /* format output order,we should not use REG_ISP_TOP7 here  */
 #define REG_SET_W_SWITCH_CTRL0(format) \
             switch(format) {\
@@ -1286,6 +1268,9 @@ r_rb_switch: switch R and B for RGB565
     		default:SETREG8(REG_ISP_BYTE_SWITCH, 0x00);break;                  \
             }
 
+
+
+
 #define REG_ISP_MEM_CTRL2		(0x63c13)
 #define REG_ISP_MEM_OUTPUT_NUM		(0x63c15)
 
@@ -1293,6 +1278,7 @@ r_rb_switch: switch R and B for RGB565
 #define REG_ISP_INT_EN                  (0x63927)
 #define REG_ISP_EXT_AEAG                (0x1dad8)
 #define REG_ISP_EXT_CMDSET              (0x1dad9)
+
 
 /*note that: manuel is wrong!!! bit3 is cmd_set_done interrupt */
 #define MASK_EOF_INT_ENABLE			(1 << 5)
@@ -1436,10 +1422,8 @@ r_rb_switch: switch R and B for RGB565
 #define EV_BRACKET_RATIO_DENOMINATOR		1000 /* EV BRACKET RATIO denominator */
 
 /*Anti hand shaking registers*/
-/* Modify by zkf78283 for isp 2.2, 2012/11/22, begin */
 /*#define REG_ISP_ANTI_SHAKING_ENABLE		(0x1c4d8)*/
 #define REG_ISP_ANTI_SHAKING_ENABLE		(0x1c581)
-/* Modify by zkf78283 for isp 2.2, 2012/11/22, end */
 
 #define REG_ISP_ANTI_SHAKING_ABSSTART_POSITION_H		(0x1c764)
 #define REG_ISP_ANTI_SHAKING_ABSSTART_POSITION_V		(0x1c766)
@@ -1473,26 +1457,20 @@ r_rb_switch: switch R and B for RGB565
 #define REG_ISP_RESERVED_EXPO			(0x1c168)
 #define REG_ISP_RESERVED_GAIN			(0x1c170)
 
-/* Modified  by w00199382 for isp 2.2 , 2013/7/27, begin*/
 #define REG_ISP_I2C_WAIT_SIGNAL		(0x1c5a2)
 #define ISP_FIRMWARE_I2C_WAIT			(1)
 
-/* Modified  by w00199382 for isp 2.2 , 2013/7/27, end */
 
 #define REG_ISP_AWB_MANUAL_ENABLE		(0x65320)
-/* modify by zkf78283 begin */
 /*#define REG_ISP_AWB_METHOD_TYPE		(0x1c17c)*/
 #define REG_ISP_AWB_METHOD_TYPE		(0x1c190)
-/* modify by zkf78283 end */
 
 #define REG_ISP_AWB_MANUAL_GAIN_BLUE(group)		(0x1c4f0+6*(group))
 #define REG_ISP_AWB_MANUAL_GAIN_GREEN(group)	(0x1c4f2+6*(group))
 #define REG_ISP_AWB_MANUAL_GAIN_RED(group)		(0x1c4f4+6*(group))
 
-/* added for more precision to check scene change by y00215412 2012-11-17 */
 #define REG_ISP_WIN_LUM(index)		(0x1cb9c + 4 * (index))
 
-/* added by y00215412 2012-05-20. */
 /* after AWB shift */
 #define REG_ISP_AWB_GAIN_B		(0x65300)
 #define REG_ISP_AWB_GAIN_GB		(0x65302)
@@ -1504,6 +1482,7 @@ r_rb_switch: switch R and B for RGB565
 #define REG_ISP_AWB_ORI_GAIN_G		(0x1C72A)
 #define REG_ISP_AWB_ORI_GAIN_R		(0x1C72C)
 /* modify by zhangzhen */
+
 
 #define REG_ISP_LENS_CP_ARRAY_LONG		(0x1c264)
 #define REG_ISP_LENS_CP_ARRAY_SHORT	(0x1c366)
@@ -1546,9 +1525,7 @@ r_rb_switch: switch R and B for RGB565
 #define REG_ISP_AGC_MASK_H		0x1c562
 #define REG_ISP_AGC_MASK_L		0x1c563
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/19, begin */
 #define REG_ISP_AGC_SENSOR_TYPE		(0x1c189)//0x1c5de
-/* Modified  by w00199382 for isp 2.2 , 2012/10/19, end */
 
 /* interrupts bits define */
 #define ISP_MAC_INT                     (1 << 1)
@@ -1583,17 +1560,14 @@ r_rb_switch: switch R and B for RGB565
 
 #define get_current_y() GETREG8(REG_ISP_CURRENT_Y)
 
-/* added for more precision to check scene change by y00215412 2012-11-17 */
 #define get_win_lum(index) \
 	((GETREG8(REG_ISP_WIN_LUM(index)) << 24) | (GETREG8(REG_ISP_WIN_LUM(index) + 1) << 16) | \
 	(GETREG8(REG_ISP_WIN_LUM(index) + 2) << 8) | (GETREG8(REG_ISP_WIN_LUM(index) + 3)))
 
-/* added by y00215412 2012-09-21 for zoom focus. */
 #define ISP_ZOOM_BASE_RATIO 0x100
 #define ISP_ZOOM_MAX_RATIO 0x400
 #define ISP_FOCUS_ZOOM_MAX_RATIO 0x200
 
-/* added by y00215412 for hdr movie mode begin */
 #define REG_ISP_AE_CTRL_MODE	(0x1d9d0) /* 1 - AP's ae . 0 - ISP ae. */ //0x1d9a0
 #define REG_ISP_AE_WRITE_MODE	(0x1d9dd) /* 1 - ISP write sensor shutter and gain; 0 - AP write shutter and gain. *///0x1d9ad
 
@@ -1602,12 +1576,9 @@ r_rb_switch: switch R and B for RGB565
 
 #define AE_WRITE_MODE_AP	0
 #define AE_WRITE_MODE_ISP	1
-/* added by y00215412 for hdr movie mode end */
 
-/* added by c00144034 2013-06-03 for zsl begin*/
 #define CAPTURE_WITH_PREVIEW_BUF_MIN_NUM	1
 #define CAPTURE_WITH_PREVIEW_BUF_MAX_NUM	6
-/* added by c00144034 2013-06-03 for zsl end */
 
 #define ISP_UV_SATURATE_ADJUST_ENABLE             0x01
 

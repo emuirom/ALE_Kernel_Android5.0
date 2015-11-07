@@ -182,6 +182,7 @@ static void hw_eofs_tasklet(unsigned long data)
 		sensor->func_tbl->sensor_set_vts(sensor, me_seq->vts);
 	}
 
+
 	if (index < me_seq->seq_size) {
 		if (sensor->func_tbl->sensor_set_expo_gain != NULL)
 			sensor->func_tbl->sensor_set_expo_gain(sensor, me_seq->expo[index], me_seq->gain[index - 1]);
@@ -254,7 +255,6 @@ inline void hw_check_done_time(u8 *val_mac, irq_port_done port_done)
 	do_gettimeofday(&time_val);
 	now_time[port_done]  = (long long)time_val.tv_sec * 1000000L + (long long)time_val.tv_usec;
 	time_gap = now_time[port_done] - last_time[port_done];
-
 	if( time_gap < 5000LL) {
 		cam_info("IRQ_PORT0_WRITE_DONE time between now and last: %lld us", time_gap);
 		(*val_mac) &= ~(1 << REG_SHIFT_WRITE_DONE);
@@ -543,10 +543,12 @@ static int load_firmware(char *filename)
 	int file_flag = O_RDONLY;
 	int ret = 0;
 
+
 	if (NULL == filename) {
 		cam_err("%s param error", __func__);
 		return -EINVAL;
 	}
+
 
 	/* must have the following 2 statement */
 	fs = get_fs();
@@ -594,6 +596,7 @@ ERROR:
 
 #define ISP_CLK_GATE ((1<<21)|(1<<23)|(1<<24)|(1<<25)|(1<<26)|(1<<27))
 #define DSS_CLK_GATE ((1<<12)|(1<<13)|(1<<14)|(1<<15)|(1<<16)|(1<<17)|(1<<20)|(1<<22))
+
 
 #define ISP_REST_DIS ((1<<12)|(1<<13)|(1<<14))
 #define DSS_REST_DIS ((1<<10)|(1<<11))
@@ -878,6 +881,7 @@ void hw_query_irq(struct irq_reg_t *irq_info)
 	return;
 }
 
+
 static void meta_data_raw_work_func(struct work_struct *work)
 {
 	int len=META_DATA_RAW_SIZE, pos=0;
@@ -1038,6 +1042,7 @@ static void meta_data_done_hander(void)
 
 }
 
+
 int hw_isp_init(struct device *pdev)
 {
 	int ret = 0;
@@ -1183,6 +1188,7 @@ int hw_isp_poweroff(void)
 	return ret;
 }
 
+
 void hw_isp_clear_port(int port)
 {
 	/* careful: only write port is allowed to clear*/
@@ -1291,6 +1297,7 @@ int hw_destory_eof_tasklet(void)
 
 	isp_hw_data.irq_val.host_ae_applied = MANUAL_AE_NOT_APPLIED;
 
+
 	return 0;
 }
 /***************** external interface definition end *****************************************/
@@ -1335,6 +1342,7 @@ void put_buf_to_interworkq(isp_port_e port, hwisp_buf_t *buf)
 	else
 		isp_hw_data.mac_array[port].buf[0] = buf;
 }
+
 
 static inline int CHECK_PORT_VALID(int port)
 {
@@ -1717,6 +1725,7 @@ static u8 ispv3_convert_output_fmt(u32 fmt)
 		break;
 	}
 
+
 	return isp_fmt;
 }
 
@@ -1766,6 +1775,8 @@ static void isp_save_raw_info(raw_buffer_info_t *raw_info, int flow)
 	raw_info->lens_online_br = ISP_GETREG16(ISP_LENS_ONLINE_BR_OUTPUT_ADDR(flow));
 	raw_info->lens_profile = ISP_GETREG16(ISP_LENS_PROFILE_OUTPUT_ADDR(flow));
 }
+
+
 
 static void isp_restore_raw_info(raw_buffer_info_t *raw_info, int flow)
 {
@@ -1875,6 +1886,7 @@ int isp_reprocess_cmdset(struct reprocess_param_list *reprocess_params)
 
 	return 0;
 }
+
 
 static void  hw_isr_do_tasklet(unsigned long data)
 {

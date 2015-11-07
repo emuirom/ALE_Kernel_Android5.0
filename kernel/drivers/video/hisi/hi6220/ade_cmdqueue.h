@@ -82,6 +82,7 @@ enum {
     TOP_ROT_BUFF_ROT_1080p
 };
 
+
 /*************************struct***************************/
 
 typedef union {
@@ -92,6 +93,7 @@ typedef union {
     }bits;
     u32     ul32;
 }WRITE_CMD_HEAD;
+
 
 typedef union {
     struct {
@@ -139,6 +141,7 @@ struct cmdqueue_buff {
     u32     reserved;
     struct  cmdfile_buffer   cf_list[ADE_CMD_FILE_BUFF_MAX];
 };
+
 
 /*****************************function*******************************/
 extern int ade_overlay_set_rot_cmd(u8* ade_base, struct ade_overlay_rot* rot_info, struct cmdfile_buffer* cf_buff);

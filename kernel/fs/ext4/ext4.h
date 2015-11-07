@@ -1741,14 +1741,17 @@ struct dx_hash_info
 	u32		*seed;
 };
 
+
 /* 32 and 64 bit signed EOF for dx directories */
 #define EXT4_HTREE_EOF_32BIT   ((1UL  << (32 - 1)) - 1)
 #define EXT4_HTREE_EOF_64BIT   ((1ULL << (64 - 1)) - 1)
+
 
 /*
  * Control parameters used by ext4_htree_next_block
  */
 #define HASH_NB_ALWAYS		1
+
 
 /*
  * Describe an inode's exact location on disk and in memory
@@ -2027,6 +2030,7 @@ extern struct inode *__ext4_new_inode(handle_t *, struct inode *, umode_t,
 				    type, nblocks)		    \
 	__ext4_new_inode(NULL, (dir), (mode), (qstr), (goal), (owner), \
 			 (type), __LINE__, (nblocks))
+
 
 extern void ext4_free_inode(handle_t *, struct inode *);
 extern struct inode * ext4_orphan_get(struct super_block *, unsigned long);
@@ -2596,6 +2600,7 @@ static inline void ext4_set_de_type(struct super_block *sb,
 		de->file_type = ext4_type_by_mode[(mode & S_IFMT)>>S_SHIFT];
 }
 
+
 /* symlink.c */
 extern const struct inode_operations ext4_symlink_inode_operations;
 extern const struct inode_operations ext4_fast_symlink_inode_operations;
@@ -2654,6 +2659,7 @@ extern int ext4_find_delalloc_range(struct inode *inode,
 extern int ext4_find_delalloc_cluster(struct inode *inode, ext4_lblk_t lblk);
 extern int ext4_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
 			__u64 start, __u64 len);
+
 
 /* move_extent.c */
 extern void ext4_double_down_write_data_sem(struct inode *first,

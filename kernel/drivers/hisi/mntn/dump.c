@@ -81,6 +81,7 @@ extern int memblock_free(phys_addr_t base, phys_addr_t size);
 char core_flag[STRINGLEN];
 struct proc_dir_entry *core_trace, *core_flag_file;
 
+
 /*dump file information, set to file->private_data*/
 struct dump_info
 {
@@ -209,13 +210,7 @@ void create_dump_phy_mem_proc_file(char *name, unsigned int phy_addr, size_t siz
     return;
 }
 
-/*****************************************************************************
- Description : bindary dump delcaration, and proc file system defination
-                    we ioremap the register/memory region to user space proc file
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
+
 #define DUMP(name, base, iosize, string, directory, prop)\
 static int __init name ## _dump_phy_mem_proc_file_init(void)\
 {\
@@ -253,16 +248,8 @@ module_init(name ## _dump_phy_mem_proc_file_init);\
 module_exit(name ## _dump_phy_mem_proc_file_exit);
 
 /*definition of register/memory dump in ascii mode*/
-/*****************************************************************************
- Description : ascii dump delcaration, and proc file system defination
-                    we ioremap the register/memory region to user space proc file
-                    ascii format output, 31 bits to 0 bits
-                    register proc fs when module init
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
-#ifdef CONFIG_ARCH_HI6XXX  /*added by z00210919 for kernel dump*/
+
+#ifdef CONFIG_ARCH_HI6XXX
 /*memory/register dump declaration*/
 DUMP(mcu_mem, MCU_SYS_MEM_ADDR, MCU_SYS_MEM_SIZE, "mcu", memory, himntn_gobal_resetlog)
 DUMP(tele_mntn_mem, TELE_MNTN_AREA_ADDR, TELE_MNTN_AREA_SIZE, "telemntn", memory, himntn_gobal_resetlog)
@@ -377,7 +364,7 @@ early_param("bitmapofabnrst", early_parse_bitmap_abnrst_cmdline);
 phys_addr_t g_memdump_addr = 0;
 phys_addr_t g_memdump_end = 0;
 unsigned int  g_memdump_size = 0;
-#ifndef CONFIG_ARCH_HI6XXX  /*added by z00210919 for kernel dump*/
+#ifndef CONFIG_ARCH_HI6XXX
 int himntn_gobal_resetlog =0;
 #endif
 #define MAX_MEMDUMP_NAME 24
@@ -435,7 +422,7 @@ static int __init early_parse_memdumpaddr_cmdline(char *p)
     g_memdump_end  = simple_strtoul(memdump_end, &endptr, TRANSFER_BASE);
     g_memdump_size = simple_strtoul(memdump_size, &endptr, TRANSFER_BASE);
     pr_err("[early_parse_memdumpaddr_cmdline] p:%s, g_memdump_addr:0x%lx g_memdump_end:0x%lx,g_memdump_size:0x%x\n", (const char *)p, (unsigned long)g_memdump_addr, (unsigned long)g_memdump_end,g_memdump_size);
-#ifndef CONFIG_ARCH_HI6XXX  /*added by z00210919 for kernel dump	*/
+#ifndef CONFIG_ARCH_HI6XXX
     himntn_gobal_resetlog = 1;
 #endif
     return 0;
@@ -471,7 +458,7 @@ static int __init memdump_init(void)
 }
 arch_initcall(memdump_init);
 
-#ifdef CONFIG_ARCH_HI6XXX  /*added by z00210919 for kernel dump	*/
+#ifdef CONFIG_ARCH_HI6XXX
 static ssize_t reboot_proc_read(struct file *file, char __user *userbuf, size_t bytes, loff_t *off)
 {
     char buf[12];
@@ -549,4 +536,5 @@ module_init(proc_balong_reset_init);
 MODULE_DESCRIPTION("Hisilicon Memory/Register Dump Module");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("xuyiping <xuyiping@huawei.com>");
+
 

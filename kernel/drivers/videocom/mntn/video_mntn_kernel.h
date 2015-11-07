@@ -1,15 +1,4 @@
-/*
- **************************************************************************************
- *       Filename:  mntn_video_print.h
- *       Description:
- *
- *       Version:  1.0
- *       Created:  2013-05-17 12:09:29
- *       Author:  c00220250   [c00220250]
- *
- *       Revision:  initial draft;
- **************************************************************************************
- */
+
 
 #ifndef _VIDEO_MNTN_KERNEL_H_
 #define _VIDEO_MNTN_KERNEL_H_

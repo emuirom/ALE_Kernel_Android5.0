@@ -65,12 +65,10 @@ static mini_ispio_controller ispv1_io_ctl;
 
 static mini_ispio_hw_t ispv1_io;
 
-/* Modified  by w00199382 for isp 2.2 , 2012/11/22, begin */
 
 #define CSI0_REG_OFFSET  (0x00)
 #define CSI1_REG_OFFSET  (0x800)
 
-/* Modified  by w00199382 for isp 2.2 , 2012/11/22, end */
 
 #define CSI0_REG_BASE  (ispv1_io.csi0_base)
 #define CSI1_REG_BASE  (ispv1_io.csi1_base)
@@ -204,7 +202,6 @@ static int ispv1_get_resource(void)
 
 	/* get reg base */
 
-    /* Modified  by w00199382 for isp 2.2 , 2012/11/22, begin */
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	if (res == NULL) {
@@ -222,7 +219,6 @@ static int ispv1_get_resource(void)
 		return -ENOMEM;
 	}
     ispv1_io.csi1_base = ispv1_io.csi0_base + CSI1_REG_OFFSET;
-    /* Modified  by w00199382 for isp 2.2 , 2012/11/22, end */
 
 	mini_register_cam_dbg_info(DBG_INFO_CSI0_BASE, (void *)ispv1_io.csi0_base);
 	mini_register_cam_dbg_info(DBG_INFO_CSI1_BASE, (void *)ispv1_io.csi1_base);
@@ -366,12 +362,10 @@ static void ispv1_release_resource(void)
 		ispv1_io.csi1_irq = 0;
 	}
 #endif
-        /* Modified  by w00199382 for isp 2.2 , 2012/11/22, begin */
 
         /*FIXME: BSP has not support the interface IO_ADDRESS*/
 
         iounmap(ispv1_io.csi0_base);
-        /* Modified  by w00199382 for isp 2.2 , 2012/11/22, end */
 
 
 	if (ispv1_io.csi0_clk) {
@@ -852,7 +846,6 @@ static int ispv1_ioconfig(camera_power_state power_state, data_interface_t type)
 	int ret = 0;
 	print_info("%s camera iomux config", __func__);
 
-    /* Modified  by w00199382 for isp 2.2 , 2012/11/23, begin */
 #if 0
 	if (power_state == POWER_ON) {
 		ret = blockmux_set(ispv1_io.block_i2c, ispv1_io.block_conf_i2c, NORMAL);
@@ -902,7 +895,6 @@ static int ispv1_ioconfig(camera_power_state power_state, data_interface_t type)
 
 	}
 #endif
-    /* Modified  by w00199382 for isp 2.2 , 2012/11/23, end */
 
 #if defined(CONFIG_ARCH_HI6620)
 	if (power_state == POWER_ON) {
@@ -942,14 +934,12 @@ static int ispv1_io_hw_init(struct platform_device *pdev)
 
 	ispv1_io.pdev = pdev;
 
-/* Modified  by w00199382 for isp 2.2 , 2012/11/23, begin */
 #if 0 /* k3 code */
 	ret = ispv1_get_iomux(IOMUX_DVP_NAME, &ispv1_io.block_dvp, &ispv1_io.block_conf_dvp);
 	ret |= ispv1_get_iomux(IOMUX_ISP_NAME, &ispv1_io.block_isp, &ispv1_io.block_conf_isp);
 	ret |= ispv1_get_iomux(IOMUX_RST_NAME, &ispv1_io.block_rst, &ispv1_io.block_conf_rst);
 	ret |= ispv1_get_iomux(IOMUX_I2C_NAME, &ispv1_io.block_i2c, &ispv1_io.block_conf_i2c);
 #endif
-/* Modified  by w00199382 for isp 2.2 , 2012/11/23, end */
 #if defined(CONFIG_ARCH_HI6620)
 
         /* pinctrl enable */

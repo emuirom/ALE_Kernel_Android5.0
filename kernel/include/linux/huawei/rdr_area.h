@@ -18,7 +18,7 @@
  * If u'll modify the area which is not zero,please ask for the orig author.
  */
 /* RDR area 0 begin: */
-#define RDR_AREA_0 (0x400000 - 0x200) /*AP, 4193792, w00204535 2013.12.26*/
+#define RDR_AREA_0 (0x400000 - 0x200)
 /* RDR area 0 end.   */
 
 /* RDR area 1 begin: */

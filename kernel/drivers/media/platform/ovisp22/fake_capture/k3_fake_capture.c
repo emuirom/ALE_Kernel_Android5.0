@@ -1,24 +1,4 @@
-/*
- *  Hisilicon K3 fake camera v4l2 driver source file
- *
- *  CopyRight (C) Hisilicon Co., Ltd.
- *    Author : qKF23847
- *  Version  : 1.2
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+
 
 #include <linux/module.h>
 #include <linux/init.h>
@@ -187,6 +167,8 @@ static int video_nr = 10;
                 ( 1 << CAMERA_PHOTOMETRY_AVERAGE)                 \
                 )
 
+
+
 static camera_capability this_cap[] = {
     { V4L2_CID_AUTO_WHITE_BALANCE,  THIS_AUTO_WHITE_BALANCE },
     { V4L2_CID_DO_WHITE_BALANCE,    THIS_WHITE_BALANCE      },
@@ -219,6 +201,7 @@ static struct v4l2_frmsizeenum fake_camera_framesizes[] =
             .discrete.height    = 96,
         },
     },
+
 
     {
         .type = V4L2_FRMSIZE_TYPE_DISCRETE,
@@ -600,6 +583,7 @@ static inline void del_from_ready_q ( camera_frame_buf* f )
         print_warn("frame[%08x] NOT in readyq", f->phyaddr);
     }
 }
+
 
 /*
  **************************************************************************
@@ -2294,6 +2278,7 @@ static int k3_fake_camera_enum_capture_fmt(struct v4l2_fmtdesc *f)
     
     return 0;
 }
+
 
 /*
  **************************************************************************

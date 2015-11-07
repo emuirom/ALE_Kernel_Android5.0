@@ -1636,7 +1636,11 @@ int mmc_set_signal_voltage(struct mmc_host *host, int signal_voltage)
 
 	cmd.opcode = SD_SWITCH_VOLTAGE;
 	cmd.arg = 0;
-	cmd.flags = MMC_RSP_R1 | MMC_CMD_AC;
+	/*
+	 * Here for using Kingsdon SD produced after 03-2015,
+	 * We set long resp and delete CRC flag for cmd11.
+	 */
+	cmd.flags = MMC_RSP_PRESENT | MMC_RSP_OPCODE | MMC_CMD_AC | MMC_RSP_136;
 
 	err = mmc_wait_for_cmd(host, &cmd, 0);
 	if (err)
@@ -2800,6 +2804,8 @@ int mmc_detect_card_removed(struct mmc_host *host)
 }
 EXPORT_SYMBOL(mmc_detect_card_removed);
 
+
+
 void mmc_rescan(struct work_struct *work)
 {
 	struct mmc_host *host =
@@ -2809,6 +2815,8 @@ void mmc_rescan(struct work_struct *work)
 
 	if (host->rescan_disable)
 		goto out;
+
+
 
 	/* If there is a non-removable card registered, only scan once */
 	if ((host->caps & MMC_CAP_NONREMOVABLE) && host->rescan_entered)

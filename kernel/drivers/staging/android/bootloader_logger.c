@@ -1,5 +1,6 @@
 /* drivers/android/bootloader_logger.c
  *
+ * Copyright (C) 2008-2014 dongjinguang@huawei.com.
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -114,6 +115,7 @@ static int bootloader_logger_init(struct bootloader_logger *logger, char *old_bu
     return 0;
 }
 
+
 static ssize_t bootloader_logger_main_read_old(struct file *file, char __user *buf,
                     size_t len, loff_t *offset)
 {
@@ -218,6 +220,7 @@ static int __init bootloader_logger_late_init(void)
     bootloader_logger_init(&logger_main, NULL/* allocate */);
     bootloader_logger_init(&logger_last, NULL/* allocate */);
 
+
     if (logger_main.old_log != NULL) {
            entry = proc_create("bootloader_log", S_IRUSR, NULL, &bootloader_logger_main_file_ops);
         if (!entry) {
@@ -262,6 +265,7 @@ static void __exit bootloader_logger_late_exit(void)
         logger_last.old_log = NULL;
     }
 }
+
 
 module_init(bootloader_logger_late_init);
 module_exit(bootloader_logger_late_exit);

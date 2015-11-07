@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  y00285329
+ * Email:	  yinxuerui@huawei.com
  * Date:	  2014-12-08
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,6 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 
 #include <linux/module.h>
 #include <linux/printk.h>
@@ -380,6 +383,7 @@ static ssize_t imx230_plk_powerctrl_store(struct device *dev,
 
 	return count;
 }
+
 
 static struct device_attribute imx230_plk_powerctrl =
     __ATTR(power_ctrl, 0664, imx230_plk_powerctrl_show, imx230_plk_powerctrl_store);

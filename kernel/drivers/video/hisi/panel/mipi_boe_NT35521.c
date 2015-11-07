@@ -459,6 +459,7 @@ static char boe_power_on_param82[] = {
     0x32, 0x32,
 };
 
+
 static char boe_power_on_param83[] = {
 	0xD8,
     0x00, 0x00, 0x00, 0x00, 0x00,
@@ -730,6 +731,7 @@ static char boe_power_on_param135[] =
 	0x5E,
 	0x28,
 };
+
 
 /*----------------Power ON Sequence(sleep mode to Normal mode)---------------------*/
 
@@ -1181,6 +1183,7 @@ static struct gpio_desc boe_lcd_gpio_lowpower_cmds[] = {
 static volatile bool g_display_on;
 static struct balong_fb_panel_data boe_panel_data;
 
+
 /******************************************************************************/
 static struct lcd_tuning_dev *p_tuning_dev = NULL;
 
@@ -1224,6 +1227,7 @@ static DEVICE_ATTR(esd_test, 0644, boe_show_esd_test, boe_store_esd_test);
 #endif
 
 static DEVICE_ATTR(lcd_info, S_IRUGO, boe_lcd_info_show, NULL);
+
 
 static struct attribute *boe_attrs[] = {
 	&dev_attr_lcd_info.attr,

@@ -422,7 +422,6 @@ static int dwc_otg_hcd_rem_wakeup_cb(void *p)
 
 	if (hcd->core_if->lx_state == DWC_OTG_L2) {
 		hcd->flags.b.port_suspend_change = 1;
-		/* added by l00196665 */
 		usb_hcd_resume_root_hub(hcd->priv);
 	}
 #ifdef CONFIG_USB_DWC_OTG_LPM

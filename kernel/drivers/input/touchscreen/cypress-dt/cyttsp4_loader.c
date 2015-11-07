@@ -202,6 +202,7 @@ static int cyttsp4_check_firmware_version(struct cyttsp4_device *ttsp,
 }
 #endif /* CYTTSP4_FW_UPGRADE || CYTTSP4_TTCONFIG_UPGRADE */
 
+
 #if CYTTSP4_FW_UPGRADE
 static u16 _cyttsp4_compute_crc(struct cyttsp4_device *ttsp, u8 *buf, int size)
 {
@@ -1459,6 +1460,7 @@ static int upgrade_ttconfig_from_platform(struct cyttsp4_device *ttsp)
 		}
 	}
 
+
 	//ttconfig = data->loader_pdata->ttconfig;
 	if (ttconfig == NULL) {
 		dev_info(dev, "%s: No ttconfig data\n", __func__);
@@ -1549,6 +1551,7 @@ static int upgrade_ttconfig_from_platform_recovery(struct cyttsp4_device *ttsp)
 
 }
 #endif
+
 
 #ifdef CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP4_MANUAL_TTCONFIG_UPGRADE
 static ssize_t cyttsp4_config_data_write(struct file *filp,
@@ -1911,6 +1914,7 @@ static int cyttsp4_loader_probe(struct cyttsp4_device *ttsp)
 
 	dev_info(dev, "%s: Successful probe %s\n", __func__, ttsp->name);
 	return 0;
+
 
 #ifdef CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP4_MANUAL_TTCONFIG_UPGRADE
 error_create_config_data:

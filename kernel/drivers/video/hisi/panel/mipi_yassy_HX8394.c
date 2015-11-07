@@ -673,6 +673,7 @@ static DEVICE_ATTR(esd_test, 0644, yassy_show_esd_test, yassy_store_esd_test);
 
 static DEVICE_ATTR(lcd_info, S_IRUGO, yassy_lcd_info_show, NULL);
 
+
 static struct attribute* yassy_attrs[] =
 {
     &dev_attr_lcd_info.attr,

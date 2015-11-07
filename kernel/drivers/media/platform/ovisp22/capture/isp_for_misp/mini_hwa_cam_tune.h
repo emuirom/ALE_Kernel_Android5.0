@@ -27,6 +27,7 @@
 #include "mini_cam_log.h"
 #include "camera.h"
 
+
 typedef struct mini_hwq_multi_reg_data{
 	u32 length;
 	u32 *reg;

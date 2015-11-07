@@ -148,6 +148,7 @@ static inline void print_memory_payload(dwc_otg_pcd_t * pcd,  dwc_ep_t * ep)
 #endif
 }
 
+
 #ifdef DWC_UTE_CFI
 static inline void print_desc(struct dwc_otg_dma_desc *ddesc,
 			      const uint8_t * epname, int descnum)
@@ -3244,6 +3245,7 @@ static void dwc_otg_pcd_handle_noniso_bna(dwc_otg_pcd_ep_t * ep)
 	dwc_otg_core_if_t *core_if = ep->pcd->core_if;
 	int i, start = 0;
 
+
 	if (!dwc_ep->desc_cnt)
 		DWC_WARN("Ep%d %s Descriptor count = %d status = 0x%x 0x%x 0x%x buf = 0x%x 0x%x 0x%x\n", dwc_ep->num,
 			 (dwc_ep->is_in ? "IN" : "OUT"), dwc_ep->desc_cnt, core_if->dev_if->out_desc_addr->status.d32,
@@ -3282,6 +3284,7 @@ static void dwc_otg_pcd_handle_noniso_bna(dwc_otg_pcd_ep_t * ep)
 		start = 0;
 		dma_desc = dwc_ep->desc_addr;
 	}
+
 
 	for (i = start; i < dwc_ep->desc_cnt; ++i, ++dma_desc) {
 		sts.d32 = dma_desc->status.d32;
@@ -3667,6 +3670,7 @@ void predict_nextep_seq( dwc_otg_core_if_t * core_if)
 	resetctl.d32 = DWC_READ_REG32(&core_if->core_global_regs->grstctl);
 	resetctl.b.intknqflsh = 1;
 	DWC_WRITE_REG32(&core_if->core_global_regs->grstctl, resetctl.d32);
+
 
 }
 
@@ -4417,6 +4421,7 @@ do { \
 								diepint0.d32 = DWC_READ_REG32(&core_if->dev_if->
 															in_ep_regs[0]->diepint);
 
+
 								if (pcd->ep0state == EP0_STALL || pcd->ep0state == EP0_DISCONNECT) {
 									DWC_ERROR("EP0 is stalled/disconnected\n");
 								}
@@ -5112,6 +5117,7 @@ int32_t dwc_otg_pcd_handle_in_nak_effective(dwc_otg_pcd_t * pcd)
 			DWC_WRITE_REG32(&dev_if->in_ep_regs[i]->diepctl, diepctl.d32);
 		}
 	}
+
 
 	/* Disable the Global IN NAK Effective Interrupt */
 	intr_mask.b.ginnakeff = 1;

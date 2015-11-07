@@ -3,6 +3,7 @@
  *
  * Copyright (c) 2011 Hisilicon Co. Ltd
  *
+ * Dongbin Yu <yudongbin@huawei.com> : 2014-2-7
  *
  * In V8R1 the mtcmos is same with V9R1's driver,so it is multiplex.
  * That the reason why name of the c document is "hi6xxx".
@@ -39,6 +40,7 @@ struct mtcmos_pwup_time {
     unsigned int pwup_time_shift;
     unsigned int pwup_time_mask;
 };
+
 
 struct hi6xxx_mtcmos{
 	struct device	*dev;
@@ -178,6 +180,7 @@ static int hi6xxx_mtcmos_probe(struct platform_device *pdev)
     pr_info("----------------[%s 2 ]---------------\n",__FUNCTION__);
 
     spin_lock_init((spinlock_t *)&mtcmos->mtcmos_spin_lock);
+
 
 	ret = of_property_read_u32(np, "hisilicon,mtcmos-nn-time-numb",
 						&mtcmos->mtcmos_n_pwup_time);

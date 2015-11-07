@@ -72,6 +72,7 @@ typedef struct _irq_reg {
 	u8  mac_irqstatus_h_done_cnt;
 } irq_reg_t;
 
+
 typedef struct _flash_weight {
 	u32 preflash_env;
 	u32 preflash_flash;
@@ -86,6 +87,7 @@ typedef struct _aec_data {
 	u32 lum_max; /* using for save max lum in 4x4 raw lum stat window */
 	u32 lum_sum;
 } aec_data_t;
+
 
 typedef struct _isp_hw_data {
     struct semaphore sem_cmd_busy;          /* cmdset mutex */
@@ -191,6 +193,9 @@ int ispv1_get_actual_iso(void);
 
 int ispv1_get_exposure_time(void);
 
+/* only use for b shutter  try ae  duing preview*/
+int ispv1_set_b_shutter_ecgc(b_shutter_ae_iso_s* b_shutter_tryae_ecgc);
+
 u32 ispv1_get_awb_gain(int withShift);
 u32 ispv1_get_focus_code(void);
 u32 ispv1_get_focus_rect(camera_rect_s *rect);
@@ -227,7 +232,6 @@ int ispv1_set_contrast(camera_contrast contrast);
 int ispv1_set_scene(camera_scene scene);
 int ispv1_set_brightness(camera_brightness brightness);
 
-/* y00215412 added 2012-08-10 */
 int ispv1_switch_brightness(camera_state state, camera_brightness brightness);
 int ispv1_switch_contrast(camera_state state, camera_contrast contrast);
 
@@ -241,12 +245,13 @@ int ispv1_update_LENC_scale(u32 inwidth, u32 inheight);
 /*using for write ad register(set position) of vcm driver ic by i2c bus*/
 int ispv1_write_vcm(u8 i2c_addr, u16 reg, u16 val, i2c_length length, int mutex_wait);
 
-/* add by ykf63300 */
 int ispv1_get_current_vts(camera_sensor *sensor);
 int ispv1_get_current_fps(camera_sensor *sensor);
 int ispv1_get_band_threshold(camera_sensor *sensor, camera_anti_banding banding);
 void ispv1_set_fps_lock(int lock);
 void ispv1_preview_done_do_tune(void);
+void ispv1_capture_done_do_tune(void);
+void ispv1_preview_done_do_tryae_tune(void);
 void ispv1_cmd_id_do_ecgc(struct work_struct *work);
 void ispv1_set_aecagc_mode(aecagc_mode_t mode);
 void ispv1_set_awb_mode(awb_mode_t mode);
@@ -257,7 +262,6 @@ void ispv1_save_aecawb_step(aecawb_step_t *step);
 void ispv1_config_aecawb_step(bool flash_mode, aecawb_step_t *step);
 void ispv1_check_flash_prepare(void);
 
-/* added by y00215412 20120820 */
 void ispv1_get_wb_value(awb_gain_t *awb);
 void ispv1_set_wb_value(awb_gain_t *awb);
 bool ispv1_copy_preview_data(u8 *dest, camera_rect_s *rect);
@@ -270,7 +274,6 @@ void ispv1_set_frame_rate_state(camera_frame_rate_state state);
 
 bool ae_is_need_flash(camera_sensor *sensor, aec_data_t *ae_data, u32 target_y_low);
 
-/* added by y00215412 for hdr movie mode */
 bool ispv1_is_hdr_movie_mode(void);
 
 void ispv1_red_clip_correction(void);

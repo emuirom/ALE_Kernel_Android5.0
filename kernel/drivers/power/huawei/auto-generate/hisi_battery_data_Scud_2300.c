@@ -22,6 +22,7 @@ static struct sf_lut Scud_2300_pc_sf = {
      }
 };
 
+
 static struct sf_lut Scud_2300_rbatt_sf = {
     .rows = 28,
     .cols = 6,

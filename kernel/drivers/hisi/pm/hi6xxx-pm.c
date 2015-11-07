@@ -813,7 +813,6 @@ static __init int hi6xxx_pm_drvinit(void)
 	hisi_get_gic_base();
 
 	suspend_set_ops(&hi6xxx_pm_ops);
-    /* get DFS parameter from dtb and put it in share memory for MCU  w00253990 */
     printk(KERN_INFO"MEMORY_AXI_SEC_CORE_BOOT_ADDR:0x%x.\n",MEMORY_AXI_SEC_CORE_BOOT_ADDR);
 	printk(KERN_INFO"%s exit\n",__FUNCTION__);
 	return 0;

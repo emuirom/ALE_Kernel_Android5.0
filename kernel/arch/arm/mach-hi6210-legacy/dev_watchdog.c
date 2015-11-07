@@ -63,6 +63,7 @@ static struct platform_device plat_wdt_dev = {
  Description : platform related, sctrl register initial,
                set SCTRL to reset device when watchdog freeze
   1.Date: 2012/9/13
+    Author : x00138766
     Modification : Created function
 *****************************************************************************/
 static void __init sctrl_reset_mode_init(void)
@@ -105,6 +106,7 @@ static void __init sctrl_reset_mode_init(void)
 /*****************************************************************************
  Description : watchdog platform device register,  and initial sctrl regitster
   1.Date: 2012/9/13
+    Author : x00138766
     Modification : Created function
 *****************************************************************************/
 static int __init plat_wdt_dev_init(void)

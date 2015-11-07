@@ -1,19 +1,4 @@
-/*******************************************************************************
- * All rights reserved, Copyright (C) huawei LIMITED 2012
- *------------------------------------------------------------------------------
- * File Name   : tlogger.c
- * Description : A TEE Logging Subsystem, read the tee os log from rdr memory
- * Platform    :
- * Author      : z00202529
- * Version     : V1.0
- * Date        : 2014.11.10
- * Notes       :
- *
- *------------------------------------------------------------------------------
- * Modifications:
- *   Date        Author          Modifications
- 2014.11.10  z00202529       create
- *******************************************************************************/
+
 /*******************************************************************************
  * This source code has been made available to you by HUAWEI on an
  * AS-IS basis. Anyone receiving this source code is licensed under HUAWEI

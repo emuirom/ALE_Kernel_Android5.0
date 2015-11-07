@@ -18,6 +18,7 @@
 #include <mach/boardid.h>
 #include "iomux.h"
 
+
 static struct iomux_block_table *blocks_table = NULL;
 int iomux_register_blocks_table(struct iomux_block_table *table)
 {
@@ -35,6 +36,8 @@ int iomux_register_pins_table(struct iomux_pin_table *table)
     return 0;
 }
 EXPORT_SYMBOL(iomux_register_pins_table);
+
+
 
 static DEFINE_MUTEX(iomux_lock);
 static DEFINE_MUTEX(iomux_lock_debugfs);

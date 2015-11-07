@@ -93,13 +93,11 @@ extern void __iomem *ipc_base;
 	}while(0)
 
 typedef void (*IPCVOIDFUNCPTR)(unsigned int );
-/*lint522,delete by z00212992 begin*/
 /*#define BSP_REG_READ(base, reg, resule) \
 	(resule = readl(base + reg))*/
 
 /*#define BSP_REG_WRITE(base, reg, data) \
 	(writel(data, (base + reg)))*/
- /*lint522,delete by z00212992 end*/
 typedef struct tagIPC_DEV_S
 {
 	int            bInit;

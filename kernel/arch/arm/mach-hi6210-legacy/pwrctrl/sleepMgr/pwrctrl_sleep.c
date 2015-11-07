@@ -173,7 +173,7 @@ s32_t pwrctrl_sleep_initial ( void_t )
 #else
     pwrctrl_set_bits(IO_ADDRESS(SOC_AO_SCTRL_SC_SECURITY_CTRL2_ADDR(SOC_SC_ON_BASE_ADDR)), \
                      BIT(SOC_AO_SCTRL_SC_SECURITY_CTRL2_remap_sram_aarm_START));
-#endif/*ƒ¨»œ πƒ‹£¨…æ≥˝≈‰÷√ w00176398 2013-11-26*/
+#endif
 #if 0/*defined(CHIP_BB_HI6210)*//*A7 feature, support hardware invalid cache*/
     pwrctrl_set_bits(IO_ADDRESS(SOC_ACPU_SCTRL_ACPU_SC_CPU0_CTRL_ADDR(SOC_ACPU_SC_BASE_ADDR)),\
                      BIT(SOC_ACPU_SCTRL_ACPU_SC_CPU0_CTRL_l1rstdisable0_START));

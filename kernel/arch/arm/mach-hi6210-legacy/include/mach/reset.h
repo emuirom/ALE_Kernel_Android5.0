@@ -78,6 +78,7 @@ typedef struct _sreset_mgr_LLI
     struct _sreset_mgr_LLI	*pnext;
 } sreset_mgr_LLI;
 
+
 typedef struct _sreset_mailbox_msg_ccore
 {
     int     iproctec;

@@ -116,9 +116,11 @@ IFC_GEN_CALL2(MAILBOX_IFC_ACPU_TO_CCPU_GET_CARRIERID, get_efuse_carrierid_value,
               IFC_BIVAR, unsigned char *, pu8Buf, 0,
 			  IFC_INCNT, unsigned int, uiLength, 0)
 
+
 IFC_GEN_CALL2(MAILBOX_IFC_ACPU_TO_CCPU_TEST_EFUSE_DISPLAY,  test_efuse_display,
               IFC_BIVAR, unsigned char *, pu8Buf, 0,
 			  IFC_INCNT, unsigned int, uiLength, 0)
+
 
 #if HISI_EFUSE_DEBUG == 1
 IFC_GEN_CALL0(MAILBOX_IFC_ACPU_TO_CCPU_TEST_EFUSE_WR, test_efuse_wr)
@@ -141,6 +143,7 @@ static int (*invoke_efuse_fn)(u64, u64, u64, u64) = NULL;
 #define EFUSE_FN_SET_KCE                                         0xc500000C
 #define EFUSE_FN_GET_CARRIERID                                   0xc500000D
 #define EFUSE_FN_GET_FREQ                                        0xc500000E
+
 
 int get_efuse_dieid_value(unsigned char *pu8Buffer, unsigned int u32Length, unsigned int timeout)
 {
@@ -322,6 +325,7 @@ int get_efuse_freq_value(unsigned char *pu8Buffer, unsigned int u32Length)
        return -EFAULT;
     }
 
+
     ret = invoke_efuse_fn(EFUSE_FN_GET_FREQ, (u64)g_phy_addr, 4, 0);
     if(OK == ret)
     {
@@ -329,6 +333,7 @@ int get_efuse_freq_value(unsigned char *pu8Buffer, unsigned int u32Length)
     }
     return ret;
 }
+
 
 static int get_efuse_kce_value(unsigned char *pu8Buffer, unsigned int u32Length, unsigned int timeout)
 {
@@ -352,6 +357,7 @@ static int get_efuse_kce_value(unsigned char *pu8Buffer, unsigned int u32Length,
     }
     return ret;
 }
+
 
 static int set_efuse_kce_value(unsigned char *pu8Buffer, unsigned int u32Length, unsigned int timeout)
 {
@@ -503,6 +509,7 @@ int bsp_efuse_write(unsigned int *pBuf, const unsigned int group, const unsigned
     }
     return ret;
 }
+
 
 #endif
 
@@ -789,6 +796,7 @@ static long efusec_ioctl(struct file *file, u_int cmd, u_long arg)
             break;
         }
 
+
         /*send back to user*/
         if (copy_to_user(argp, efuse_buf, 16))
 		{
@@ -833,6 +841,7 @@ static long efusec_ioctl(struct file *file, u_int cmd, u_long arg)
 
 		break;
 
+
     case HISI_EFUSE_TEST_WR:
         ret = test_efuse_wr(1000);
         if (OK != ret)
@@ -869,6 +878,7 @@ static long efusec_ioctl(struct file *file, u_int cmd, u_long arg)
 
 	return ret;
 }
+
 
 #if HISI_EFUSE_DEBUG == 1
 int efuse_test_debug(unsigned int test_case)
@@ -945,6 +955,7 @@ void hi6xxx_smc_start_work(u64 a0)
 EXPORT_SYMBOL_GPL(hi6xxx_smc_start_work);
 #endif
 
+
 static const struct file_operations efusec_fops = {
 	.owner		= THIS_MODULE,
 	.unlocked_ioctl = efusec_ioctl,
@@ -959,6 +970,7 @@ static int __init hisi_efusec_init(void)
 	struct device_node *np = NULL;
 	unsigned int bit_width;
 	unsigned int i;
+
 
 	memset(&g_efusec_data, 0, sizeof(g_efusec_data));
 
@@ -1068,6 +1080,7 @@ error1:
 	return ret;
 
 }
+
 
 rootfs_initcall(hisi_efusec_init);
 

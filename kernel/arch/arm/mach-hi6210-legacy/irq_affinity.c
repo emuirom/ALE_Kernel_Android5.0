@@ -122,6 +122,7 @@ static int __init irq_affinity_init(void)
 }
 postcore_initcall(irq_affinity_init);
 
+
 static int proc_irq_affinity_record_show(struct seq_file *m, void *v)
 {
     int i;

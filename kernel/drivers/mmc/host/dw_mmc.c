@@ -382,6 +382,7 @@ static void dw_mci_reg_dump(struct dw_mci *host)
 	dev_err(host->dev, ": ===========================================\n");
 }
 
+
 static void dw_mci_set_timeout(struct dw_mci *host)
 {
 	/* timeout (maximum) */
@@ -502,6 +503,12 @@ static void dw_mci_start_command(struct dw_mci *host,
 
 	if (cmd->opcode == SD_SWITCH_VOLTAGE) {
 		int loop_count;
+		u32 temp;
+
+		temp = mci_readl(host, INTMASK);
+		temp &= ~SDMMC_INT_RESP_ERR;
+		mci_writel(host, INTMASK, temp);
+
 		cmd_flags |= SDMMC_VOLT_SWITCH;
 
 		/* disable clock low power */
@@ -713,6 +720,7 @@ static void dw_mci_idmac_complete_dma(struct dw_mci *host)
         }
 
 #endif
+
 
 }
 
@@ -1277,6 +1285,7 @@ static void dw_mci_request(struct mmc_host *mmc, struct mmc_request *mrq)
 
 	WARN_ON(slot->mrq);
 
+
 	/*
 	 * The check for card presence and queueing of the request must be
 	 * atomic, otherwise the card could be removed in between and the
@@ -1601,7 +1610,7 @@ static const struct mmc_host_ops dw_mci_ops = {
 	.panic_erase = raw_mmc_panic_erase,
 	.execute_tuning		 = dw_mci_execute_tuning,
 #ifdef CONFIG_HI110X_WIFI_ENABLE
-	.init_card  = mshci_init_card,      /* c00189311 init non-standard card */
+	.init_card  = mshci_init_card,
 #endif
 };
 
@@ -2506,6 +2515,7 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
 	struct dw_mci *host = dev_id;
 	u32 pending;
 	int i;
+	u32 temp;
 
 	pending = mci_readl(host, MINTSTS); /* read-only mask reg */
 
@@ -2553,6 +2563,11 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
 				mci_writel(host, RINTSTS, SDMMC_INT_VOLT_SW);
 
 				dw_mci_cmd_interrupt(host, pending);
+
+				mci_writel(host, RINTSTS, SDMMC_INT_RESP_ERR);
+				temp = mci_readl(host, INTMASK);
+				temp |= SDMMC_INT_RESP_ERR;
+				mci_writel(host, INTMASK, temp);
 			}
 		}
 
@@ -2655,11 +2670,13 @@ static void dw_mci_timeout_timer(unsigned long data)
 	struct dw_mci *host = (struct dw_mci *)data;
 	struct mmc_request *mrq;
 
+
 	if (host) {
 		spin_lock(&host->lock);
 			if (host->mrq) {
 			mrq = host->mrq;
 			dev_vdbg(host->dev, "time out host->mrq = %p\n", host->mrq);
+
 
 			host->sg = NULL;
 			host->data = NULL;
@@ -2950,6 +2967,7 @@ static int dw_mci_init_slot(struct dw_mci *host, unsigned int id)
 	 */
 	if (host->pdata->setpower)
 		host->pdata->setpower(id, 0);
+
 
 	if (host->pdata->caps)
 		mmc->caps = host->pdata->caps;
@@ -3266,6 +3284,10 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
 
 	if (of_find_property(np, "caps2-mmc-poweroff-notify", NULL))
 		pdata->caps2 |= MMC_CAP2_POWEROFF_NOTIFY;
+
+	if (of_find_property(np, "caps2-mmc-detect-on-error", NULL)) {
+		pdata->caps2 |= MMC_CAP2_DETECT_ON_ERR;
+	}
 
 	if (of_find_property(np, "caps2-mmc-ddr50-notify", NULL))
 	{
@@ -3593,6 +3615,8 @@ void dw_mci_remove(struct dw_mci *host)
 		clk_disable_unprepare(host->biu_clk);
 }
 EXPORT_SYMBOL(dw_mci_remove);
+
+
 
 #ifdef CONFIG_PM_SLEEP
 /*

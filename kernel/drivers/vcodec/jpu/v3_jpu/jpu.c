@@ -33,17 +33,13 @@
 #define JPU_DEV_NAME "jpu"
 #define JPU_LDO_NAME "ldo_jpu"
 
-//hisi l00206966 @add begin
 #ifdef JPU_MMU
 static u32 mmu_phy_base     = JPU_MMU_PAGE_BASE;
 static u32 mmu_reg_phy_base = JPU_MMU_ADDR;
 #endif
-//hisi l00206966 @add end
 #ifdef JPU_SUPPORT_ISR
-//hisi l00206966 @modify begin
 #define JPU_IRQ_NUM 172
 #define JPU_INSTANCE_POOL_SIZE 102400
-//hisi l00206966 @modify end
 #endif
 typedef struct jpu_drv_context_t {
     struct fasync_struct *async_queue;
@@ -81,10 +77,8 @@ static void jpu_clk_put(struct clk *clk);
 static jpudrv_buffer_t s_instance_pool = {0};
 static jpu_drv_context_t s_jpu_drv_context = {0};
 static int s_jpu_major = 0;
-//hisi l00206966 @add begin
 struct class *jpu_class  =NULL;
 struct device *s_jpu_dev = NULL;
-//hisi l00206966 @add end
 static u32 s_jpu_open_count = 0;
 //static struct clk *s_jpu_clk = NULL;
 #ifdef JPU_SUPPORT_ISR
@@ -414,7 +408,6 @@ static int jpu_fasync(int fd, struct file *filp, int mode)
     return fasync_helper(fd, filp, mode, &dev->async_queue);
 }
 
-//hisi l00206966 @modify begin
 static int jpu_map_to_physical_memory(struct file *fp, struct vm_area_struct *vm)
 {
 	unsigned long start = vm->vm_start;
@@ -442,7 +435,6 @@ static int jpu_mmap(struct file *fp, struct vm_area_struct *vm)
     printk(KERN_INFO "[JPUDRV]  jpu_map_to_physical_memory\n");
     return jpu_map_to_physical_memory(fp, vm);
 }
-//hisi l00206966 @modify end
 struct file_operations jpu_fops = {
     .owner          = THIS_MODULE,
     .open           = jpu_open,
@@ -718,13 +710,11 @@ static int jpu_remove(struct platform_device *pdev)
 #endif
 
 
-//hisi l00206966 @modify begin
     if (s_jpu_major > 0)
     {
         unregister_chrdev(s_jpu_major, JPU_DEV_NAME);
         s_jpu_major = 0;
     }
-//hisi l00206966 @modify end
 
 #ifdef JPU_SUPPORT_ISR
     if (s_jpu_irq){
@@ -815,7 +805,6 @@ static void __exit jpu_exit(void)
 #ifdef JPU_SUPPORT_PLATFORM_DRIVER_REGISTER
     printk(KERN_INFO "jpu_exit\n");
 #else
-//hisi l00206966 @modify begin
     printk(KERN_INFO "jpu_exit s_jpu_open_count=%d\n", s_jpu_open_count);
     if (s_jpu_major > 0)
     {
@@ -823,7 +812,6 @@ static void __exit jpu_exit(void)
         s_jpu_major = 0;
     }
 
-//hisi l00206966 @modify begin
     if (s_instance_pool.base)
     {
         printk(KERN_INFO "jpu_exit jpu_free_dma_buffer\n");
@@ -838,13 +826,11 @@ static void __exit jpu_exit(void)
     }
 #endif
 
-//hisi l00206966 @modify begin
     if(s_jpu_dev)
     {
         device_destroy(jpu_class, MKDEV(s_jpu_major, 0));
         class_destroy(jpu_class);
     }
-//hisi l00206966 @modify end
 #ifdef JPU_SUPPORT_ISR
     if (s_jpu_irq){
         free_irq(s_jpu_irq, &s_jpu_drv_context);

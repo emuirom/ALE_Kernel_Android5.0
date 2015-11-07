@@ -88,14 +88,12 @@
 
 //#define DUMP_VPU_POWER_REG
 
-/* Added by d00206042 2014-04-26 for SYSMMU start */
 static struct ion_device *s_ion_dev;
 static struct ion_client *s_ion_instance_pool_client;
 static struct ion_handle *s_ion_instance_pool_handle;
 static struct ion_client *s_ion_reserved_mem_client;
 static struct ion_handle *s_ion_reserved_mem_handle;
 static int s_vpu_systemMMU_support = 0;
-/* Added by d00206042 2014-04-26 for SYSMMU end */
 
 typedef struct
 {
@@ -175,11 +173,8 @@ static void vpu_clk_disable(void);
 static int vpu_pll_clk_enable(void);
 static void vpu_pll_clk_disable(void);
 
-/* Added by d00206042 2014-04-26 for SYSMMU start */
 extern struct ion_device * get_ion_device(void);
-/* Added by d00206042 2014-04-26 for SYSMMU end */
 
-/* add by y00251056 at 2014-5-9 for sram  start */
 static SramDrvInfo s_vpu_sramDrvInfo;
 static bool s_vpu_sramTimeout               = false;
 static struct semaphore s_vpu_semaphore     = __SEMAPHORE_INITIALIZER(s_vpu_semaphore, 0);
@@ -198,7 +193,6 @@ extern void DRV_ADEMemFree(void);
 extern void vpu_on_notice_ade(void);
 extern void vpu_off_notice_ade(void);
 
-/* add by y00251056 at 2014-5-9 for sram  end */
 
 
 
@@ -952,7 +946,6 @@ ERROR_INSTANCE_MEMORY_ALLOC:
 			vpu_hw_reset();
 		}
 		break;
-        /* Added by d00206042 2014-04-26 for SYSMMU start */
     case VDI_IOCTL_GET_SYSTEMMMU_SURPPORT:
         {
             //vpu_logd("VDI_IOCTL_GET_SYSTEMMMU_SURPPORT \n");
@@ -1141,9 +1134,7 @@ ERROR_RESERVED_MEMORY_ALLOC:
             wake_unlock(&s_vpu_wakelock);
         }
         break;
-        /* Added by d00206042 2014-04-26 for SYSMMU end */
 
-        /* add by y00251056 at 2014-5-9 for sram  start */
     case VDI_IOCTL_ALLOCATE_SRAM_MEMORY:
         {
             SramDrvInfo vdiSramInfo     = {0};
@@ -1251,7 +1242,6 @@ ERROR_RESERVED_MEMORY_ALLOC:
             wake_unlock(&s_vpu_wakelock);
         }
         break;
-        /* add by y00251056 at 2014-5-9 for sram  end */
 
     case  VDI_IOCTL_GET_VSCREENINFO:
         {
@@ -1512,7 +1502,6 @@ static int vpu_release(struct inode *inode, struct file *filp)
 	// Disable VPU hardware first.
 	vpu_regulator_disable();
 
-    /* add by y00251056 at 2014-5-9 for sram  start */
     /* free ade sram */
     if (s_vpu_sramDrvInfo.sram_size > 0)
     {
@@ -1520,9 +1509,7 @@ static int vpu_release(struct inode *inode, struct file *filp)
         DRV_ADEMemFree();
     }
     memset(&s_vpu_sramDrvInfo, 0x00, sizeof(s_vpu_sramDrvInfo));
-    /* add by y00251056 at 2014-5-9 for sram  end */
 
-    /* Added by d00206042 2014-04-26 for SYSMMU start */
     if (s_instance_pool.size != 0)
     {
         if ((!IS_ERR((void *)s_instance_pool.base)) && (s_instance_pool.base != 0))
@@ -1582,7 +1569,6 @@ static int vpu_release(struct inode *inode, struct file *filp)
             s_ion_reserved_mem_client = NULL;
         }
     }
-    /* Added by d00206042 2014-04-26 for SYSMMU end */
 
     vpu_off_notice_ade();
     up(&s_vpu_sem);
@@ -1644,7 +1630,6 @@ static int hisi_vpu_mmap(struct ion_client *client, struct ion_handle *handle, s
 }
 
 
-/* Added by d00206042 2014-04-26 for SYSMMU start */
 static int vpu_map_to_physical_memory(struct file *fp, struct vm_area_struct *vm)
 {
     int ret = 0;
@@ -1725,7 +1710,6 @@ static int vpu_map_to_instance_pool_memory(struct file *fp, struct vm_area_struc
 
     return  ret;
 }
-/* Added by d00206042 2014-04-26 for SYSMMU end */
 
 
 /*!
@@ -1767,9 +1751,7 @@ static int vpu_probe(struct platform_device *pdev)
 {
     int err = 0;
     struct resource *res = NULL;
-    /* Added by d00206042 2014-04-26 for SYSMMU start */
     struct ion_heap_info_data mem_data;
-    /* Added by d00206042 2014-04-26 for SYSMMU end */
 
     //vpu_logd("enter.\n");
 
@@ -1780,11 +1762,9 @@ static int vpu_probe(struct platform_device *pdev)
     }
     /* V8R2B020 not support vpu, z62576, 20140412, end */
 
-    /* Added by d00206042 2014-04-26 for SYSMMU start */
 
     s_vpu_systemMMU_support = 1;
 
-    /* Added by d00206042 2014-04-26 for SYSMMU end */
 
 	memset(&s_vpu_clk,0,sizeof(vpu_clk));
 
@@ -1864,7 +1844,6 @@ static int vpu_probe(struct platform_device *pdev)
         goto ERROR_PROVE_DEVICE;
     }
 
-    /* Added by d00206042 2014-04-26 for SYSMMU start */
     if (1 != s_vpu_systemMMU_support)
     {
         if (0 != hisi_ion_get_heap_info(ION_VPU_HEAP_ID, &mem_data)) {
@@ -1900,7 +1879,6 @@ static int vpu_probe(struct platform_device *pdev)
         //vpu_logd("success to probe vpu device with reserved video memory phys_addr=0x%x, base = 0x%x\n",
                 //(int) s_video_memory.phys_addr, (int)s_video_memory.base);
     }
-    /* Added by d00206042 2014-04-26 for SYSMMU end */
 
     return 0;
 
@@ -2215,10 +2193,8 @@ static void vpu_varible_init(void)
     memset(&s_interrupt_wait_q, 0x00, sizeof(s_interrupt_wait_q));
     memset(s_bit_firmware_info, 0x00, sizeof(s_bit_firmware_info));
 
-    /* add by y00251056 at 2014-5-9 for sram  start */
     memset(&s_vpu_sramDrvInfo, 0x00, sizeof(s_vpu_sramDrvInfo));
     s_vpu_sramTimeout = false;
-    /* add by y00251056 at 2014-5-9 for sram  end */
 
     s_vpu_major             = 0;
     s_vpu_irq               = IRQ_VDEC;
@@ -2371,14 +2347,12 @@ static int vpu_regulator_enable(void)
         iounmap((void *)s_vpu_qos_virt_addr);
     }
 
-    /* add by y00251056 at 2014-5-9 for sram  start */
     /* SecAxi share Ade Sram */
     phy_reg_writel(SOC_MEDIA_SCTRL_BASE_ADDR,
                    SOC_MEDIA_SCTRL_SC_MEDIA_SUBSYS_CTRL5_ADDR(CALC_REG_OFFSET),
                    SOC_MEDIA_SCTRL_SC_MEDIA_SUBSYS_CTRL5_vpu_mem_share_sel_START,
                    SOC_MEDIA_SCTRL_SC_MEDIA_SUBSYS_CTRL5_vpu_mem_share_sel_END,
                    0x1);
-    /* add by y00251056 at 2014-5-9 for sram  end */
 
 #ifdef DUMP_VPU_POWER_REG
     vpu_dump_power_reg(1);
@@ -2807,7 +2781,6 @@ static void vpu_dump_power_reg(int power)
 }
 #endif
 
-/* add by y00251056 at 2014-5-9 for sram  start */
 int vpu_sram_callback(unsigned int memSize, unsigned int memAddress)
 {
     if (!s_vpu_sramTimeout)
@@ -2857,7 +2830,6 @@ int vpu_allocate_sram_memory(unsigned int memSize, unsigned int alloc_sram_timeo
 
     return ret;
 }
-/* add by y00251056 at 2014-5-9 for sram  end */
 
 
 int vpu_hw_reset(void)

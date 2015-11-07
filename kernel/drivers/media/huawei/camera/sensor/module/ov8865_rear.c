@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00144661
+ * Email:	  flying.he@huawei.com
  * Date:	  2013-12-27
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,6 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 
 #include <linux/module.h>
 #include <linux/printk.h>
@@ -167,6 +170,7 @@ struct sensor_power_setting ov8865_rear_power_setting[] = {
     },
 
 };
+
 
 static sensor_t s_ov8865_rear =
 {
@@ -409,6 +413,7 @@ static ssize_t ov8865_powerctrl_store(struct device *dev,
 
 	return count;
 }
+
 
 static struct device_attribute ov8865_powerctrl =
     __ATTR(power_ctrl, 0664, ov8865_powerctrl_show, ov8865_powerctrl_store);

@@ -12,6 +12,7 @@
 #include <linux/interrupt.h>
 #include <linux/module.h>
 
+
 static struct device *dwc_get_hcd_device(struct lm_device *lm_dev);
 extern struct hiusb_info *g_hiusb_info;
 extern irqreturn_t hiusb_vbus_intr(int irq, void *dev);

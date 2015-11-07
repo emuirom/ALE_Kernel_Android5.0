@@ -612,6 +612,7 @@ static void reset_config(struct usb_composite_dev *cdev)
 	}
 	cdev->config = NULL;
 
+
 	cdev->delayed_status = 0;
 }
 

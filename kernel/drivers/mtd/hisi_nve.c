@@ -867,6 +867,7 @@ static int nve_open(struct inode *inode, struct file *file)
 	return ret;
 }
 
+
 static int nve_close(struct inode *inode, struct file *file)
 {
 	return 0;
@@ -988,6 +989,7 @@ static long nve_ioctl(struct file *file, u_int cmd, u_long arg)
 	up(&nv_sem);
 	return ret;
 }
+
 
 #ifdef CONFIG_COMPAT
 static long nve_compat_ioctl(struct file *file, u_int cmd, u_long arg)

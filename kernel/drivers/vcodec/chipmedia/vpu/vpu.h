@@ -44,13 +44,10 @@
 
 
 #ifdef CONFIG_CNM_VPU_HISI_PLATFORM
-/* Added by d00206042 2014-04-26 for SYSMMU start */
 #define VDI_IOCTL_GET_SYSTEMMMU_SURPPORT    _IO(VDI_IOCTL_MAGIC, 12)
 #define VDI_IOCTL_RESERVED_MEMORY_ALLOC     _IO(VDI_IOCTL_MAGIC, 13)
 #define VDI_IOCTL_FLUSH_ION_CACHE           _IO(VDI_IOCTL_MAGIC, 14)
-/* Added by d00206042 2014-04-26 for SYSMMU end */
 
-/* add by y00251056 at 2014-5-9 for sram  start */
 #define VDI_IOCTL_ALLOCATE_SRAM_MEMORY      _IO(VDI_IOCTL_MAGIC, 16)
 #define VDI_IOCTL_FREE_SRAM_MEMORY          _IO(VDI_IOCTL_MAGIC, 17)
 #define VDI_IOCTL_GET_VSCREENINFO	    _IO(VDI_IOCTL_MAGIC, 18)
@@ -59,7 +56,6 @@ typedef struct SramDrvInfo {
    unsigned int sram_size;
    unsigned int phys_addr;
 } SramDrvInfo;
-/* add by y00251056 at 2014-5-9 for sram  end */
 #endif //CONFIG_CNM_VPU_HISI_PLATFORM
 
 

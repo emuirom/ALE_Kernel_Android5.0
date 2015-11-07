@@ -123,6 +123,7 @@ static inline struct adb_dev *func_to_adb(struct usb_function *f)
 	return container_of(f, struct adb_dev, function);
 }
 
+
 static struct usb_request *adb_request_new(struct usb_ep *ep, int buffer_size)
 {
 	struct usb_request *req = usb_ep_alloc_request(ep, GFP_KERNEL);
@@ -452,6 +453,9 @@ static struct miscdevice adb_device = {
 	.fops = &adb_fops,
 };
 
+
+
+
 static int
 adb_function_bind(struct usb_configuration *c, struct usb_function *f)
 {
@@ -498,6 +502,7 @@ adb_function_unbind(struct usb_configuration *c, struct usb_function *f)
 {
 	struct adb_dev	*dev = func_to_adb(f);
 	struct usb_request *req;
+
 
 	dev->online = 0;
 	dev->error = 1;
@@ -576,6 +581,7 @@ static int adb_bind_config(struct usb_configuration *c)
 	dev->function.unbind = adb_function_unbind;
 	dev->function.set_alt = adb_function_set_alt;
 	dev->function.disable = adb_function_disable;
+
 
 	ret = usb_add_function(c, &dev->function);
 	return ret;

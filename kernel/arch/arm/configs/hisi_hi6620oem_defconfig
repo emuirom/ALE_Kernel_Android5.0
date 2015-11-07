@@ -1869,7 +1869,6 @@ CONFIG_UHID=y
 CONFIG_HID_GENERIC=y
 
 CONFIG_HID_ELECOM=y
-
 #
 # Special HID drivers
 #

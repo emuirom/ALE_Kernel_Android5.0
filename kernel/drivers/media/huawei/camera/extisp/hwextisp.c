@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00145353
+ * Email:	  alan.hefeng@huawei.com
  * Date:	  2013-12-11
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,6 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 
 #include <linux/compiler.h>
 #include <linux/fs.h>
@@ -305,6 +308,7 @@ static void hwextisp_notify_dump(hwextisp_notify_intf_t* i, hwextisp_event_t* ex
 
 	v4l2_event_queue(vdev, &ev);
 }
+
 
 static hwextisp_notify_vtbl_t s_notify_hwextisp =
 {

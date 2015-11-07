@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00145353
+ * Email:	  alan.hefeng@huawei.com
  * Date:	  2013-12-27
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,6 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 
 #include <linux/module.h>
 #include <linux/printk.h>
@@ -218,6 +221,7 @@ static int imx214_i2c_read (hwsensor_intf_t* intf, void * data)
 
 	return ret;
 }
+
 
 static int
 imx214_match_id(

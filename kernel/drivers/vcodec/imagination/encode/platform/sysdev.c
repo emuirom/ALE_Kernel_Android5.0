@@ -124,7 +124,6 @@ int driver_probe(struct platform_device *ofdev) {
 		return ret;
 	}
 
-	/*start j00140427 add clock and regulator*/
 	gvenc_regulator.supply = "ldo_venc";
 	ret = regulator_bulk_get(&ofdev->dev, 1, &gvenc_regulator);
 	if (ret) {
@@ -170,14 +169,12 @@ static void handle_suspend(SYSDEVU_sInfo *dev, IMG_BOOL forAPM)
 {
 	printk("@@@@@@@@@@@@@@@%s,%d\n",__FUNCTION__,__LINE__);
 
-	/*start j00140427 add clock and regulator*/
 	if (gvenc_clk)
 	{
 		clk_disable_unprepare(gvenc_clk);
 	}
 
 	regulator_bulk_disable(1, &(gvenc_regulator));
-	/*end j00140427 add clock and regulator*/
 }
 
 static void handle_resume(SYSDEVU_sInfo *dev, IMG_BOOL forAPM)
@@ -186,7 +183,6 @@ static void handle_resume(SYSDEVU_sInfo *dev, IMG_BOOL forAPM)
 
 	printk("@@@@@@@@@@@@@@@%s,%d\n",__FUNCTION__,__LINE__);
 
-	/*start j00140427 add clock and regulator*/
 	ret = regulator_bulk_enable(1, &(gvenc_regulator));
 	if (ret)
 		printk( "failed to enable regulators %d\n", ret);
@@ -200,7 +196,6 @@ static void handle_resume(SYSDEVU_sInfo *dev, IMG_BOOL forAPM)
 			ret = -EINVAL;
 		}
 	}
-	/*end j00140427 add clock and regulator*/
 }
 
 
@@ -213,7 +208,6 @@ static void free_device(SYSDEVU_sInfo *dev)
 	free_irq(module_irq, gpsInfo);
 	platform_driver_unregister(&local_driver);
 
-	/*start j00140427 add clock and regulator*/
 	if (NULL != gvenc_clk) {
 		clk_put( gvenc_clk);
 		gvenc_clk = NULL;

@@ -237,7 +237,6 @@ extern "C" {
 #define MEMORY_AXI_DDR_DDL_ADDR             (LPDDR_OPTION_ADDR + LPDDR_OPTION_SIZE)
 #define MEMORY_AXI_DDR_DDL_SIZE				(0x2BC)
 
-/* for DDR only begin w00253990 */
 #define DDR_TEST_DFS_ADDR                      (MEMORY_AXI_DDR_DDL_ADDR + MEMORY_AXI_DDR_DDL_SIZE)
 #define DDR_TEST_DFS_ADDR_SIZE                 (4)
 

@@ -12,7 +12,6 @@
 #include "soc_peri_sctrl_interface.h"
 /*uart device declare and register*/
 
-//todo l00215322
 #define UART_RESET_CONTROLLER_TIMEOUT 10
 
 #define MODULE_FUNCS_DEFINE(chip_id, dev_name)				\

@@ -3,7 +3,7 @@ ccflags-y += -I$(srctree)/arch/arm/include/
 ccflags-y += -I$(srctree)/drivers/hisi/secure_boot/inc
 ccflags-y += -I$(srctree)/drivers/hisi/ipc_hi6xxx
 ccflags-y += -I$(srctree)/drivers/hisi/mailbox/hi6xxx_mailbox
-ccflags-y += -I$(BALONG_TOPDIR)/ap/config/product/$(OBB_PRODUCT_NAME)/config
+ccflags-y += -I$(srctree)/drivers/hisi/ap/config/product/$(OBB_PRODUCT_NAME)/config
 
 obj-$(CONFIG_HISILICON_PLATFORM_MAINTAIN)	+= hisilicon_platform_mntn.o
 obj-$(CONFIG_HISILICON_PLATFORM_HISI_EASYSHELL)	+= hisi-easy-shell.o

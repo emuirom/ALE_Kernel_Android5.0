@@ -103,6 +103,7 @@ static u32 rdr_dump_stack[RDR_DUMP_STACK_DEEP];
 #define RDR_TIMEOF_DAY 0
 #define RDR_PRINTK_TIME 1
 
+
 #define SCTRL_BASE	0xFFF0A000
 #define SCBBPDRXSTAT1	0x534
 #define SCBBPDRXSTAT2	0x538
@@ -147,6 +148,7 @@ struct linux_dirent {
 #define DRV_DSP_POWER_OFF				(0x55FF55FF)
 
 extern int hifireset_runcbfun (DRV_RESET_CALLCBFUN_MOMENT eparam);
+
 
 static int g_cpu_state = 1;
 static DEFINE_SPINLOCK(rdr_v_hifi_mb_lock);
@@ -236,6 +238,7 @@ static char *rdr_parse_tick(u32 high, u32 low, char *buf, size_t buf_len)
 	msec = msec * 5 / 4 * 25;
 	sec = (long unsigned int)time;
 	sec %= 100000;
+
 
 	memset(buf, 0, buf_len);
 	snprintf(buf, buf_len, "%05lu.%06lu", sec, msec);
@@ -1202,6 +1205,7 @@ noti_is_ap:
         }
 		msg = NOT_HIFI_LPM3_NOTIFY_LPM3;
 		hisi_rdr_ipc_notify_lpm3(&msg, 1);
+
 
 		//hisi_rdr_nmi_notify_iom3();
 		/*hisi_rdr_ipc_notify_asp(&msg, 1);*/ /*need fixup*/

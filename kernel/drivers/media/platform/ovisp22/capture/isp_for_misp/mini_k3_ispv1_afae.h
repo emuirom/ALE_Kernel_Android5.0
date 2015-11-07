@@ -86,19 +86,15 @@ typedef struct _mini_lum_table_s {
 typedef struct _mini_ispv1_afae_ctrl_s {
 	mini_focus_area_s af_area;
 
-	/*added for Area CAF function by y00215412 2012-11-14. */
 	bool area_changed;
 
-	/* added for more precision to check scene change by y00215412 2012-11-17 */
 	mini_lum_win_info_s lum_info;
 
 	camera_focus mode;
 	camera_focus pre_mode;
 
-	/* added by y00215412 2012-09-21 for zoom focus. */
 	u32 zoom;
 
-	/*added by y00215412 2012-09-09 */
 	mini_camera_rect_s cur_rect;
 
 	/* u32 raw_unit_area; */
@@ -109,7 +105,6 @@ typedef struct _mini_ispv1_afae_ctrl_s {
 	/* save current focus state. */
 	focus_state_e focus_state;
 
-	/* added by y00215412 for target tracking 2012-01-09, save current focus stage. */
 	af_run_stage af_stage;
 
 	/* previous focus action is failed or not. 0:success; 1:failed */
@@ -144,11 +139,7 @@ typedef struct _mini_ispv1_afae_ctrl_s {
 	 */
 	mini_focus_frame_stat_s frame_stat[CAF_STAT_FRAME];
 
-	/*
-	 * added by y00215412 2012-11-10 for dynamic stat frame.
-	 * if gsensor info's interval is less than 100ms, less stat frames are needed;
-	 * else if interval is larger chan 100ms and fps is larger than 20fps, more stat frames are needed.
-	 */
+
 	int gsensor_interval;
 
 	/*
@@ -162,7 +153,7 @@ typedef struct _mini_ispv1_afae_ctrl_s {
 	u8 af_result; /* equals focus_state */
 
 	struct semaphore	af_run_sem;
-	u8 target_high; /* added for focus AE by y00215412 2013-06-27*/
+	u8 target_high;
 } mini_ispv1_afae_ctrl;
 #define ISP_MAX_FOCUS_WIN		25
 typedef struct _mini_focus_win_info_s{
@@ -177,6 +168,7 @@ typedef struct _mini_focus_win_info_s{
 	u32 weight[ISP_MAX_FOCUS_WIN];
 } mini_focus_win_info_s;
 
+
 /* For auto focus, public API, temporarily we just support one point focus.
  * y36721 todo
  */
@@ -184,7 +176,6 @@ int mini_ispv1_auto_focus(int flag);
 int mini_ispv1_set_focus_mode(camera_focus focus_mode);
 int mini_ispv1_set_focus_area(mini_focus_area_s *area, u32 zoom);
 int mini_ispv1_get_focus_result(mini_focus_result_s *result);
-/* added by y00215412 2012-09-21 for zoom focus. */
 int mini_ispv1_set_focus_zoom(u32 zoom);
 int mini_ispv1_set_sharpness_zoom(u32 zoom);
 
@@ -211,13 +202,11 @@ int mini_ispv1_set_metering_area(mini_metering_area_s *area, u32 zoom);
 int mini_ispv1_set_focus_range(camera_focus focus_mode);
 int mini_ispv1_get_focus_distance(void);
 
-/* added for by y00215412 2012-11-04. */
 focus_state_e mini_get_focus_state(void);
 FOCUS_STATUS mini_get_focus_result(void);
 
-/*added by w00217024 2012-11-13*/
 bool mini_afae_ctrl_is_valid(void);
-void mini_save_target_high(void); /* added for focus AE by s00061250 2013-09-22 */
+void mini_save_target_high(void);
 
 int mini_ispv1_set_gsensor_stat(mini_axis_triple *xyz);
 int mini_ispv1_set_ae_statwin(mini_pic_attr_t *pic_attr, mini_coordinate_s *center, METERING_STATWIN_MODE statwin_mode, u32 zoom);

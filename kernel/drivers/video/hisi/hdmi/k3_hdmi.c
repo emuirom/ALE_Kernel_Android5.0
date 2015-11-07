@@ -60,6 +60,7 @@ static void k3_hdmi_late_resume(struct early_suspend *h);
 extern void hi3620_pcm_hdmi_event(bool hdmiin,bool beforeNotify);
 int mhl_rcp_register_input_dev(void);
 
+
 static DEFINE_SPINLOCK(irqstatus_lock);
 
 static void mhl_work_queue(struct work_struct *work)
@@ -954,6 +955,7 @@ static void hdmi_pw_power_off(void)
         hdmi.irq_is_init = false;
     }
 
+
     if (hw_support_mhl() && !hdmi.in_reset) {
         if(mhl_work) {
             cancel_work_sync(mhl_work);
@@ -1087,6 +1089,8 @@ err:
     return ret;
 }
 
+
+
 #if ENABLE_CHECK_SHORT_CIRCUIT
 /******************************************************************************
 * Function:       check_short_circuit
@@ -1143,6 +1147,7 @@ static void hdmi_irq_work_queue(struct work_struct *ws)
 
     static ktime_t last_connect = {0};
     static ktime_t last_disconnect = {0};
+
 
     mutex_lock(&hdmi.lock);
 
@@ -1361,6 +1366,7 @@ static void hdmi_process_hdmi_irq(void)
      return;
 }
 
+
 /******************************************************************************
 * Function:       hdmi_irq_handler
 * Description:    irq handler, will get irqs from register
@@ -1453,6 +1459,7 @@ int hdmi_control_notify_cec_cmd(char *cec_str)
     OUT_FUNCTION;
     return 0;
 }
+
 
 /******************************************************************************
 * Function:       hdmi_get_timing_list
@@ -3371,6 +3378,7 @@ static int k3_hdmi_resume(struct platform_device *dev)
 #define k3_hdmi_resume NULL
 #endif
 
+
 #ifdef HDMI_HAS_EARLYSUSPEND
 /******************************************************************************
 * Function:       k3_hdmi_early_suspend
@@ -3412,6 +3420,7 @@ static void k3_hdmi_late_resume(struct early_suspend *h)
 }
 #endif
 
+
 static const struct of_device_id k3_hdmi_match_table[] = {
     {
         .compatible = DTS_COMP_HDMI_NAME,
@@ -3419,6 +3428,7 @@ static const struct of_device_id k3_hdmi_match_table[] = {
     },
 };
 MODULE_DEVICE_TABLE(of, k3_hdmi_match_table);
+
 
 static struct platform_driver this_driver = {
     .probe   = k3_hdmi_probe,

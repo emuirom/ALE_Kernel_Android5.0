@@ -10,6 +10,7 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
+ *         Author:  MaYaohui (m00194513), stesen.ma@huawei.com
  *   Organization:  Huawei
  *
  * =====================================================================================

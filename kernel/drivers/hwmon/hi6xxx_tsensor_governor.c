@@ -422,6 +422,7 @@ static struct of_device_id tsensors_match[] = {
 	{}
 };
 
+
 /*tsensor platform driver–≈œ¢ */
 static struct platform_driver hi6xxx_tsensor_driver = {
     .probe     = hi6xxx_tsensor_probe,

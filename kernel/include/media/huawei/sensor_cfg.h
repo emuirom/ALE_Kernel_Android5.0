@@ -1,24 +1,5 @@
-/* 
- *  Hisilicon K3 SOC camera driver source file 
- * 
- *  Copyright (C) Huawei Technology Co., Ltd. 
- * 
- * Date:	  2013-12-12
- *
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
- * (at your option) any later version. 
- *
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
- * GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- */
+
+
 
 #ifndef __HW_ALAN_KERNEL_HWCAM_SENSOR_CFG_H__
 #define __HW_ALAN_KERNEL_HWCAM_SENSOR_CFG_H__
@@ -27,6 +8,7 @@
 #include <linux/types.h>
 #include <linux/videodev2.h>
 #include <media/huawei/camera.h>
+
 
 #define ISO_OTP_DATA_LENGTH            (18)
 #define LSC_OTP_DATA_LENGTH            (1402)
@@ -56,6 +38,7 @@ typedef struct {
     uint8_t   ucHDCLValid;
     uint8_t   ucHDCRValid;
 }hwsensor_otp_info_t;
+
 
 enum 
 {
@@ -125,6 +108,7 @@ struct sensor_cfg_data {
 	//struct hisi_sensor_af_otp af_otp;
 	} cfg;
 };
+
 
 #define HWSENSOR_IOCTL_GET_INFO                 _IOR('S', BASE_VIDIOC_PRIVATE + 1, hwsensor_info_t)
 #define HWSENSOR_IOCTL_SENSOR_CFG 		        _IOWR('V', BASE_VIDIOC_PRIVATE + 2, struct sensor_cfg_data)

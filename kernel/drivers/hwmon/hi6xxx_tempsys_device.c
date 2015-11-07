@@ -84,6 +84,7 @@ static ssize_t tempsys_val_show(struct device * dev,
 static  ssize_t tempsys_val_store(struct device *dev, struct device_attribute *attr,
 			 const char *buf, size_t count);
 
+
 static ssize_t tempsys_vol_show(struct device * dev,
                     struct device_attribute * attr,
                     char * buf);

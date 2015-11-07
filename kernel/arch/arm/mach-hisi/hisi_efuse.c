@@ -103,6 +103,7 @@ static void __iomem *EFC_BASE = NULL;
 #define SCPERDIS1(r)			(r+0x034)
 #define GT_PCLK_EFUSEC			(0x01UL<<30)
 
+
 /* 烧写时序要求, hi3630 asic版本不能用默认值
 *  (EFUSEC_COUNT<<2)*Trefclk>120ns,11us<PGM_COUNT*Trefclk+EFUSEC_COUNT*Trefclk<13us,
 *  其中EFUSEC_COUNT>=3
@@ -203,6 +204,8 @@ static void display_regtable(void)
 	pr_info("EFUSEC_DATA: 0x%X.\n", readl(EFUSEC_DATA(EFC_BASE)));
 	pr_info("EFUSEC_HW_CFG: 0x%X.\n", readl(EFUSEC_HW_CFG(EFC_BASE)));
 }
+
+
 
 /******************************************************************************
 Function:	    bsp_efuse_write
@@ -353,6 +356,7 @@ end1:
 }
 EXPORT_SYMBOL_GPL(bsp_efuse_write);
 
+
 /******************************************************************************
 Function:	    bsp_efuse_read
 Description:	    从指定Words偏移开始读取指定Words个数的eFuse值
@@ -402,6 +406,7 @@ int bsp_efuse_read(unsigned int* buf,
 		result = ERROR_EXIT_PD;
 		goto end1;
 	}
+
 
 	/* 选择efuse信号为apb操作efuse */
 	writel(readl(EFUSEC_CFG(EFC_BASE)) | EFUSEC_APB_SIG_SEL, EFUSEC_CFG(EFC_BASE));
@@ -544,6 +549,7 @@ error1:
 }
 EXPORT_SYMBOL_GPL(bsp_efuse_write);
 
+
 /******************************************************************************
 Function:	    bsp_efuse_read
 Description:	    从指定Words偏移开始读取指定Words个数的eFuse值
@@ -663,6 +669,7 @@ int efuse_test(void)
 	else {
 		pr_err("Failed to read efuse.\n");
 	}
+
 
 	if (OK == bsp_efuse_write(efuse_write, 36, 2)) {
 		pr_info("efuse write : efuse_write[0]=%x,efuse_write[1]=%x\n",

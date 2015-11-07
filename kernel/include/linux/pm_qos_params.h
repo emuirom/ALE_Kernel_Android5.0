@@ -35,6 +35,7 @@ struct pm_qos_request_list {
     int pm_qos_class;
 };
 
+
 enum  {
     IPC_QOS = 1,   /*IPC信号量有32票，占用32个投票值, 1-32*/
     I2C_QOS  = 40, /*I2C 0-5, 40-45*/
@@ -42,6 +43,7 @@ enum  {
     USB_QOS = 60,
     IDLE_QOS,
 };
+
 
 void pm_qos_add_request(struct pm_qos_request_list *l, int pm_qos_class, s32 value);
 void pm_qos_update_request(struct pm_qos_request_list *pm_qos_req,

@@ -213,6 +213,7 @@ USB_Jump_Table:
 	ljmp	ISR_Ep2out
 	.byte	0
 
+
 	.org 0x200
 		
 start:	mov SP,STACK-1 ; set stack
@@ -275,6 +276,7 @@ clear_rx_ring_loop:
 	mov a, #0x82
 	mov dptr,OEC
 	movx @dptr,a
+
 
 	;; set PORTCCFG.[01] to route TxD0,RxD0 to serial port
 	mov dptr, PORTCCFG
@@ -353,6 +355,7 @@ wait1:
 	jnb TI, wait1
 	clr TI
 	djnz r1, send
+;done:	sjmp done
 
 #endif
 	
@@ -382,6 +385,7 @@ renum_wait3:
 	;; we are back online. the host device will now re-query us
 	
 	
+main:	sjmp main
 
 	
 
@@ -499,6 +503,7 @@ setup_ctrl_not_07:
 setup_bmreq_type_not_vendor:
 	ljmp setup_stall
 
+
 setup_bmreq_is_standard:	
 	cjne r2, #0x00, setup_breq_not_00
 	;; 00:	Get_Status (sub-switch on bmRequestType: device, ep, int)
@@ -521,9 +526,11 @@ setup_Get_Status_not_device:
 	;; Get_Status(endpoint)
 	;;  must get stall bit for ep[wIndexL], return two bytes, bit in lsb 0
 	;; for now: cheat. TODO
+	sjmp setup_return_two_zero_bytes
 setup_Get_Status_not_endpoint:
 	cjne r1, #0x81, setup_Get_Status_not_interface
 	;; Get_Status(interface): return two zeros
+	sjmp setup_return_two_zero_bytes
 setup_Get_Status_not_interface:	
 	ljmp setup_stall
 	
@@ -657,6 +664,7 @@ setup_done_ack:
 	mov dptr, EP0CS
 	mov a, #0x02
 	movx @dptr, a
+	sjmp setup_done
 setup_stall:	
 	;; unhandled. STALL
 	;EP0CS |= bmEPSTALL
@@ -664,6 +672,7 @@ setup_stall:
 	movx a, @dptr
 	orl a, EP0STALLbit
 	movx @dptr, a
+	sjmp setup_done
 	
 setup_done:	
 	pop acc
@@ -749,12 +758,14 @@ ISR_Ep2in:
         mov dptr,OEA
         movx @dptr, a
 
+
 	;; do stuff
 	lcall start_in
 
 	mov a, #0x20             ; Turn off the green LED
         mov dptr,OEA
         movx @dptr, a
+
 
 	
 	pop acc
@@ -776,6 +787,8 @@ ISR_Ep2out:
         mov a, #0x10             ; Turn the green LED
         mov dptr,OEA
         movx @dptr, a
+
+
 
 	mov a,EXIF
 	clr acc.4
@@ -802,11 +815,13 @@ OUT_loop:
 	movx @dptr,a		; store
 	mov a,dpl1
 	cjne a, tx_ring_out, OUT_no_overflow
+	sjmp OUT_overflow
 OUT_no_overflow:	
 	inc tx_ring_in		; tx_ring_in++
 	inc dps			; switch to DPTR0: source
 	inc dptr
 	djnz r1, OUT_loop
+	sjmp OUT_done
 OUT_overflow:
 	;; signal overflow
 	;; fall through
@@ -1021,6 +1036,7 @@ start_in__have_work:
 start_in__loop:
 	mov a, rx_ring_in
 	cjne a, rx_ring_out, start_inlocal_irq_enablell_copying
+	sjmp start_in__kick
 start_inlocal_irq_enablell_copying:
 	inc rx_ring_out
 	mov dpl, rx_ring_out

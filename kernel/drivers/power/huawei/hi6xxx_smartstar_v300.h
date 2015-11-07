@@ -1,15 +1,6 @@
 #ifndef _HISI_SMARTSTAR_V300_H_
 #define _HISI_SMARTSTAR_V300_H_
-/*****************************************************************************************
-* Filename:	hisi_smartstar_coul.h
-*
-* Discription:  smartstar coulometer headfile.
-* Copyright: 	(C) 2013 huawei.
-*
-* revision history:
-* 2014-1-15 s00249479 -v1.0
-*
-******************************************************************************************/
+
 #include <linux/kernel.h>
 #include <linux/slab.h>
 #include <linux/module.h>
@@ -166,7 +157,6 @@ extern int hi6xxx_pmic_send_data (unsigned int reg_addr, char *buffer, int len);
 /************************************************************
     coul register of smartstar
 ************************************************************/
-/* s00249479  digital need to be replaced by macro */
 #define COUL_CTRL_ENABLE     (1<<7)
 #define COUL_CALI_ENABLE     (1<<6)
 #define COUL_ECO_FLT_20MS    (0)

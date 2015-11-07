@@ -10,13 +10,7 @@
  * either version 2 of that License or (at your option) any later version.
  */
 
-/*============================================================================================
- *
- * History
- *
- * modify NO.         author         date         reason
- *============================================================================================
-*/
+
 
 #include <linux/slab.h>
 #include <linux/kernel.h>
@@ -24,6 +18,7 @@
 
 #include "u_serial.h"
 #include "gadget_chips.h"
+
 
 /*
  * This function packages a simple "generic serial" port with no real
@@ -76,6 +71,8 @@ struct f_gser {
 #define ACM_CTRL_DCD        (1 << 0)
 #endif
 };
+
+
 
 static inline struct f_gser *func_to_gser(struct usb_function *f)
 {
@@ -272,6 +269,8 @@ static struct usb_gadget_strings *gser_strings[] = {
     &gser_string_table,
     NULL,
 };
+
+
 
 //---------------------------------------------------------------------------
 
@@ -715,6 +714,7 @@ gser_bind(struct usb_configuration *c, struct usb_function *f)
             gser->port_num,
             gadget_is_dualspeed(c->cdev->gadget) ? "dual" : "full",
             gser->port.in->name, gser->port.out->name);
+
 
     return 0;
 

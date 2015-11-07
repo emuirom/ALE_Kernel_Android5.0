@@ -44,6 +44,7 @@ extern unsigned int cpufreq_get_fb(unsigned int cpu);
 #define	DEFAULT_MIPI_CLK_RATE	19200000
 //#define   ROUND(x,y)   ((x) / (y) + ((x) % (y) *10 / (y) >= 5 ? 1 : 0))
 
+
 struct dsi_phy_seq_info dphy_seq_info[] = {
 	{46,   62,    1,   7},
 	{62,   93,    0,   7},
@@ -125,6 +126,9 @@ void get_dsi_phy_register(u32 *phy_freq, struct mipi_dsi_phy_register *phy_regis
 			m_pll = m_n_int * n_pll;
 		}
 	}
+
+
+
 
 	if (n_pll == 1) {
 		phy_register->rg_pll_fbd_p = 0;
@@ -1010,6 +1014,7 @@ void debug_lcd_parse_cmd_str(char ** str)
             g_mipi_lcd_debug_info.para_num = DEBUG_LCD_REG_PARA_MAX_NUM;
         }
 
+
         if ((g_mipi_lcd_debug_info.para_num > 1)
          && (g_mipi_lcd_debug_info.cmd_type == DTYPE_GEN_READ1)) {
             g_mipi_lcd_debug_info.cmd_type = DTYPE_GEN_READ2;
@@ -1140,6 +1145,7 @@ void debug_lcd_send_cmd_set(void)
         debug_lcd_write_lcd_reg();
     }
 
+
     if (LCD_DEBUG_OPS_TYPE_READ == g_mipi_lcd_debug_info.ops_type) {
         debug_lcd_read_lcd_reg();
     }
@@ -1228,6 +1234,7 @@ void debug_lcd_build_cmd_to_str(char * buf)
         }
     }
 
+
     if ((buf_para_start) < DEBUG_LCD_CMD_STR_MAX_BYTE) {
         buf[buf_para_start] = '\0';
     }
@@ -1266,6 +1273,7 @@ ssize_t debug_lcd_write_file(struct file *filp, const char __user *ubuf, size_t 
 {
     char cmd_buf[DEBUG_LCD_CMD_STR_MAX_BYTE] = {0};
     char *cmd_buf_str;
+
 
     balongfb_logi("enter succ! \n");
 
@@ -1318,4 +1326,7 @@ int __init mipi_lcd_debug_init(void)
 late_initcall(mipi_lcd_debug_init);
 
 #endif
+
+
+
 

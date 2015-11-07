@@ -3,6 +3,7 @@
  *
  * Copyright (C) 2011 Hisilicon
  *
+ * Author: zhangniangao@huawei.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -77,7 +78,6 @@ struct hisi_reserved_media_memory {
 	unsigned long fb_size;
 };
 
-/*FHD&HD DTS:2013072204915 modifier: yuanfang y00241633 begin*/
 extern int get_isfullhd();
 void memset_for_fhd(void);
 void memset_for_hd(void);
@@ -121,7 +121,6 @@ unsigned long HISI_PMEM_OVERLAY_SIZE_NEW[2] = {
 
 unsigned long PLAT_MEM_RESERVED_SIZE_NEW = 0;
 
-/*FHD&HD DTS:2013072204915 modifier: yuanfang y00241633 end*/
 
 static struct hisi_reserved_media_memory hisi_media_mem_array[] = {
     [0] = {
@@ -279,7 +278,6 @@ arch_initcall(k3v2_register_ion);
 unsigned long hisi_get_reserve_mem_size(void)
 {
     unsigned long reserved = SZ_2M;
-/*FHD&HD DTS:2013072204915 modifier: yuanfang y00241633 begin*/
 	if(!get_isfullhd())
 	{
 		memset_for_hd();
@@ -288,7 +286,6 @@ unsigned long hisi_get_reserve_mem_size(void)
 	{
 		memset_for_fhd();
 	}
-/*FHD&HD DTS:2013072204915 modifier: yuanfang y00241633 end*/
     reserved += hisi_media_mem.gpu_size;
     reserved += hisi_media_mem.codec_size;
     reserved += hisi_media_mem.camera_size;
@@ -445,7 +442,6 @@ void __init k3v2_allocate_memory_regions(void)
 
 }
 
-/*FHD&HD DTS:2013072204915 modifier: yuanfang y00241633 begin*/
 void memset_for_hd(void)
 {
     int i = 0;
@@ -512,7 +508,6 @@ void memset_for_fhd(void)
         + HISI_MEM_FB_SIZE_NEW[1]       + HISI_PMEM_OVERLAY_SIZE_NEW[1]);
 	HISI_FRAME_BUFFER_SIZE = HISI_MEM_FB_SIZE_NEW[1];
 }
-/*FHD&HD DTS:2013072204915 modifier: yuanfang y00241633 end*/
 
 static int __init k3v2_ion_setup(char *str)
 {

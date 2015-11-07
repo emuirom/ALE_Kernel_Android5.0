@@ -65,10 +65,8 @@
 //t00176423 modified for tracedot
 #include <trace/trace_kernel.h>
 //t00176423 modified for tracedot
-/* Added by zkf78283 for power sensor, 2012/11.28, begin */
 //#include <mach/gpio.h>
 #include <linux/gpio.h>
-/* Added by zkf78283 for power sensor, 2012/11.28, end */
 #include "mini_cam_util.h"
 #include "mini_cam_dbg.h"
 #include "mini_k3_isp.h"
@@ -93,12 +91,9 @@
 #endif
 
 #ifndef SCENE_NIGHT_MODE_FPS
-/* Modified  by w00199382 for isp 2.2 , 2012/12/18, begin */
 /*FIXME: FPGA lower fps in dark than Asic*/
 
-/* add by j00179721 for scene*/
 #define	SCENE_NIGHT_MODE_FPS			1//5
-/* Modified  by w00199382 for isp 2.2 , 2012/12/18, end */
 #endif
 
 /* MACRO DEFINITION */
@@ -144,7 +139,7 @@
 
 /* Set input format bit array according MIPI1/MIPI2/DVP Type and if bypass isp */
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
+
 
 #define CALC_ISP_IN_TYPE(fmt, sensor_type, is_bypass_isp) \
 	do { \
@@ -160,7 +155,6 @@
 		}					\
 	} while (0)
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
 /*
 clk divider
@@ -203,7 +197,6 @@ Reg0x63023[3:0], or Reg0x63023[7:4]
 	 */
 
 #elif defined(CONFIG_MACH_HI6620SFT)
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 
 /*FIXME:FPGA OV8830 for isp sclk 20M Sensor Mclk 5M*/
 //#ifdef CONFIG_HI6620_CAMERA_OV8830
@@ -212,7 +205,6 @@ Reg0x63023[3:0], or Reg0x63023[7:4]
 #define CLK_DIVIDER  0x22
 //#endif
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
 #elif defined(CONFIG_ARCH_HI6620)
 /* V9R1 CS isp clokc is 200Mhz, clock divider is 10, mclk = 20 */
@@ -297,6 +289,7 @@ const struct mini_isp_reg_t mini_isp_mipi_init_regs1[] = {
 	{0x63c14, 0x01}, /*men_thre                     */
 	{0x63c15, 0x53}, /*mem valid high&low number    */
 
+
 	/* ISP TOP REG */
 	{0x65000, 0x3f},
 	{0x65001, 0x6f}, /*turn off local boost*/
@@ -376,6 +369,7 @@ const struct mini_isp_reg_t mini_isp_dvp_init_regs[] = {
 	{0x1c13e, 0x00},
 	{0x1c144, 0x88},
 	{0x1c145, 0x00},
+
 
 	{0x1c176, 0x03},
 	{0x1c177, 0x48},
@@ -559,7 +553,6 @@ static int ispv1_hw_init(struct platform_device *pdev, mini_data_queue_t* data_q
 #if 0
 static void ispv1_set_process_mode(u32 w, u32 h);
 #else
-/* add by c00220250 */
 static void ispv1_set_process_mode(capture_type process_mode);
 /* end */
 #endif
@@ -693,6 +686,7 @@ static u16 ispv1_convert_input_fmt(u32 fmt)
 	return isp_fmt;
 }
 
+
 /*
  **************************************************************************
  * FunctionName: ispv1_config_idi;
@@ -763,7 +757,6 @@ static u16 ispv1_convert_output_fmt(u32 cmdset, u32 fmt)
 
 	print_debug("ispv1_convert_output_fmt:cmdset=%d",cmdset);
 
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 	switch (fmt) {
 	case V4L2_PIX_FMT_YUYV:
 		print_debug("fmt=yuyv");
@@ -799,7 +792,6 @@ static u16 ispv1_convert_output_fmt(u32 cmdset, u32 fmt)
 		break;
 	}
 
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
 	return isp_fmt;
 }
@@ -857,7 +849,6 @@ static u16 ispv1_convert_output_fmt2(u32 cmdset, u32 fmt)
 static void ispv1_set_process_mode(u32 w, u32 h)
 {
 	/* mini_isp_hw_data.process_mode = (IS_OFFLINE_BY_SIZE(w, h)) ? ISP_CAPTURE_OFFLINE : ISP_CAPTURE_ONLINE;*/
-	/* last modified by j00212990 */
 
 #ifdef OVISP_OFFLINE_MODE
 	mini_isp_hw_data.process_mode = ISP_CAPTURE_OFFLINE;
@@ -866,7 +857,6 @@ static void ispv1_set_process_mode(u32 w, u32 h)
 #endif
 }
 #else
-/* add by c00220250 */
 static void ispv1_set_process_mode(capture_type process_mode)
 {
     print_info("enter %s", __FUNCTION__);
@@ -949,17 +939,7 @@ static void ispv1_set_auto_flash(int status, camera_flash flash_mode)
 	mini_isp_hw_data.flash_mode = flash_mode;
 }
 
-/*
- **************************************************************************
- * FunctionName: ispv1_is_need_flash;
- * Description : query wheather we need turn on flash;
- * Input       : mini_camera_sensor *sensor;
- * Output      : NA;
- * ReturnValue : 0: need turn on flash;
- *		 other: don't need flash
- * Other       : last modified for new mechanism of flash by j00212990 2012-06-08;
- **************************************************************************
- */
+
 static bool ispv1_is_need_flash(mini_camera_sensor *sensor)
 {
 	mini_aec_data_t ae_data;
@@ -1153,6 +1133,7 @@ static int ispv1_write_i2c_buf(const struct _mini_sensor_reg_t *addr, u8 num, u8
 	return 0;
 }
 
+
 /*
  **************************************************************************
  * FunctionName: ispv1_clear_irq;
@@ -1280,7 +1261,6 @@ static int ispv1_set_zoom(u32 zoom, zoom_quality_t quality)
 	print_debug("%s: zoom = 0x%x", __func__, zoom);
 
     /* set preview zoom */
-	/* revised by y00215412 2012-09-21 for zoom focus. */
 	ratio = isp_zoom_to_ratio(zoom, mini_this_ispdata->video_stab);
 	SETREG8(COMMAND_REG1, quality);
 	SETREG16(COMMAND_REG2, ratio);
@@ -1336,6 +1316,9 @@ void mini_ispv1_refresh_yuv_crop_pos(void)
 	SETREG16(REG_ISP_YUV_CROP_TOP, y);
 	mini_this_ispdata->cur_crop_pos = mini_this_ispdata->next_crop_pos;
 }
+
+
+
 
 int mini_ispv1_get_fps(mini_camera_sensor *sensor, camera_fps fps)
 {
@@ -1446,7 +1429,6 @@ static void ispv1_zsl_update_addr(u32 out_fmt,u32 phyaddr,mini_uv_offset *puvoff
  */
 static int ispv1_hdr_cmd(mini_pic_attr_t *pic_attr, u32 addr_long, u32 addr_short, u32 target_addr)
 {
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/17, begin */
 
 #if 0
 	/*u32 value = 0;
@@ -1496,7 +1478,6 @@ static int ispv1_hdr_cmd(mini_pic_attr_t *pic_attr, u32 addr_long, u32 addr_shor
 #else
         return 0;
 #endif
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/17, end */
 
 }
 
@@ -1546,6 +1527,7 @@ static int ispv1_offline_cmd(mini_pic_attr_t *pic_attr, u32 source_addr, u32 tar
 	/* 1. ISP input setting: instead of MAC (REG_SET_ISP_IN_CHANNEL(mac))*/
 	SETREG8(REG_ISP_INPUT_CHANNEL, ISP_INPUT_CHANNEL_MAC);
 
+
 #if 0
 	/* FIXME: set byteswitch */
 	REG_SET_BYTESWITCH(false);
@@ -1559,16 +1541,14 @@ static int ispv1_offline_cmd(mini_pic_attr_t *pic_attr, u32 source_addr, u32 tar
     REG_SET_W_SWITCH_CTRL0(pic_attr->out_fmt);
 #endif
 
+
 	/* 2. Sensor out: instead of MAC Read */
 	CMD_SET_IN_BASE_ADDR_OFFLINE(BUF_LEFT, source_addr);
 
-        /* Deleted by w00199382 for isp 2.2 , 2012/10/16, begin */
 	/*CMD_SET_READ_MEM_STRIDE_OFFLINE(pic_attr->in_width);*/
-        /* Deleted by w00199382 for isp 2.2 , 2012/10/16, end */
 
 	/* 3. ISP input */
 	//CMD_SET_ISP_IN_FMT_SIZE_OFFLINE(in_fmt, pic_attr->in_width, pic_attr->in_height);
-	/* update for ISP 2.2 add by c00220250 */
     CMD_SET_ISP_IN_FMT_SIZE_OFFLINE(in_fmt|0x60, pic_attr->in_width, pic_attr->in_height);
 	/* 4. ISP output */
 	CMD_SET_ISP_OUT_FMT_SIZE_OFFLINE(out_fmt, pic_attr->out_width, pic_attr->out_height);
@@ -1577,12 +1557,10 @@ static int ispv1_offline_cmd(mini_pic_attr_t *pic_attr, u32 source_addr, u32 tar
 	/* 5. Scale and Crop config */
 	CMD_SET_ISP_FUNCTION_CTRL_OFFLINE(value);
 
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 	CMD_SET_ISP_RAW_YUV_DCW_OFFLINE(dcw_e, dcw_e);
 	CMD_SET_SCALE_DOWN_RATIO_1_OFFLINE(down_nscale, down_nscale);
 
 	/*CMD_SET_SCALE_DOWN_RATIO_2_OFFLINE(down_nscale, down_nscale);*/
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
 	CMD_SET_SCALE_UP_RATIO_OFFLINE(up_nscale, up_nscale);
 
@@ -1670,7 +1648,6 @@ static u32 ispv1_cal_banding_step(int hz, u32 fps, u32 vts)
 	return banding_step;
 }
 
-/* remove by c00220250 for compile warning */
 #if 0
 static u32 ispv1_get_curr_banding_step(int hz)
 {
@@ -1689,15 +1666,7 @@ static u32 ispv1_get_curr_banding_step(int hz)
 }
 #endif
 
-/*
- **************************************************************************
- * FunctionName: mini_ispv1_get_banding_step;
- * Input       : hz:0 is 50Hz, 1 is 60Hz; sensor,frame_index
- * Output      : NA;
- * ReturnValue : NA;
- * Other       : NA;
- **************************************************************************
- */
+
 void mini_ispv1_get_banding_step(mini_camera_sensor *sensor, u32 frame_index, u32 *step_50hz, u32 *step_60hz)
 {
 	u32 banding_step_50hz, banding_step_60hz;
@@ -1876,7 +1845,6 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 	u8 min_cap_fps = ispv1_get_min_capfps();
 	u32 dns_expo = get_writeback_expo() / 0x10;
 
-	/* added for AP write AE mode by y00215412 2013-01-29 */
 	u32 delay_clk;
 	u8 ap_writeAE_mode;
 	u16 max_expo_gap;
@@ -1898,6 +1866,7 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 
 	mini_ispv1_set_aecagc_mode(MANUAL_AECAGC);
 
+
 	/*
 	 * for AWB, capture will return CCM pre-gain back to 0x80/0x80/0x80
 	 */
@@ -1907,10 +1876,8 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 		sensor->get_ccm_pregain(STATE_CAPTURE, frame_index, &bgain, &rgain);
 	}
 
-	/* added by y00215412 for ISP Denoise control in flash mode */
 	summary = sensor->frmsize_list[frame_index].summary;
 
-        /* Modified  by w00199382 for isp 2.2 , 2013/1/18, begin */
 #if 0
 	/* config CCM pre-gain to cmdset params */
 	SETREG8(ISP_CMDSET_CCM_PREGAIN_B, bgain);
@@ -1918,12 +1885,10 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 	SETREG8(ISP_CMDSET_CCM_PREGAIN_R, rgain);
 	SETREG8(ISP_CMDSET_CCM_PREGAIN_ENABLE, 2);
 #endif
-        /* Modified  by w00199382 for isp 2.2 , 2013/1/18, end */
 	full_fps = sensor->frmsize_list[frame_index].fps;
 	basic_vts = sensor->frmsize_list[frame_index].vts;
 
 	/* added by y36721 2012-04-10 for banding step auto calculation. */
-	/* if config in sensor is not zero, should use sensor's config params, revised by y00215412 2012-06-11 */
 	mini_ispv1_get_banding_step(sensor, frame_index, &banding_step_50hz, &banding_step_60hz);
 
 	/* get the max auto frame rate level at capture */
@@ -1940,7 +1905,6 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 
 	if ((CAMERA_USE_K3ISP == sensor->isp_location)	&& (NULL != sensor->get_vts_reg_addr)) {
 		vts_addr = sensor->get_vts_reg_addr();
-		/* y00215412 added 2012-04-26 to support some night scene's low framerate. */
 		/* some night scene, force frame rate is 5fps.*/
 		if ((CAMERA_SCENE_NIGHT == scene)
 			|| (CAMERA_SCENE_NIGHT_PORTRAIT == scene)
@@ -2010,25 +1974,19 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 		/* 4. ISP output */
 		/* use input format as output format RAW or YUV422*/
 
-                /* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 		out_fmt = (in_fmt & 0x7)<<4; /* use LOWBYTE of input format but output format [7:4] bit*/
 		CMD_SET_ISP_OUT_FMT_SIZE(out_fmt, pic_attr->in_width, pic_attr->in_height);
-                /* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
 		CMD_SET_MAC_MEM_STRIDE(pic_attr->in_width);
 
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 		CMD_SET_MAC_MEM_UV_STRIDE(pic_attr->in_width/2);
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
 		/* 5. Scale and Crop config */
 		/* do not need scale */
 		CMD_SET_ISP_FUNCTION_CTRL(0x00);
 
-                /* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 		CMD_SET_ISP_SCALE_DOWN_RATIO1(0x80, 0x80);
 		CMD_SET_ISP_RAW_YUV_DCW(0, 0);
-                /* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
 		CMD_SET_ISP_SCALE_UP_RATIO(0x100, 0x100);
 
@@ -2050,12 +2008,11 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
                 /*
 		CMD_SET_ISP_IN_START_3D_POS(0, 0);
 		*/
-		/* Added by w00199382 for isp 2.2 , 2012/10/16, begin */
 		CMD_SET_ISP_IN_START_POS2(pic_attr->startx, pic_attr->starty);
-		/* Added by w00199382 for isp 2.2 , 2012/10/16, end */
 
 		CMD_SET_ISP_INPUT_MODE(0);
 		CMD_SET_ISP_IN_FMT_SIZE(in_fmt, pic_attr->in_width, pic_attr->in_height);
+
 
     #if 0
 		/* 4. ISP output */
@@ -2085,19 +2042,15 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 		CMD_SET_ISP_OUT_FMT_SIZE(out_fmt, pic_attr->out_width, pic_attr->out_height);
 		CMD_SET_MAC_MEM_STRIDE(pic_attr->out_width);
 
-                /* Added by w00199382 for isp 2.2 , 2012/10/16, begin */
 		CMD_SET_MAC_MEM_UV_STRIDE(pic_attr->out_width/2);
-                /* Added by w00199382 for isp 2.2 , 2012/10/16, end */
 
 		/* 5. Scale and Crop config */
 		calc_scale_param(pic_attr, &dcw_e, &value, &up_nscale, &down_nscale);
 
 		CMD_SET_ISP_FUNCTION_CTRL(value);
 
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
         CMD_SET_ISP_SCALE_DOWN_RATIO1(down_nscale, down_nscale);
 		CMD_SET_ISP_RAW_YUV_DCW(dcw_e, dcw_e);
-                /* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
                 /*
 		CMD_SET_ISP_SCALE_DOWN_RATIO2(down_nscale, down_nscale);
@@ -2140,10 +2093,8 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 		ratio0 = ISP_EXPOSURE_RATIO_MAX;
 
 	if (CAMERA_SCENE_ACTION == scene) {
-		/* Reduce max exposure time 1/100s, revised by y00215412 2012-08-05 */
 		max_expo = full_fps * basic_vts / sence_action_expo;
 	}else if (sensor->fps == sence_night_expo) {
-		/*added by y00215412 2012-08-05 */
 		max_expo = vts - max_expo_gap;
 	} else {
 		/* default max expo is vts-14. */
@@ -2160,9 +2111,6 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 				/* get expected capture expo line at gain 0x10 */
 				capture_el_1x = ((preview_gain * preview_expo) >> 8) * ratio0 / EV_RATIO_DIVIDEND;
 			} else {
-				/*
-				 * Fixed the bug that exposure time is equal to 1/16 second in low ISO scene when the flash on mode
-				 */
 				preview_gain = mini_isp_hw_data.preflash_ae.gain;
 				preview_expo = mini_isp_hw_data.preflash_ae.expo;
 
@@ -2233,8 +2181,10 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 		CMD_SET_ISP_SET_GAIN_RANGE(max_gain, sensor->min_gain);
 	}
 
+
 	CMD_SET_ISP_SET_EXPOSURE_RANGE(max_expo, 0x003);
 	CMD_SET_ISP_SET_EXPOSURE_RATIO(ratio0);
+
 
 	SETREG8(ISP_BANDING_STEP_50HZ, (banding_step_50hz >> 4));
 	SETREG8(ISP_BANDING_STEP_50HZ + 1, ((banding_step_50hz & 0x0f) << 4));
@@ -2272,12 +2222,10 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 	REG_SET_ADDR(REG_BASE_ADDR1_Y, REG_BASE_ADDR1_UV, phyaddr, (phyaddr + mini_isp_hw_data.capture_uv_offset.uoffset));
 	CMD_SET_BASE_ADDR(BUF_LEFT, phyaddr);
 
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 	if (((out_fmt & 0x70)>>4) > 3) {
 		phyaddr += pic_attr->out_width * pic_attr->out_height;
 		SETREG32(ISP_BASE_ADDR_LEFT_UV, (phyaddr));
 	}
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
 	/* bracket mode */
 	/* [0]: 0 for normal, 1 for bracket mode */
@@ -2297,7 +2245,7 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
     /* END:   Modified by w65960, 2013/7/17 */
 
 	/* firmware 2013-0130 support set gain effect mode, next or next 2 frames. */
-	if (sensor->sensor_type == SENSOR_OV) /* changed by y00231328 for new sensor type: OV or others. */
+	if (sensor->sensor_type == SENSOR_OV)
 		SETREG8(REG_ISP_GAIN_EFFECT_MODE, SENSOR_GAIN_EFFECT_NEXT);
 	else
 		SETREG8(REG_ISP_GAIN_EFFECT_MODE, SENSOR_GAIN_EFFECT_NEXT2);
@@ -2324,11 +2272,8 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 	//SETREG8(COMMAND_REG6, reg3c13);
 	//SETREG8(COMMAND_REG7, reg3c15);
 	//	mini_dump_cmd_reg();
-	/* add by zkf78283 for test isp begin */
 	mini_dump_ispzyk_reg();
-	/* add by zkf78283 for test isp end */
 
-	/* added for AP write sensor's expo/gain delay by y00215412 2013-01-28 begin */
 	ap_writeAE_mode = GETREG8(REG_ISP_AECAGC_WRITESENSOR_ENABLE);
 	ap_writeAE_mode &= 0x1;
 	if (ap_writeAE_mode == ISP_WRITESENSOR_DISABLE) {
@@ -2343,7 +2288,6 @@ static int ispv1_capture_cmd(mini_pic_attr_t *pic_attr, u32 phyaddr, u32 count, 
 	}
 	SETREG8(COMMAND_REG8, (delay_clk >> 8));
 	SETREG8(COMMAND_REG9, (delay_clk & 0xff));
-	/* added for AP write sensor's expo/gain delay by y00215412 2013-01-28 end */
 	/* END:   Modified by w65960, 2013/7/11 */
 
 	SETREG8(COMMAND_REG0, CMD_CAPTURE);
@@ -2480,12 +2424,14 @@ static int ispv1_start_capture_yuv_with_preview_cmd(
 
 	CMD_SET_SENSOR_OUT_SIZE(pic_attr->sensor_width, pic_attr->sensor_height);
 
+
 	SETREG16(ISP_SENSOR_OUTPUT_MODE, SENSOR_OUTPUT_MODE_NO_SKIP
                             	| SENSOR_OUTPUT_MODE_NO_BINNING
                             	| SENSOR_OUTPUT_MODE_FLIP_DISABLE
                             	| SENSOR_OUTPUT_MODE_MIRROR_DISABLE);
 
 	SETREG16(ISP_IDI_CONTROL, mini_this_ispdata->idi);
+
 
 	SETREG16(ISP_INPUT_TYPE,INPUT_TYPE_DUAL_SOURCE_ENABLE
                     		| INPUT_TYPE_ISP_PROCESS_ENABLE
@@ -2585,6 +2531,7 @@ static int ispv1_start_capture_yuv_with_preview_cmd(
 	    print_error("%s:unknown pic_attr->out_fmt.",__func__);
 		return -EINVAL;
 	}
+
 
 	SETREG16(MAC_MEMORY_WIDTH2, pic_attr->out_stride);
 	SETREG16(MAC_MEMORY_UV_WIDTH2, pic_attr->out_stride/2);
@@ -2854,6 +2801,7 @@ static int ispv1_stop_capture_with_preview_cmd()
     return ret;
 }
 
+
 /*
  **************************************************************************
  * FunctionName: ispv1_start_proc_img_with_preview;
@@ -2886,16 +2834,19 @@ static int ispv1_start_proc_img_with_preview_cmd(
                            | INPUT_TYPE_PRIMARY_MIPI_SENSOR
                            | INPUT_TYPE_RAW10);
 
+
 	SETREG16(ISP_SENSOR_OUTPUT_MODE, SENSOR_OUTPUT_MODE_NO_SKIP
                                    | SENSOR_OUTPUT_MODE_NO_BINNING
                                    | SENSOR_OUTPUT_MODE_FLIP_DISABLE
                                    | SENSOR_OUTPUT_MODE_MIRROR_DISABLE);
+
 
 	SETREG16(SENSOR_OUTPUT_WIDTH, pic_attr->sensor_width);
 	SETREG16(SENSOR_OUTPUT_HEIGHT, pic_attr->sensor_height);
 
     SETREG16(ISP_INPUT_WIDTH,pic_attr->in_width);
     SETREG16(ISP_INPUT_HEIGHT,pic_attr->in_height);
+
 
 	SETREG16(ISP_IDI_CONTROL, mini_this_ispdata->idi);
 
@@ -2996,6 +2947,7 @@ static int ispv1_start_proc_img_with_preview_cmd(
     mini_isp_hw_data.pix_fmt = pic_attr->out_fmt;
     ispv1_zsl_update_addr(pic_attr->out_fmt,target_addr,&mini_isp_hw_data.capture_uv_offset);
 
+
     if (mini_this_ispdata->zsl_ctrl.zsl_proc_type == ZSL_PROC_IMG_HISTORY_BACKWARD_ONE)
     {
         print_info("process image type:backward one.");
@@ -3021,6 +2973,7 @@ static int ispv1_start_proc_img_with_preview_cmd(
 
     SETREG8(COMMAND_REG1, proce_src
                         | mini_this_ispdata->zsl_ctrl.zsl_proc_idx);/* [7]:1for offline;0:capture new;[2:0]:0:cur frame,n last n frame */
+
 
     sema_init(&mini_isp_hw_data.sem_proc_img_cmd_done, 0);
 
@@ -3120,6 +3073,7 @@ static void calc_scale_param2(mini_pic_attr_t *pic_attr, u32* dcw_e, u16* value,
 		*dcw_e, *value, *down_nscale, *up_nscale);
 }
 
+
 /*
  **************************************************************************
  * FunctionName: ispv1_preview_cmd;
@@ -3156,14 +3110,11 @@ static int ispv1_preview_cmd(mini_pic_attr_t *pic_attr,
 	u8 rgain = 0x80;
 	u8 bgain = 0x80;
 
-	/* added for AP write AE mode by y00215412 2013-01-29 */
 	u32 delay_clk;
 	u8 ap_writeAE_mode;
 
     //FIXME:to be check;
-    /* Modified  by w00199382 for isp 2.2 b030, 2013/1/18, begin */
 	//ispv1_switch_config(sensor, STATE_PREVIEW, false, 0);
-    /* Modified  by w00199382 for isp 2.2 b030, 2013/1/18, end */
 
 	/*
 	 * preview will set CCM pre-gain 0x8x/0x80/0x8x to compensate for preview
@@ -3172,7 +3123,6 @@ static int ispv1_preview_cmd(mini_pic_attr_t *pic_attr,
 	if (sensor->get_ccm_pregain != NULL) {
 		sensor->get_ccm_pregain(STATE_PREVIEW, frame_index, &bgain, &rgain);
 	}
-        /* Modified  by w00199382 for isp 2.2 b030, 2013/1/18, begin */
 
 #if 0
 	/* config CCM pre-gain to cmdset params */
@@ -3181,13 +3131,11 @@ static int ispv1_preview_cmd(mini_pic_attr_t *pic_attr,
 	SETREG8(ISP_CMDSET_CCM_PREGAIN_R, rgain);
 	SETREG8(ISP_CMDSET_CCM_PREGAIN_ENABLE, 2);
 #endif
-        /* Modified  by w00199382 for isp 2.2 b030, 2013/1/18, end */
 
 	full_fps = sensor->frmsize_list[frame_index].fps;
 	basic_vts = sensor->frmsize_list[frame_index].vts;
 
 	/* added by y36721 2012-04-10 for banding step auto calculation. */
-	/* if config in sensor is not zero, should use sensor's config params, revised by y00215412 2012-06-11 */
 	mini_ispv1_get_banding_step(sensor, frame_index, &banding_step_50hz, &banding_step_60hz);
 
 	print_info("%s, in_width=%d, in_height=%d, out_width=%d, out_height=%d, cold_boot %d, band50Hz 0x%x, band60Hz 0x%x",
@@ -3271,7 +3219,6 @@ static int ispv1_preview_cmd(mini_pic_attr_t *pic_attr,
 
 	/* 2. Sensor out */
 
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
         /*
 	CMD_SET_SENSOR_START_POS(0, 0);
 	CMD_SET_SENSOR_START_3D_POS(0, 0);
@@ -3344,7 +3291,6 @@ static int ispv1_preview_cmd(mini_pic_attr_t *pic_attr,
 	CMD_SET_ISP_YUV_CROP_SIZE2(pic_attr->crop_width, pic_attr->crop_height);
 
 	/* 6. Tune config */
-	/* h00206029 2012-01-18 add begin */
 	if (preview_ratio != 0xffff)
 		CMD_SET_ISP_SET_EXPOSURE_RATIO(preview_ratio * sensor->frmsize_list[frame_index].capture_ratio / latest_preview_ratio);
 	else
@@ -3357,11 +3303,8 @@ static int ispv1_preview_cmd(mini_pic_attr_t *pic_attr,
 	SETREG8(REG_ISP_BANDING_STEP_50HZ + 1, ((banding_step_50hz & 0x0f) << 4));
 	SETREG8(REG_ISP_BANDING_STEP_60HZ, (banding_step_60hz >> 4));
 	SETREG8(REG_ISP_BANDING_STEP_60HZ + 1, ((banding_step_60hz & 0x0f) << 4));
-	/* h00206029 2012-01-18 add end */
 
-	/* h00206029 2012-02-21 add begin */
 	mini_ispv1_set_wb_value(&mini_isp_hw_data.preview_awb);
-	/* h00206029 2012-02-21 add end */
 	if (CAMERA_SCENE_ACTION == scene)
 		CMD_SET_ISP_SET_EXPOSURE_RANGE(full_fps * sensor->frmsize_list[frame_index].vts / 100, 0x003);
 	else
@@ -3375,7 +3318,9 @@ static int ispv1_preview_cmd(mini_pic_attr_t *pic_attr,
 		CMD_SET_ISP_SET_GAIN_RANGE(sensor->max_gain * 2, sensor->min_gain);
 	}
 
-    /* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
+
+
+
 
 #ifdef OVISP_DEBUG_MODE
 	if (cold_boot == true)
@@ -3429,7 +3374,6 @@ static int ispv1_preview_cmd(mini_pic_attr_t *pic_attr,
 	SETREG8(ISP_INPUT_FORMAT, 0x61);
 #endif
 
-	/* added for AP write sensor's expo/gain delay by y00215412 2013-01-28 begin */
 	ap_writeAE_mode = GETREG8(REG_ISP_AECAGC_WRITESENSOR_ENABLE);
 	ap_writeAE_mode &= 0x1;
 	if (ap_writeAE_mode == ISP_WRITESENSOR_DISABLE) {
@@ -3444,14 +3388,11 @@ static int ispv1_preview_cmd(mini_pic_attr_t *pic_attr,
 	}
 	SETREG8(COMMAND_REG8, (delay_clk >> 8));
 	SETREG8(COMMAND_REG9, (delay_clk & 0xff));
-	/* added for AP write sensor's expo/gain delay by y00215412 2013-01-28 end */
 	/* END:   Modified by w65960, 2013/7/11 */
 
 #ifdef CONFIG_MACH_HI6620SFT
-    /* Added by w00199382 for isp 2.2 , 2013/1/6, begin */
     /*FIXME:FPGA cause 24M of DDR we set line blanking longer in zoom in mode in asic do not need set*/
     SETREG8(REG_ISP_SCALE_UP_COUNT_OF_FRAME,0x64);
-    /* Added by w00199382 for isp 2.2 , 2013/1/6, end */
 #endif
 
 	SETREG8(COMMAND_REG0, CMD_SET_FORMAT);
@@ -3497,7 +3438,6 @@ int mini_atoi16(char *s)
 	return ret;
 }
 
-/* remove by c00220250 to remove  compile warning, 20131225*/
 #if 0
 static int ispv1_load_isp_setting(char *filename)
 {
@@ -3846,6 +3786,7 @@ static int ispv1_start_process(mini_pic_attr_t *pic_attr, u8 mode, mini_buffer_a
         return ret;
 	}
 
+
 	framedst = ispv1_move_queue_element(&mini_isp_hw_data.data_queue_ref->ready_q[STATE_IPP],
 				CAMERA_FLAG_READYQ,
 				&mini_isp_hw_data.data_queue_ref->work_q[STATE_IPP],
@@ -4031,7 +3972,6 @@ static int ispv1_stop_preview(void)
 
 #if 0 /* k3 force overflow code */
 	/* force ISP mac overflow */
-	/* last modified by j00212990 */
 #ifdef OVISP_OFFLINE_MODE
 	/*Do not set 0x63b31*/
 #else
@@ -4042,7 +3982,6 @@ static int ispv1_stop_preview(void)
 /* for K3V2, there is some problem with frame control, so k3 use force overflow reg;
    after isp2.0, use new frame control, not need force overflow. */
 #if 0 /* balong force overflow code */
-    /* add by c00220250 */
     if(CAPTURE_OFFLINE != ispv1_get_process_mode())
     {
       SETREG8(0x63b31, (GETREG8(0x63b31) | 0x01));
@@ -4502,7 +4441,6 @@ error_out2:
 	return -EFAULT;
 }
 
- /*add by z00221179 2013/4/24 start */
 /*
  **************************************************************************
  * FunctionName: ispv1_read_sensor_byte;
@@ -4513,7 +4451,6 @@ error_out2:
  * Other       : NA;
  **************************************************************************
  */
-/* remove by c00220250 to remove  compile warning, 20131225*/
 #if 0
 
 static int ispv1_read_sensor_byte_addr8(i2c_index_t index, u8 i2c_addr, u16 reg, u16 *val, i2c_length length)
@@ -4628,7 +4565,6 @@ error_out2:
 	free_i2c_bus_mutex();
 	return -EFAULT;
 }
- /*add by z00221179 2013/4/24 end */
 #endif
 
 /*
@@ -4911,6 +4847,7 @@ return 0;
 	print_debug("array size : %d, sizeof(*sensor_reg) is %d, i2c_addr is 0x%0x",
 		size, sizeof(*sensor_reg), i2c_addr);
 
+
 	do {
 		for (i2c_write_num = 0; (i2c_write_num < I2C_MAX) && (bytes_read < size);) {
 			count = sensor_reg->size;
@@ -5044,19 +4981,15 @@ static void ispv1_power_sensor(sensor_index_t sensor_index,
 	if (((POWER_ON == power_state) && (LOW_VALID == pd_valid)) ||
 		((POWER_OFF == power_state) && (HIGH_VALID == pd_valid))) {
 		if (CAMERA_SENSOR_PRIMARY == sensor_index) {
-			/* Modify by zkf78283 for sensor PWDN, 2012/11/22, beign */
 			/*SETREG8(REG_ISP_GPIO_CTL_L, 0x20 | GETREG8(REG_ISP_GPIO_CTL_L));*/
 			SETREG8(REG_ISP_GPIO_CTL_L, 0x10 | GETREG8(REG_ISP_GPIO_CTL_L));
-			/* Modify by zkf78283 for sensor PWDN, 2012/11/22, end */
 		} else {
 			SETREG8(REG_ISP_GPIO_CTL_L, 0x40 | GETREG8(REG_ISP_GPIO_CTL_L));
 		}
 	} else {
 		if (CAMERA_SENSOR_PRIMARY == sensor_index) {
-			/* Modify by zkf78283 for sensor PWDN, 2012/11/22, begin */
 			/*SETREG8(REG_ISP_GPIO_CTL_L, 0xdf & GETREG8(REG_ISP_GPIO_CTL_L));*/
 			SETREG8(REG_ISP_GPIO_CTL_L, 0xef & GETREG8(REG_ISP_GPIO_CTL_L));
-			/* Modify by zkf78283 for sensor PWDN, 2012/11/22, end */
 		} else {
 			SETREG8(REG_ISP_GPIO_CTL_L, 0xbf & GETREG8(REG_ISP_GPIO_CTL_L));
 		}
@@ -5069,14 +5002,12 @@ static void ispv1_power_sensor(sensor_index_t sensor_index,
 		((POWER_OFF == power_state) && (HIGH_VALID == vcmpd_valid))) {
 			/*primary sensor' AF driver IC power down is GPIO_075(ISP_GPIO6)*/
 			/* For ISP IP, it is 0x63030 gpio_ctrl[15:8]:bit[2] manual sn_frex0_o, when gpio_sel = 1, gpio12*/
-			/* Modify by zkf78283 for AF vcm power down 2012/11/22, begin */
 			/*SETREG8(REG_ISP_GPIO_CTL_H, 0x04 | GETREG8(REG_ISP_GPIO_CTL_H));*/
 			SETREG8(REG_ISP_GPIO_CTL_L, 0x20 | GETREG8(REG_ISP_GPIO_CTL_L));
 
 		} else {
 			/*SETREG8(REG_ISP_GPIO_CTL_H, (~(0x04)) & GETREG8(REG_ISP_GPIO_CTL_H));*/
 			SETREG8(REG_ISP_GPIO_CTL_L, 0xdf & GETREG8(REG_ISP_GPIO_CTL_L));
-			/* Modify by zkf78283 for AF vcm power down 2012/11/22, end */
 		}
 	}
     return;
@@ -5327,6 +5258,7 @@ static void ispv1_clkregion_rstdis(camera_power_state type)
     return;
 }
 
+
 /*
  **************************************************************************
  * FunctionName: ispv1_poweron;
@@ -5558,6 +5490,7 @@ static void ispv1_poweroff(void)
 #endif
 }
 
+
 /*
  **************************************************************************
  * FunctionName: ispv1_drop_handler;
@@ -5587,6 +5520,7 @@ static int ispv1_drop_handler(u8 buf_sel, u32 addr,u32 stats_addr, camera_state 
         print_error("%s:invalid state=%d.", __func__, state);
         return -EINVAL;
     }
+
 
 	if (BUF_LEFT == buf_sel) {
 		/* FIXME left buffer is writing */
@@ -5638,6 +5572,7 @@ static int ispv1_drop_handler(u8 buf_sel, u32 addr,u32 stats_addr, camera_state 
 	return 0;
 }
 
+
 /*
  **************************************************************************
  * FunctionName: ispv1_write_start_handler;
@@ -5659,6 +5594,7 @@ static int ispv1_write_start_handler(camera_state state)
 
 	/* print_debug("enter %s", __func__); */
 
+
     if (state == STATE_PREVIEW){
         puvoffset = &mini_isp_hw_data.preview_uv_offset;
     } else if (state == STATE_CAPTURE) {
@@ -5671,6 +5607,8 @@ static int ispv1_write_start_handler(camera_state state)
 	spin_lock_irqsave(&mini_isp_hw_data.data_queue_ref->queue_lock, lock_flags);
 	ready_q = &mini_isp_hw_data.data_queue_ref->ready_q[state];
 	work_q = &mini_isp_hw_data.data_queue_ref->work_q[state];
+
+
 
 	if (!list_empty(ready_q)) {
 		/* add a new ready buffer to work_q */
@@ -5691,6 +5629,7 @@ static int ispv1_write_start_handler(camera_state state)
 		ret = -EINVAL;
 	}
 	spin_unlock_irqrestore(&mini_isp_hw_data.data_queue_ref->queue_lock, lock_flags);
+
 
 	return ret;
 }
@@ -5834,6 +5773,7 @@ static int ispv1_zsl_frame_done_handler(void)
     int                 ret     = 0;
     unsigned long       lock_flags;
 
+
     spin_lock_irqsave(&mini_isp_hw_data.data_queue_ref->queue_lock, lock_flags);
     work_q = &mini_isp_hw_data.data_queue_ref->work_q[state];
     done_q = &mini_isp_hw_data.data_queue_ref->done_q[state];
@@ -5868,6 +5808,7 @@ static int ispv1_zsl_slice_done_handle(void)
 {
     int                 ret     = 0;
 
+
     if (mini_this_ispdata->zsl_ctrl.zsl_proc_type != ZSL_PROC_IMG_HISTORY_BACKWARD_ONE)
     {
         print_error("invalid process image type.");
@@ -5876,6 +5817,7 @@ static int ispv1_zsl_slice_done_handle(void)
     return ret;
 }
 #endif
+
 
 /*
  **************************************************************************
@@ -6080,6 +6022,8 @@ static void isr_do_tasklet(unsigned long data)
 	camera_state cur_state;
 	mini_uv_offset *puvoffset = NULL;
 
+
+
     if (mini_this_ispdata) {
         if (CAMERA_ZSL_ON == mini_this_ispdata->zsl_ctrl.zsl_state) {
             cur_state = STATE_PREVIEW;
@@ -6092,6 +6036,7 @@ static void isr_do_tasklet(unsigned long data)
         cur_state = mini_isp_hw_data.cur_state;
     }
 
+
     if (cur_state == STATE_PREVIEW){
         puvoffset = &mini_isp_hw_data.preview_uv_offset;
     } else if (cur_state == STATE_CAPTURE) {
@@ -6099,6 +6044,7 @@ static void isr_do_tasklet(unsigned long data)
     } else {
         puvoffset = &mini_isp_hw_data.capture_uv_offset;
     }
+
 
 	print_debug("irq_status=%#x, mac_int_ctrl1=%#x, mac_int_ctrl0=%#x",
 		    mini_isp_hw_data.irq_val.irq_status, mini_isp_hw_data.irq_val.mac_irqstatus_h, mini_isp_hw_data.irq_val.mac_irqstatus_l);
@@ -6372,6 +6318,7 @@ static void isr_do_tasklet(unsigned long data)
 		spin_unlock_irqrestore(&mini_isp_hw_data.irq_status_lock, lock_flags);
 	}
 
+
 	/* ZSL:proc image with preview done */
     if (mini_isp_hw_data.irq_val.mac_irqstatus_h & 2) {
     	print_info("zsl slice r ok");
@@ -6455,6 +6402,7 @@ static int ispv1_hw_init(struct platform_device *pdev, mini_data_queue_t* data_q
 	unsigned int chip_id = 0;
     struct device *dev = &pdev->dev;
 
+
 	print_debug("enter %s", __func__);
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
@@ -6463,7 +6411,6 @@ static int ispv1_hw_init(struct platform_device *pdev, mini_data_queue_t* data_q
 		return -ENXIO;
 	}
 
-    /* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 
     /*FIXME: BSP has not support the interface IO_ADDRESS*/
 	mini_isp_hw_data.base = ioremap(res->start, resource_size(res));
@@ -6472,7 +6419,6 @@ static int ispv1_hw_init(struct platform_device *pdev, mini_data_queue_t* data_q
                 print_error("failed to get mini_isp_hw_data.base");
 	        return -ENOMEM;
 	}
-    /* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
 	mini_register_cam_dbg_info(DBG_INFO_ISP_BASE, (void *) mini_isp_hw_data.base);
 
@@ -6698,15 +6644,12 @@ static void ispv1_hw_deinit(void)
 	}
 #endif
 
-    /* Modified  by w00199382 for isp 2.2 , 2012/11/22, begin */
 
     /*FIXME: BSP has not support the interface IO_ADDRESS*/
     iounmap(mini_isp_hw_data.base );
-    /* Modified  by w00199382 for isp 2.2 , 2012/11/22, end */
 
 }
 
-/* add by ykf63300 */
 int mini_ispv1_get_current_vts(mini_camera_sensor *sensor)
 {
 	u32 frame_index = sensor->preview_frmsize_index;
@@ -6789,7 +6732,6 @@ static int ispv1_hw_set_default (void)
 	ispv1_ctl.isp_get_fps 			= mini_ispv1_get_fps;
 	ispv1_ctl.isp_set_fps 			= mini_ispv1_set_fps;
 
-	/* added by ykf63300 2012-05-22 */
 	ispv1_ctl.isp_get_current_vts		= mini_ispv1_get_current_vts;
 	ispv1_ctl.isp_get_current_fps		= mini_ispv1_get_current_fps;
 	ispv1_ctl.isp_get_band_threshold	= mini_ispv1_get_band_threshold;
@@ -6807,7 +6749,6 @@ static int ispv1_hw_set_default (void)
 	/* param: focus_zone_s *zone, zone definition, max 25 rectangle */
 	ispv1_ctl.isp_tune_ops->isp_set_focus_area			= mini_ispv1_set_focus_area;
 	ispv1_ctl.isp_tune_ops->isp_get_focus_result			= mini_ispv1_get_focus_result;
-	/* revised by y00215412 2012-09-21 for zoom focus. */
 	ispv1_ctl.isp_tune_ops->isp_set_focus_zoom			= mini_ispv1_set_focus_zoom;
 	ispv1_ctl.isp_tune_ops->isp_set_sharpness_zoom			= mini_ispv1_set_sharpness_zoom;
 
@@ -6832,7 +6773,6 @@ static int ispv1_hw_set_default (void)
 	/* auto, mwb:daylight, cloudy, incandescence, fluorescence ... */
 	ispv1_ctl.isp_tune_ops->set_awb = mini_ispv1_set_awb;
 
-	/*added by ykf63300 2012-05-22 */
 	ispv1_ctl.isp_tune_ops->isp_get_focus_distance = mini_ispv1_get_focus_distance;
 	ispv1_ctl.isp_tune_ops->isp_set_fps_lock = mini_ispv1_set_fps_lock;
 
@@ -6852,7 +6792,6 @@ static int ispv1_hw_set_default (void)
 	ispv1_ctl.isp_tune_ops->isp_get_expo_line			= mini_ispv1_get_expo_line;
 	ispv1_ctl.isp_tune_ops->isp_get_sensor_vts			= mini_ispv1_get_sensor_vts;
 
-	/* add by ykf63300 for video stabilization */
 	ispv1_ctl.isp_get_yuv_crop_rect = ispv1_get_yuv_crop_rect;
 	ispv1_ctl.isp_set_yuv_crop_pos = ispv1_set_yuv_crop_pos;
 	ispv1_ctl.isp_tune_ops->isp_get_current_ccm_rgain		= mini_ispv1_get_current_ccm_rgain;
@@ -6876,7 +6815,6 @@ static int ispv1_hw_set_default (void)
 	mini_isp_hw_data.flash_resume = false;
 	mini_isp_hw_data.ae_resume = false;
 
-    /* add by c00220250 */
     mini_isp_hw_data.process_mode = ISP_CAPTURE_ONLINE;
     /* add end */
 

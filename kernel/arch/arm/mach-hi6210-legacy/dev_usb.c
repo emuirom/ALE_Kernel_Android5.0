@@ -338,6 +338,7 @@ int get_charger_name(void)
 }
 EXPORT_SYMBOL_GPL(get_charger_name);
 
+
 int hiusb_charger_registe_notifier(struct notifier_block *nb)
 {
     int ret = -1;
@@ -354,6 +355,7 @@ int hiusb_charger_registe_notifier(struct notifier_block *nb)
 
 }
 EXPORT_SYMBOL_GPL(hiusb_charger_registe_notifier);
+
 
 int hiusb_charger_unregiste_notifier(struct notifier_block *nb)
 {
@@ -444,6 +446,7 @@ STATIC int switch_init(struct lm_device *dev)
 
     lm_dev = dev;
     hiusb_info = lm_dev->hiusb_info;
+
 
     dev_info(&lm_dev->dev, "%s +.\n", __func__);
 
@@ -672,6 +675,7 @@ struct hisi_rst hiusb_rst[] = {
     {0,0,0},
 };
 
+
 /* usb nrst registers *//*w00140341 B030 modify*/
 struct hisi_rst hiusb_nrst[] = {
     {SOC_PERI_SCTRL_SC_PERIPH_RSTDIS0_ADDR(IO_ADDRESS(SOC_PERI_SCTRL_BASE_ADDR)), \
@@ -752,6 +756,7 @@ void hiusb_otg_and_phy_setup(int mode)
 #else
     clk_enable(g_hiusb_info->clk_picophy);
 #endif
+
 
     pr_info("%s .\n", __func__);
 
@@ -982,6 +987,7 @@ irqreturn_t hiusb_otggpio_intr(int irq, void *dev)
             }
         }
     }
+
 
     dev_dbg(&lm_dev->dev, "%s irq %d -.\n", __func__, irq);
     return IRQ_HANDLED;
@@ -1349,6 +1355,7 @@ STATIC struct hiusb_info hiusb_sft_info = {
     .suspend            =   hiusb_suspend,
     .resume             =   hiusb_resume,
 };
+
 
 struct lm_device usb_sft_otg = {
     .dev            = {

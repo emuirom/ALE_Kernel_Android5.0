@@ -67,6 +67,7 @@
 
 k3_isp_data *this_ispdata;
 static bool camera_ajustments_flag;
+extern k3_isp_data isp_data;
 
 static int scene_target_y_low = DEFAULT_TARGET_Y_LOW;
 static int scene_target_y_high = DEFAULT_TARGET_Y_HIGH;
@@ -247,6 +248,84 @@ out:
 	return retvalue;
 }
 
+/*
+ **************************************************************************
+ * FunctionName: ispv1_set_b_shutter_ecgc;
+ * Description : set b shutter mode aecagc that supported by isp and camera rear sensorn duing preview;
+ * Input       : NA;
+ * Output      : NA;
+ * ReturnValue : NA;
+ * Other       : NA;
+ **************************************************************************
+ */
+int ispv1_set_b_shutter_ecgc(b_shutter_ae_iso_s* b_shutter_tryae_ecgc)
+{
+	int currBandingMode = CAMERA_ANTI_BANDING_50Hz;
+	u32 banding_step = 0;
+	u32 expo_line = 0;
+	u32 expo_vts = 0;
+	u32 frame_index = 0;
+	u32 gain = 0;
+	u16 basic_vts=0;
+	camera_sensor *sensor = this_ispdata->sensor;
+	u32 bandMode=100;
+
+	print_info("%s %s b_shutter_tryae expo=0x%x iso=0x%x", BSHUTTER_LOG_TAG, __FUNCTION__,b_shutter_tryae_ecgc->long_expo_expo,b_shutter_tryae_ecgc->long_expo_iso);
+
+	gain = ispv1_iso2gain(b_shutter_tryae_ecgc->long_expo_iso,false);
+	if(b_shutter_tryae_ecgc->long_expo_expo <=0 || gain<=0)
+	{
+		print_error("%s %s error input", BSHUTTER_LOG_TAG, __FUNCTION__);
+		return -1;
+	}
+
+	frame_index = sensor->preview_frmsize_index;
+	currBandingMode = ispv1_get_anti_banding();
+	if(CAMERA_ANTI_BANDING_60Hz == currBandingMode){
+		banding_step = sensor->frmsize_list[frame_index].banding_step_60hz;
+		bandMode=120;
+	}else{//none 60HZ case use 50HZ setting
+		banding_step = sensor->frmsize_list[frame_index].banding_step_50hz;
+		bandMode=100;
+	}
+
+	if(b_shutter_tryae_ecgc->long_expo_expo>=SEGMENT_EXPO_TIME_TO_LINE){
+		expo_line = (b_shutter_tryae_ecgc->long_expo_expo*banding_step)/1000000*bandMode;
+		print_info("%s %s expo_time=0x%x exceed 2second", BSHUTTER_LOG_TAG,__func__, b_shutter_tryae_ecgc->long_expo_expo);
+	}else{
+		expo_line = b_shutter_tryae_ecgc->long_expo_expo/(1000000/bandMode/banding_step);
+	}
+
+	basic_vts = sensor->frmsize_list[frame_index].vts;
+	if(expo_line< basic_vts){
+		expo_vts = basic_vts;
+	}else{
+		expo_vts = expo_line + sensor->support_expoline_offset;//FIX the frame gap issue
+
+		if((expo_vts>sensor->support_max_vts) && (sensor->support_max_vts!=0)){
+			expo_vts = sensor->support_max_vts;
+		}
+	}
+	print_info("%s %s b_shutter_tryae expo_line=0x%x gain=0x%x expo_vts=0x%x frame_index=0n%d banding_step=0x%x sensor=%s", BSHUTTER_LOG_TAG, __FUNCTION__,expo_line,gain,expo_vts,frame_index,banding_step,sensor->info.name);
+
+	if(expo_line > expo_vts - sensor->support_expoline_offset){
+		expo_line = expo_vts - sensor->support_expoline_offset;
+		print_warn("%s %s expo_line=0x%x is changned to below vts = 0x%x ecgc_support_type=0x%x support_expoline_offset=0x%x", 
+			BSHUTTER_LOG_TAG, __FUNCTION__,expo_line,expo_vts,isp_data.ecgc_support_type,sensor->support_expoline_offset);
+	}
+
+	/*all the tryae input para are tranlated to the sensor para, do the least thing in the eof interrupt*/
+	isp_data.b_shutter_tryae_aecagc.tryae_expo = expo_line<<4;
+	isp_data.b_shutter_tryae_aecagc.tryae_gain = gain;
+	isp_data.b_shutter_tryae_aecagc.tryae_vts  = expo_vts;
+	isp_data.b_shutter_tryae_aecagc.tryae_set_vts_flag = 0;//a lock is in need or not(logical being not),TBD
+
+	print_info("%s %s expo_line=0x%x gain=0x%x expo_vts=0x%x tryae_set_vts_flag=0n%d", BSHUTTER_LOG_TAG, __FUNCTION__,
+		isp_data.b_shutter_tryae_aecagc.tryae_expo,isp_data.b_shutter_tryae_aecagc.tryae_gain,isp_data.b_shutter_tryae_aecagc.tryae_vts,isp_data.b_shutter_tryae_aecagc.tryae_set_vts_flag);
+
+	return 0;
+}
+
 int inline ispv1_iso2gain(int iso, bool summary)
 {
 	int gain;
@@ -274,7 +353,6 @@ int inline ispv1_gain2iso(int gain, bool summary)
 		iso /= 2;
 	}
 
-	/* modified by h00206029 2012-05-11 */
 	iso = (iso + 5) / 10 * 10;
 	return iso;
 }
@@ -300,6 +378,7 @@ u32 get_writeback_cap_expo(void)
 {
 	u8 reg5 = GETREG8(COMMAND_REG5);
 	u32 expo = 0;
+
 
 	reg5 &= 0x3;
 	if (reg5 == 0 || reg5 == 2) {
@@ -361,18 +440,9 @@ int ispv1_get_exposure_time(void)
 	}
 
 	denominator_expo_time = ispv1_expo_line2time(expo, fps, vts);
+
 	return denominator_expo_time;
 }
-
-/*
- **************************************************************************
- * FunctionName: ispv1_get_awb_gain;
- * Description : call by ispv1_preview_done_do_tune and ispv1_hw_set_default;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
 u32 ispv1_get_awb_gain(int withShift)
 {
 	u16 b_gain, r_gain;
@@ -485,7 +555,6 @@ void ispv1_calc_ev(u8 *target_low, u8 *target_high, int ev)
  */
 int ispv1_set_ev(int ev)
 {
-	/* added by j00212990 */
 #ifdef OVISP_DEBUG_MODE
 	return 0;
 #endif
@@ -509,7 +578,6 @@ int ispv1_set_ev(int ev)
 
 	scene_target_y_low = target_y_low;
 	scene_target_y_high = target_y_high;
-	/* added for focus AE by s00061250 2013-09-22 */
 	save_target_high();
 
 	return ret;
@@ -588,7 +656,6 @@ int ispv1_set_anti_banding(camera_anti_banding banding)
 
 	print_debug("enter %s", __func__);
 
-        /* Modified  by w00199382 for isp 2.2 , 2013/1/8, begin */
 
 	switch (banding) {
 	case CAMERA_ANTI_BANDING_OFF:
@@ -618,7 +685,6 @@ int ispv1_set_anti_banding(camera_anti_banding banding)
 		return -1;
 	}
 
-        /* Modified  by w00199382 for isp 2.2 , 2013/1/8, end */
 
 	SETREG8(REG_ISP_BANDFILTER_EN, 0x1);
 	SETREG8(REG_ISP_BANDFILTER_FLAG, op);
@@ -780,48 +846,38 @@ int ispv1_set_saturation_done(camera_saturation saturation)
 
 	switch (saturation) {
 	case CAMERA_SATURATION_L2:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_U_SATURATION, 0x10);
 		SETREG8(REG_ISP_SDE_V_SATURATION, 0x10);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_SATURATION_L1:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_U_SATURATION, 0x28);
 		SETREG8(REG_ISP_SDE_V_SATURATION, 0x28);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_SATURATION_H0:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_U_SATURATION, 0x40);
 		SETREG8(REG_ISP_SDE_V_SATURATION, 0x40);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_SATURATION_H1:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_U_SATURATION, 0x58);
 		SETREG8(REG_ISP_SDE_V_SATURATION, 0x58);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_SATURATION_H2:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_U_SATURATION, 0x70);
 		SETREG8(REG_ISP_SDE_V_SATURATION, 0x70);
-		/* modify by zkf78283 end */
 		break;
 
 	default:
@@ -845,9 +901,7 @@ int ispv1_set_contrast_done(camera_contrast contrast)
 	print_debug("enter %s, %d", __func__, contrast);
 
 	SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
-    /* modify by zkf78283 begin */
 	//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_CONTRAST_ENABLE);
-    /* modify by zkf78283 end */
 
 	ispv1_switch_contrast(STATE_PREVIEW, contrast);
 
@@ -1065,7 +1119,7 @@ int ispv1_set_scene(camera_scene scene)
              //SETREG8(REG_ISP_UV_ADJUST, UV_ADJUST_ENABLE);
 		SETREG8(REG_ISP_UV_ADJUST, uv_adjust_ctrl | ISP_UV_SATURATE_ADJUST_ENABLE);
 		SETREG8(REG_ISP_UV_SATURATION, uv_saturation[CAMERA_SCENE_LANDSPACE]);
-		ispv1_set_focus_mode(CAMERA_FOCUS_INFINITY); /* y00215412 revise 2012-08-10 */
+		ispv1_set_focus_mode(CAMERA_FOCUS_INFINITY);
 		ispv1_set_awb(CAMERA_WHITEBALANCE_AUTO);
 		break;
 
@@ -1085,7 +1139,7 @@ int ispv1_set_scene(camera_scene scene)
 		//SETREG8(REG_ISP_UV_ADJUST, UV_ADJUST_DISABLE);
 		SETREG8(REG_ISP_UV_ADJUST, uv_adjust_ctrl & (~ISP_UV_SATURATE_ADJUST_ENABLE));
 		SETREG8(REG_ISP_UV_SATURATION, uv_saturation[CAMERA_SCENE_NIGHT]);
-		ispv1_set_focus_mode(CAMERA_FOCUS_CONTINUOUS_PICTURE); /* y00215412 revise 2012-08-10 */
+		ispv1_set_focus_mode(CAMERA_FOCUS_CONTINUOUS_PICTURE);
 		ispv1_set_awb(CAMERA_WHITEBALANCE_AUTO);
 		break;
 
@@ -1181,7 +1235,7 @@ int ispv1_set_scene(camera_scene scene)
 		//SETREG8(REG_ISP_UV_ADJUST, UV_ADJUST_ENABLE);
 		SETREG8(REG_ISP_UV_ADJUST, uv_adjust_ctrl | ISP_UV_SATURATE_ADJUST_ENABLE);
 		SETREG8(REG_ISP_UV_SATURATION, uv_saturation[CAMERA_SCENE_FIREWORKS]);
-		ispv1_set_focus_mode(CAMERA_FOCUS_INFINITY); /* y00215412 revise 2012-08-10 */
+		ispv1_set_focus_mode(CAMERA_FOCUS_INFINITY);
 		ispv1_set_awb(CAMERA_WHITEBALANCE_AUTO);
 		break;
 
@@ -1207,11 +1261,7 @@ int ispv1_set_scene(camera_scene scene)
 
 	case CAMERA_SCENE_FLOWERS:
 		print_info("case CAMERA_SCENE_FLOWER ");
-		/*
-		 * Turn off the flash
-		 * set focus mode to Macro,
-		 * revised by y00215412 2012-06-27 for ev bug from scene snow/beach to flowers
-		 */
+
 		ispv1_change_fps(CAMERA_FRAME_RATE_AUTO);
 		ispv1_change_max_exposure(this_ispdata->sensor, CAMERA_MAX_EXPOSURE_RESUME);
 		SETREG8(REG_ISP_TARGET_Y_LOW, target_y_low);
@@ -1264,43 +1314,33 @@ int ispv1_set_brightness_done(camera_brightness brightness)
 
 	switch (brightness) {
 	case CAMERA_BRIGHTNESS_L2:
-		/* modify by zkf78283 beign */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_BRIGHTNESS_ENABLE);
 		SETREG8(REG_ISP_SDE_SIGN_SET, GETREG8(REG_ISP_SDE_SIGN_SET) | ISP_BRIGHTNESS_SIGN_NEGATIVE);
-		/* modify by zkf78283 beign */
 		break;
 
 	case CAMERA_BRIGHTNESS_L1:
-		/* modify by zkf78283 beign */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_BRIGHTNESS_ENABLE);
 		SETREG8(REG_ISP_SDE_SIGN_SET, GETREG8(REG_ISP_SDE_SIGN_SET) | ISP_BRIGHTNESS_SIGN_NEGATIVE);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_BRIGHTNESS_H0:
-		/* modify by zkf78283 beign */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_BRIGHTNESS_ENABLE);
 		SETREG8(REG_ISP_SDE_SIGN_SET, GETREG8(REG_ISP_SDE_SIGN_SET) & (~ISP_BRIGHTNESS_SIGN_NEGATIVE));
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_BRIGHTNESS_H1:
-		/* modify by zkf78283 beign */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_BRIGHTNESS_ENABLE);
 		SETREG8(REG_ISP_SDE_SIGN_SET, GETREG8(REG_ISP_SDE_SIGN_SET) & (~ISP_BRIGHTNESS_SIGN_NEGATIVE));
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_BRIGHTNESS_H2:
-		/* modify by zkf78283 beign */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_BRIGHTNESS_ENABLE);
 		SETREG8(REG_ISP_SDE_SIGN_SET, GETREG8(REG_ISP_SDE_SIGN_SET) & (~ISP_BRIGHTNESS_SIGN_NEGATIVE));
-		/* modify by zkf78283 end */
 		break;
 
 	default:
@@ -1370,7 +1410,6 @@ int ispv1_switch_brightness(camera_state state, camera_brightness brightness)
 	return 0;
 }
 
-/* Add effect, h00206029 20120204 */
 int ispv1_set_effect(camera_effects effect)
 {
 	print_debug("enter %s, %d", __func__, effect);
@@ -1385,7 +1424,6 @@ int ispv1_set_effect_done(camera_effects effect)
 
 	switch (effect) {
 	case CAMERA_EFFECT_NONE:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, ISP_CONTRAST_ENABLE | ISP_BRIGHTNESS_ENABLE | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_CTRL0C_CONTRAST, GETREG8(REG_ISP_SDE_CTRL0C_CONTRAST) & ~0x3);
@@ -1404,11 +1442,9 @@ int ispv1_set_effect_done(camera_effects effect)
 		SETREG8(REG_ISP_SDE_SIGN_SET, 0x0);
 		SETREG8(REG_ISP_SDE_CTRL1A_HTHRE, GETREG8(REG_ISP_SDE_CTRL1A_HTHRE) & ~0x3f);
 		SETREG8(REG_ISP_SDE_CTRL1B_HGAIN, 0x4);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_EFFECT_MONO:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, ISP_MONO_EFFECT_ENABLE);
 		SETREG8(REG_ISP_SDE_CTRL0C_CONTRAST, GETREG8(REG_ISP_SDE_CTRL0C_CONTRAST) & ~0x3);
@@ -1427,11 +1463,9 @@ int ispv1_set_effect_done(camera_effects effect)
 		SETREG8(REG_ISP_SDE_SIGN_SET, 0x0);
 		SETREG8(REG_ISP_SDE_CTRL1A_HTHRE, GETREG8(REG_ISP_SDE_CTRL1A_HTHRE) & ~0x3f);
 		SETREG8(REG_ISP_SDE_CTRL1B_HGAIN, 0x4);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_EFFECT_NEGATIVE:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, ISP_NEGATIVE_EFFECT_ENABLE);
 		SETREG8(REG_ISP_SDE_CTRL0C_CONTRAST, GETREG8(REG_ISP_SDE_CTRL0C_CONTRAST) | 0x2);
@@ -1450,11 +1484,9 @@ int ispv1_set_effect_done(camera_effects effect)
 		SETREG8(REG_ISP_SDE_SIGN_SET, 0x0);
 		SETREG8(REG_ISP_SDE_CTRL1A_HTHRE, GETREG8(REG_ISP_SDE_CTRL1A_HTHRE) & ~0x3f);
 		SETREG8(REG_ISP_SDE_CTRL1B_HGAIN, 0x84);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_EFFECT_SEPIA:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, ISP_FIX_U_ENABLE | ISP_FIX_V_ENABLE);
 		//SETREG8(REG_ISP_SDE_U_REG, 0x30);
@@ -1475,7 +1507,6 @@ int ispv1_set_effect_done(camera_effects effect)
 		SETREG8(REG_ISP_SDE_SIGN_SET, 0x0);
 		SETREG8(REG_ISP_SDE_CTRL1A_HTHRE, GETREG8(REG_ISP_SDE_CTRL1A_HTHRE) & ~0x3f);
 		SETREG8(REG_ISP_SDE_CTRL1B_HGAIN, 0x4);
-		/* modify by zkf78283 end */
 		break;
 
 	default:
@@ -1488,7 +1519,6 @@ int ispv1_set_effect_done(camera_effects effect)
 
 int ispv1_set_effect_saturation_done(camera_effects effect, camera_saturation saturation, camera_contrast contrast, camera_brightness brightness)
 {
-        /* Modified  by w00199382 for isp 2.2 , 2012/11/2, begin */
 	if(effect != CAMERA_EFFECT_NONE) {
 		ispv1_set_effect_done(effect);
 	} else {
@@ -1498,7 +1528,6 @@ int ispv1_set_effect_saturation_done(camera_effects effect, camera_saturation sa
 		ispv1_set_saturation_done(saturation);
 	}
 	return 0;
-        /* Modified  by w00199382 for isp 2.2 , 2012/11/2, end */
 
 }
 
@@ -1541,6 +1570,11 @@ void ispv1_cmd_id_do_ecgc(struct work_struct *work)
 	u32 expo, gain;
 	camera_sensor *sensor = this_ispdata->sensor;
 	u8 wait_flag;
+	u32 frame_index=0;
+	int currBandingMode;
+	u32 banding_step;
+	u32 bandMode=100;
+
 #ifdef AP_WRITE_AE_TIME_PRINT
 	struct timeval tv_start, tv_end;
 	do_gettimeofday(&tv_start);
@@ -1548,7 +1582,6 @@ void ispv1_cmd_id_do_ecgc(struct work_struct *work)
 
 	print_debug("enter %s, cmd id 0x%x", __func__, isp_hw_data.aec_cmd_id);
 
-	/* added by y00215412 for hdr movie mode */
 	if (ispv1_is_hdr_movie_mode() == true)
 		return;
 
@@ -1568,7 +1601,6 @@ void ispv1_cmd_id_do_ecgc(struct work_struct *work)
 		{
 			print_error("firmware do no set  0x1c5a2 = 0x%x  ", GETREG8(REG_ISP_I2C_WAIT_SIGNAL));
 		}
-		/* Modified  by w00199382 for isp 2.2 , 2013/7/27, begin*/
 
 		return;
 	}
@@ -1576,7 +1608,22 @@ void ispv1_cmd_id_do_ecgc(struct work_struct *work)
 	if (CMD_WRITEBACK_EXPO_GAIN == isp_hw_data.aec_cmd_id ||
 		CMD_WRITEBACK_EXPO == isp_hw_data.aec_cmd_id ||
 		CMD_WRITEBACK_GAIN == isp_hw_data.aec_cmd_id) {
+
 			/* changed by y00231328.some sensor such as S5K4E1, expo and gain should be set together in holdon mode */
+			if(CAMERA_B_SHUTTER_MODE_ON == isp_data.b_shutter_state){//this branch is used for B_SHUTTER_Alog to support sensor long expo once
+				if(isp_data.b_shutter_hdr_aecagc.hdrCounter>0){//HDR mode or HDR&longExpo mode
+					expo=isp_data.b_shutter_hdr_aecagc.b_shutter_aec_agc[isp_data.b_shutter_hdr_aecagc.currExcuteOrder].expo;
+					gain=isp_data.b_shutter_hdr_aecagc.b_shutter_aec_agc[isp_data.b_shutter_hdr_aecagc.currExcuteOrder].gain;
+
+					isp_data.b_shutter_hdr_aecagc.currExcuteOrder++;
+				}else{//longExpo mode only
+					expo=isp_data.b_shutter_aecagc.expo;
+					gain=isp_data.b_shutter_aecagc.gain;
+				}
+
+				print_info("%s %s,expo_line=0x%x,gain=0x%x,currExcuteOrder=0n%d", BSHUTTER_LOG_TAG, __func__, expo,gain,isp_data.b_shutter_hdr_aecagc.currExcuteOrder);
+			}
+
 			if (sensor->set_exposure_gain) {
 				sensor->set_exposure_gain(expo, gain);
 			} else {
@@ -1586,7 +1633,6 @@ void ispv1_cmd_id_do_ecgc(struct work_struct *work)
 					sensor->set_gain(gain);
 			}
 
-			/* Modified  by w00199382 for isp 2.2 , 2013/7/27, begin*/
 
 			/*firmware will up the signal and wait for drv down the flag then set sensor use i2c*/
 			wait_flag =  GETREG8(REG_ISP_I2C_WAIT_SIGNAL);
@@ -1599,7 +1645,7 @@ void ispv1_cmd_id_do_ecgc(struct work_struct *work)
 			{
 				print_error("firmware do no set  0x1c5a2 = 0x%x  ", GETREG8(REG_ISP_I2C_WAIT_SIGNAL));
 			}
-			/* Modified  by w00199382 for isp 2.2 , 2013/7/27, begin*/
+
 
 	} else {
 		print_error("%s:unknow cmd id", __func__);
@@ -1701,7 +1747,6 @@ static bool ispv1_change_frame_rate(
 
 	print_debug("enter %s: state %d, frame_rate_level %d", __func__, *state, frame_rate_level);
 
-	/* add by y00215412 2012-11-05, state CAMERA_EXPO_PRE_REDUCEx is highest priority. */
 	if (*state == CAMERA_EXPO_PRE_REDUCE1) {
 		/* desired level should go to FPS_HIGH level */
 		level_changed = true;
@@ -1801,10 +1846,7 @@ error_out:
 	return false;
 }
 
-/*
- * change by y00215412 for flash capture 2012-06-27
- * flash_awb_gain is marked by Golden Module.
- */
+
 awb_gain_t flash_platform_awb[FLASH_PLATFORM_MAX] =
 {
 	{0xc8, 0x80, 0x80, 0x104}, /* U9510 */
@@ -2060,6 +2102,7 @@ static inline FLASH_AWBTEST_POLICY get_awbtest_policy(void)
 void ispv1_check_flash_prepare(void)
 {
 
+
 	awb_gain_t *preset_awb = &(isp_hw_data.flash_preset_awb);
 	awb_gain_t *led_awb0 = &(isp_hw_data.led_awb[0]);
 	awb_gain_t *led_awb1 = &(isp_hw_data.led_awb[1]);
@@ -2140,10 +2183,6 @@ void ispv1_check_flash_exit(void)
 {
 	ispv1_config_aecawb_step(false, &isp_hw_data.aecawb_step);
 }
-
-/*
- * change logs:
- */
 static void ispv1_poll_flash_lum(void)
 {
 	static u8 frame_count;
@@ -2356,7 +2395,6 @@ awbtest_out:
 	}
 }
 
-/* added by y00215412 for dynamic y denoise changed  2012-11-7 start. */
 #if 0
 void ispv1_switch_dns(camera_sensor *sensor, camera_state state, bool flash_on, u32 expo_line)
 {
@@ -2449,6 +2487,7 @@ void ispv1_switch_dns(camera_sensor *sensor, camera_state state, bool flash_on, 
     }
 }
 
+
 void ispv1_mannal_iso_dynamic_framerate(camera_sensor *sensor)
 {
 	u32 max_expo;
@@ -2470,6 +2509,8 @@ void ispv1_mannal_iso_dynamic_framerate(camera_sensor *sensor)
 	cur_expo = (ispv1_get_expo_line() >> 4);
 
 	GETREG32(REG_ISP_MAX_EXPOSURE, max_expo);
+
+
 
 	expo_th_low2mid  =  auto_fps_manual_iso_th[0];
 	expo_th_mid2high = auto_fps_manual_iso_th[1];
@@ -2507,7 +2548,6 @@ void ispv1_mannal_iso_dynamic_framerate(camera_sensor *sensor)
 	}
 }
 
-/* added by y00215412 for dynamic y denoise changed  2012-11-7 end. */
 
 void ispv1_dynamic_framerate(camera_sensor *sensor, camera_iso iso)
 {
@@ -2531,8 +2571,8 @@ void ispv1_dynamic_framerate(camera_sensor *sensor, camera_iso iso)
 	gain_th_high2mid = auto_fps_th[2];
 	gain_th_mid2low = auto_fps_th[3];
 
+
 	if (CAMERA_ISO_AUTO != iso) {
-		/* add by y00215412 2012-11-05. */
 		if (state == CAMERA_EXPO_PRE_REDUCE1 || state == CAMERA_EXPO_PRE_REDUCE2) {
 			//|| ispv1_get_frame_rate_level() != 0) {
 			ispv1_change_frame_rate(&state, CAMERA_FRAME_RATE_UP, sensor);
@@ -2542,7 +2582,6 @@ void ispv1_dynamic_framerate(camera_sensor *sensor, camera_iso iso)
 		}
 		ispv1_mannal_iso_dynamic_framerate(sensor);
 	} else {
-		/* add by y00215412 2012-11-05, state CAMERA_EXPO_PRE_REDUCE is highest priority. */
 		if (state == CAMERA_EXPO_PRE_REDUCE1 || state == CAMERA_EXPO_PRE_REDUCE2) {
 			ret = ispv1_change_frame_rate(&state, CAMERA_FRAME_RATE_UP, sensor);
 			ispv1_set_frame_rate_state(state);
@@ -2612,6 +2651,7 @@ static void ispv1_set_blc_clamp_mode(camera_sensor *sensor)
     }
 }
 
+
 void ispv1_preview_done_do_tune(void)
 {
 	k3_isp_data *ispdata = this_ispdata;
@@ -2637,6 +2677,7 @@ void ispv1_preview_done_do_tune(void)
 		print_error("ispv1_get_frame_rate_state fail, state= %d", state);
 		return;		  
 	}
+
 
 	sensor = ispdata->sensor;
 
@@ -2668,7 +2709,6 @@ void ispv1_preview_done_do_tune(void)
 	}
 
 	if ((FLASH_TESTING == ispdata->flash_flow) || (FLASH_FROZEN == ispdata->flash_flow)) {
-		/*added by y00215412 2012-12-18 to improve framerate first to speed up FLASH_TESTING */
 		if (state == CAMERA_EXPO_PRE_REDUCE1 || state == CAMERA_EXPO_PRE_REDUCE2
 			|| ispv1_get_frame_rate_level() != 0) {
 			ispv1_set_aecagc_mode(AUTO_AECAGC);
@@ -2758,6 +2798,118 @@ void ispv1_preview_done_do_tune(void)
 }
 
 /*
+ **************************************************************************
+ * FunctionName: ispv1_capture_done_do_tune
+ * Description : used for B_Shutter hdr algo duing preview mode.
+ * Input           : NA;
+ * Output         : NA;
+ * ReturnValue : NA;
+ * Other           : NA
+ **************************************************************************
+ */
+void ispv1_preview_done_do_tryae_tune(void)
+{
+	camera_sensor *sensor = this_ispdata->sensor;
+
+	print_info("%s begin of %s: tryae_vts=0x%x,tryae_expo=0x%x,tryae_gain=0x%x tryae_set_vts_flag=0x%x", BSHUTTER_LOG_TAG, __func__,
+		isp_data.b_shutter_tryae_aecagc.tryae_vts,isp_data.b_shutter_tryae_aecagc.tryae_expo,isp_data.b_shutter_tryae_aecagc.tryae_gain,isp_data.b_shutter_tryae_aecagc.tryae_set_vts_flag);
+
+	if((isp_data.b_shutter_tryae_aecagc.tryae_set_vts_flag==1)&&(isp_data.b_shutter_tryae_aecagc.tryae_vts!=0)){
+		sensor->set_vts(isp_data.b_shutter_tryae_aecagc.tryae_vts);
+
+		print_debug("%s %s set_vts: tryae_vts=0x%x,tryae_expo=0x%x,tryae_gain=0x%x tryae_set_vts_flag=0x%x", BSHUTTER_LOG_TAG, __func__,
+			isp_data.b_shutter_tryae_aecagc.tryae_vts,isp_data.b_shutter_tryae_aecagc.tryae_expo,isp_data.b_shutter_tryae_aecagc.tryae_gain,isp_data.b_shutter_tryae_aecagc.tryae_set_vts_flag);
+
+		isp_data.b_shutter_tryae_aecagc.tryae_set_vts_flag = 0;
+		isp_data.b_shutter_tryae_aecagc.tryae_vts = 0;
+	}
+
+	if((isp_data.b_shutter_tryae_aecagc.tryae_expo!=0) && (isp_data.b_shutter_tryae_aecagc.tryae_gain!=0)){
+		if (sensor->set_exposure_gain) {
+			sensor->set_exposure_gain(isp_data.b_shutter_tryae_aecagc.tryae_expo, isp_data.b_shutter_tryae_aecagc.tryae_gain);
+		} else {
+			if (sensor->set_exposure)
+				sensor->set_exposure(isp_data.b_shutter_tryae_aecagc.tryae_expo);
+			if (sensor->set_gain)
+				sensor->set_gain(isp_data.b_shutter_tryae_aecagc.tryae_gain);
+		}
+
+		isp_data.b_shutter_tryae_aecagc.tryae_set_vts_flag++;//vts set must delay one frame eof after setting gain&expo, and they need take effect at the same frame
+
+		print_debug("%s %s set_exposure_gain:tryae_vts=0x%x,tryae_expo=0x%x,tryae_gain=0x%x tryae_set_vts_flag=0x%x",BSHUTTER_LOG_TAG, __func__,
+			isp_data.b_shutter_tryae_aecagc.tryae_vts,isp_data.b_shutter_tryae_aecagc.tryae_expo,isp_data.b_shutter_tryae_aecagc.tryae_gain,isp_data.b_shutter_tryae_aecagc.tryae_set_vts_flag);
+
+		isp_data.b_shutter_tryae_aecagc.tryae_expo = 0;
+		isp_data.b_shutter_tryae_aecagc.tryae_gain = 0;
+	}
+
+	print_info("%s end of %s: tryae_vts=0x%x,tryae_expo=0x%x,tryae_gain=0x%x tryae_set_vts_flag=0x%x",BSHUTTER_LOG_TAG, __func__,
+		isp_data.b_shutter_tryae_aecagc.tryae_vts,isp_data.b_shutter_tryae_aecagc.tryae_expo,isp_data.b_shutter_tryae_aecagc.tryae_gain,isp_data.b_shutter_tryae_aecagc.tryae_set_vts_flag);
+
+	return;
+}
+
+/*
+ **************************************************************************
+ * FunctionName: ispv1_capture_done_do_tune
+ * Description : used for B_Shutter hdr algo with  burstshot mode.
+ * Input           : NA;
+ * Output         : NA;
+ * ReturnValue : NA;
+ * Other           : NA
+ **************************************************************************
+ */
+void ispv1_capture_done_do_tune(void)
+{
+	u32 vts = 0;
+	u32 expo = 0;
+	u32 gain = 0;
+	camera_sensor *sensor = this_ispdata->sensor;
+	u8  wait_flag=0;
+	int skip_frame_num=1;//default CAPTURE_SKIP_1
+
+	if(CAPTURE_SKIP_2==sensor->capture_skip_frames){
+		skip_frame_num=2;//CAPTURE_SKIP_2 for sonyimx328
+	}else{
+		skip_frame_num=1;//CAPTURE_SKIP_1 for ov13850 &ov13850oflim
+	}
+
+	/*SET VTS calculated by currExcuteOrder algo expo*/
+	if(isp_data.b_shutter_hdr_aecagc.currExcuteOrder>skip_frame_num){
+		vts=isp_data.b_shutter_hdr_aecagc.b_shutter_aec_agc[isp_data.b_shutter_hdr_aecagc.currExcuteOrder-skip_frame_num].vts;
+		sensor->set_vts(vts);
+	}
+
+	/*SET currExcuteOrder algo expo & gain to sensor*/
+	if((isp_data.b_shutter_hdr_aecagc.currExcuteOrder<isp_data.b_shutter_hdr_aecagc.hdrCounter+skip_frame_num-1) && (isp_data.b_shutter_hdr_aecagc.currExcuteOrder>(skip_frame_num-1))){
+		expo=isp_data.b_shutter_hdr_aecagc.b_shutter_aec_agc[isp_data.b_shutter_hdr_aecagc.currExcuteOrder-skip_frame_num+1].expo;
+		gain=isp_data.b_shutter_hdr_aecagc.b_shutter_aec_agc[isp_data.b_shutter_hdr_aecagc.currExcuteOrder-skip_frame_num+1].gain;
+
+		if (sensor->set_exposure_gain) {
+			sensor->set_exposure_gain(expo, gain);
+		} else {
+			if (sensor->set_exposure)
+				sensor->set_exposure(expo);
+			if (sensor->set_gain)
+				sensor->set_gain(gain);
+		}
+		//check I2C status
+		ispv1_check_i2c_ispbuf_write_ack_status();
+	}
+	print_info("%s %s CAMERA_B_SHUTTER_MODE_ON: vts=0x%x,expo_line=0x%x,gain=0x%x,currExcuteOrder=0n%d,skip_frame_num=0n%d",
+		BSHUTTER_LOG_TAG, __func__,vts,expo,gain,isp_data.b_shutter_hdr_aecagc.currExcuteOrder,skip_frame_num);
+
+	isp_data.b_shutter_hdr_aecagc.currExcuteOrder++;
+
+	if(isp_data.b_shutter_hdr_aecagc.currExcuteOrder>=isp_data.b_shutter_hdr_aecagc.hdrCounter+skip_frame_num){
+		print_info("%s %s memset currExcuteOrder=0x%x  skip_frame_num=0n%d", BSHUTTER_LOG_TAG, __func__, isp_data.b_shutter_hdr_aecagc.currExcuteOrder,skip_frame_num);
+		memset(&isp_data.b_shutter_hdr_aecagc,0,sizeof(isp_data.b_shutter_hdr_aecagc));
+	}
+
+	return;
+}
+
+/*
  * Used for tune ops and AF functions to get isp_data handler
  */
 int ispv1_tune_ops_init(k3_isp_data *ispdata)
@@ -2785,7 +2937,6 @@ int ispv1_tune_ops_init(k3_isp_data *ispdata)
 	ispv1_do_aeag_wq_init();
 	camera_ajustments_flag = true;
 
-	/* add by y00215412 2012-11-05 to init frame_rate_state. */
 	ispv1_set_frame_rate_state(CAMERA_FPS_STATE_HIGH);
 
 	ispv1_init_sensor_config(sensor);
@@ -2808,16 +2959,14 @@ void ispv1_tune_ops_exit(void)
 	ispv1_aeag_exit();
 }
 
-/*
- * something need to do before start_preview and start_capture
- */
+
 void ispv1_tune_ops_prepare(camera_state state)
 {
 	k3_isp_data *ispdata = this_ispdata;
 	camera_sensor *sensor = ispdata->sensor;
 	u32 unit_width = ispdata->pic_attr[STATE_PREVIEW].in_width / ISP_LUM_WIN_WIDTH_NUM;
 	u32 unit_height = ispdata->pic_attr[STATE_PREVIEW].in_height / ISP_LUM_WIN_HEIGHT_NUM;
-	coordinate_s center; /* added for focus AE by s00061250 2013-06-27 */
+	coordinate_s center;
 
 	if (STATE_PREVIEW == state) {
 
@@ -2870,7 +3019,6 @@ void ispv1_tune_ops_withdraw(camera_state state)
 		}
 }
 
-/* added by y00215412 for hdr movie mode begin */
 bool ispv1_is_hdr_movie_mode(void)
 {
 	u8 ae_ctrl_mode = GETREG8(REG_ISP_AE_CTRL_MODE); /* 1 - AP's ae . 0 - ISP ae. */
@@ -2885,7 +3033,6 @@ bool ispv1_is_hdr_movie_mode(void)
 	else
 		return false;
 }
-/* added by y00215412 for hdr movie mode end */
 
 /*
  **************************************************************************
@@ -2973,15 +3120,7 @@ void deal_uv_data_from_preview(u8 *pdata, u32 preview_width, u32 preview_height)
 	}
 
 }
-/*
- **************************************************************************
- * FunctionName: ispv1_uv_stat_work_func;
- * Description : NA;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 static void ispv1_uv_stat_work_func(struct work_struct *work)
 {
 	u32 preview_width = this_ispdata->pic_attr[STATE_PREVIEW].out_width;
@@ -2999,7 +3138,6 @@ static void ispv1_uv_stat_work_func(struct work_struct *work)
 		goto error_out1;
 	}
 	
-	/*mod by w00199382 for smmu*/
 	if ((0 == frame->phyaddr) || (NULL == frame->viraddr)) {
 		print_error("params error, frame->phyaddr 0x%p, frame->viraddr:0x%p",
 			frame->phyaddr, frame->viraddr);

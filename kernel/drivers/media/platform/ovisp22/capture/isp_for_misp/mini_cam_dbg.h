@@ -59,11 +59,9 @@ void mini_register_cam_dbg_info(int dbg_info_type, void *context);
 void mini_dump_queue(struct list_head *list_queue, u32 flag);
 void mini_dump_file(char *filename, u32 addr, u32 size);
 void mini_dump_cmd_reg(void);
-/* add by zkf78283 for isp test begin */
 void mini_dump_status_after_reg(void);
 void mini_dump_ispzyk_reg(void);
 
-/* add by zkf78283 for isp test end */
 void mini_dump_sensor_reg(u32 addr);
 void mini_dump_size_reg(void);
 void mini_dump_zoom_reg(void);

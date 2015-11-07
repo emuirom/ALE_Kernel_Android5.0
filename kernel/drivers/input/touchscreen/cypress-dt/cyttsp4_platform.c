@@ -125,6 +125,7 @@ static struct cyttsp4_touch_config cyttsp4_ttconfig = {
 	.fw_vsize = 0,
 };
 
+
 struct cyttsp4_sett_ttconfig_map cyttsp4_sett_ttconfig_map[] = {
 		[0]={
 				.id=6,

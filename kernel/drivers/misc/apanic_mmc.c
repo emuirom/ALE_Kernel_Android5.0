@@ -113,6 +113,7 @@ static struct memdump_data memdump_ctx;
 static char memdump_dev_name[BDEVNAME_SIZE];
 #endif
 
+
 #define PANIC_BUF_LEN	(256*1024)
 struct panic_info {
 	int		panic_log_pos;
@@ -132,6 +133,7 @@ void apanic_console_write(char *s, unsigned c)
 		s += c - PANIC_BUF_LEN;
 		c = PANIC_BUF_LEN;
 	}
+
 
 	if (PANIC_BUF_LEN < panicinfo.panic_log_pos + c) {
 		memcpy(&panicinfo.panic_log_buf[panicinfo.panic_log_pos],
@@ -153,6 +155,7 @@ void apanic_console_write(char *s, unsigned c)
 	}
 
 }
+
 
 //#define APANIC_INVALID_OFFSET 0xFFFFFFFF
 
@@ -801,6 +804,7 @@ static int apanic_write_srecorder_mmc(unsigned int off, char *psrc, int data_len
     return bytes_write_total;
 }
 
+
 /**
     @function: char *alloc_buf_for_srecorder(unsigned long buf_len)
     @brief: allocate memory for SRecorder by vmalloc
@@ -1118,6 +1122,7 @@ static int __init apanic_mmc_init(void)
 	memset(&drv_ctx, 0, sizeof(drv_ctx));
 	drv_ctx.bounce = (void *) __get_free_page(GFP_KERNEL);
 	INIT_WORK(&proc_removal_work, apanic_remove_proc_work);
+
 
 	memset(&panicinfo, 0 , sizeof(panicinfo));
 	spin_lock_init(&panicinfo.buf_lock);

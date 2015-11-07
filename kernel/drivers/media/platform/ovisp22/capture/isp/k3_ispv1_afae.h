@@ -75,19 +75,15 @@ typedef struct _lum_table_s {
 typedef struct _ispv1_afae_ctrl_s {
 	focus_area_s af_area;
 
-	/*added for Area CAF function by y00215412 2012-11-14. */
 	bool area_changed;
 
-	/* added for more precision to check scene change by y00215412 2012-11-17 */
 	lum_win_info_s lum_info;
 
 	camera_focus mode;
 	camera_focus pre_mode;
 
-	/* added by y00215412 2012-09-21 for zoom focus. */
 	u32 zoom;
 
-	/*added by y00215412 2012-09-09 */
 	camera_rect_s cur_rect;
 
 	/* u32 raw_unit_area; */
@@ -98,7 +94,6 @@ typedef struct _ispv1_afae_ctrl_s {
 	/* save current focus state. */
 	focus_state_e focus_state;
 
-	/* added by y00215412 for target tracking 2012-01-09, save current focus stage. */
 	af_run_stage af_stage;
 
 	/* previous focus action is failed or not. 0:success; 1:failed */
@@ -133,11 +128,7 @@ typedef struct _ispv1_afae_ctrl_s {
 	 */
 	focus_frame_stat_s frame_stat[CAF_STAT_FRAME];
 
-	/*
-	 * added by y00215412 2012-11-10 for dynamic stat frame.
-	 * if gsensor info's interval is less than 100ms, less stat frames are needed;
-	 * else if interval is larger chan 100ms and fps is larger than 20fps, more stat frames are needed.
-	 */
+
 	int gsensor_interval;
 
 	/*
@@ -151,7 +142,7 @@ typedef struct _ispv1_afae_ctrl_s {
 	u8 af_result; /* equals focus_state */
 
 	struct semaphore	af_run_sem;
-	u8 target_high; /* added for focus AE by y00215412 2013-06-27*/
+	u8 target_high;
 	bool point_light; /* added for detecting whether there is point light in focus window */
 	camera_bool_e fast_shoot; /* true:enable; false:disable */
 } ispv1_afae_ctrl;
@@ -163,7 +154,6 @@ int ispv1_auto_focus(int flag);
 int ispv1_set_focus_mode(camera_focus focus_mode);
 int ispv1_set_focus_area(focus_area_s *area, u32 zoom);
 int ispv1_get_focus_result(focus_result_s *result);
-/* added by y00215412 2012-09-21 for zoom focus. */
 int ispv1_set_focus_zoom(u32 zoom);
 int ispv1_set_sharpness_zoom(u32 zoom);
 
@@ -190,13 +180,12 @@ int ispv1_set_metering_area(metering_area_s *area, u32 zoom);
 int ispv1_set_focus_range(camera_focus focus_mode);
 int ispv1_get_focus_distance(void);
 
-/* added for by y00215412 2012-11-04. */
 focus_state_e get_focus_state(void);
 FOCUS_STATUS get_focus_result(void);
 
-/*added by w00217024 2012-11-13*/
+
 bool afae_ctrl_is_valid(void);
-void save_target_high(void); /* added for focus AE by s00061250 2013-09-22 */
+void save_target_high(void);
 
 int ispv1_set_gsensor_stat(axis_triple *xyz);
 int ispv1_set_ae_statwin(pic_attr_t *pic_attr, coordinate_s *center, METERING_STATWIN_MODE statwin_mode, u32 zoom);

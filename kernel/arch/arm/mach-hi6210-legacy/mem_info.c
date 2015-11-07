@@ -40,10 +40,13 @@
 #include <mach/ddr_map.h>
 #include <linux/seq_file.h>
 
+
+
 /*****************************************************************************
  Description : display phy addr info
   History
   1.Date: 2012/9/13
+    Author : x00138766
     Modification : Created function
 *****************************************************************************/
 #define MEM_INFO(name, base, string)\
@@ -81,12 +84,17 @@ static void __exit name ## _mem_info_proc_exit(void)\
 module_init(name ## _mem_info_proc_init);\
 module_exit(name ## _mem_info_proc_exit);
 
+
 MEM_INFO(gpu_addr, PLAT_MEM_GPU_ADDR, "gpu")
 MEM_INFO(camera_addr, PLAT_MEM_CAMERA_ADDR, "camera")
 MEM_INFO(codec_addr, PLAT_MEM_CODEC_ADDR, "codec")
 MEM_INFO(gralloc_addr, PLAT_MEM_GRALLOC_ADDR, "gralloc")
 
+
 MODULE_DESCRIPTION("Hisilicon Memory Info Module");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("xuyiping <xuyiping@huawei.com>");
+
+
+
 

@@ -60,11 +60,9 @@ void unregister_cam_dbg_info(int dbg_info_type);
 void dump_queue(struct list_head *list_queue, u32 flag);
 void dump_file(char *filename, u32 addr, u32 size);
 void dump_cmd_reg(void);
-/* add by zkf78283 for isp test begin */
 void dump_status_after_reg(void);
 void dump_ispzyk_reg(void);
 
-/* add by zkf78283 for isp test end */
 void dump_sensor_reg(u32 addr);
 void dump_size_reg(void);
 void dump_isp_size_reg(void);

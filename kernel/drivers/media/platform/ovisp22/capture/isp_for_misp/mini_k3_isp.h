@@ -68,7 +68,6 @@ typedef struct _mini_uv_offset {
 	u32 voffset;
 } mini_uv_offset;
 
-/* added by c00144034 for zsl begin */
 typedef struct _mini_zsl_ctrl {
     camera_zsl          zsl_state;
 
@@ -90,7 +89,7 @@ typedef struct _mini_zsl_ctrl {
 
 	u8                  focused_frame_cnt; /* continuous focused frame count */
 }mini_zsl_ctrl_t;
-/* added by c00144034 for zsl end */
+
 
 /* add by zhoutian for mini-ISP meta data begin */
 typedef struct _mini_common_st {
@@ -221,12 +220,10 @@ typedef struct _mini_k3_isp_data {
 	struct semaphore frame_sem;
 	/* AndroidK3 added by y36721 for focus 2011-10-28 end */
 
-	/* added by c00144034 for ZSL begin*/
 	mini_zsl_ctrl_t          zsl_ctrl;
 
 	bool        		hw_3a_switch;
     int                 idi;
-    /* added by c00144034 for ZSL end*/
 
 	mini_isp_meta_data	*meta_data;  //add by zhoutian for mini-ISP meta data
 	bool				meta_data_vc_on;
@@ -266,7 +263,6 @@ typedef struct _mini_isp_hw_controller {
 #if 0
 	void (*isp_set_process_mode) (u32 w, u32 h);
 #else
-    /* add by c00220250 */
     void (*isp_set_process_mode) (capture_type process_mode);
 #endif
 	isp_process_mode_t(*isp_get_process_mode) (void);
@@ -331,7 +327,6 @@ void mini_k3_ispio_deinit(void);
 
 /* Used to switch between yuv rect and raw rect */
 int mini_k3_isp_yuvrect_to_rawrect(mini_camera_rect_s *yuv, mini_camera_rect_s *raw);
-/* added by y00215412 for AE zoom issue */
 int mini_k3_isp_yuvrect_to_rawrect2(mini_camera_rect_s *yuv, mini_camera_rect_s *raw);
 int mini_k3_isp_rawrect_to_yuvrect(mini_camera_rect_s *yuv, mini_camera_rect_s *raw);
 int mini_k3_isp_antishaking_rect_stat2out(mini_camera_rect_s *out, mini_camera_rect_s *stat);

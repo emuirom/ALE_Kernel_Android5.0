@@ -212,6 +212,7 @@ static int hisi_powerkey_probe(struct platform_device *pdev)
 
 	wake_lock_init(&info->pwr_wake_lock, WAKE_LOCK_SUSPEND, "android-pwr");
 
+
 #if defined (CONFIG_HUAWEI_DSM)
 	/* initialize the statistic variable */
 	powerkey_press_count = 0;
@@ -336,6 +337,7 @@ static int hisi_powerkey_resume(struct platform_device *pdev)
 	return 0;
 }
 #endif
+
 
 static struct of_device_id hisi_powerkey_of_match[] = {
 	{ .compatible = "hisilicon,hisi-powerkey", },

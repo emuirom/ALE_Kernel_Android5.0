@@ -14,10 +14,8 @@ config HI6521_CHARGER
 config CHARGER_TYPE_RECHECK
         bool "hi6xxx charger type recheck"
         default n
-
 config HUAWEI_HLTHERM_CHARGING
          bool "High and low tem charging"
-
 config COUL_TEST
         bool "hisi coul test"
         default n

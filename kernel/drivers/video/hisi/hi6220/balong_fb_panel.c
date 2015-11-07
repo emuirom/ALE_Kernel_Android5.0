@@ -25,6 +25,7 @@
 #include "balong_fb.h"
 
 u32 three_lane_flag = 0;
+u32 colortemp_adjust_flag = 0;
 
 void set_value(u32* addr, u32 val, u8 bw, u8 bs)
 {
@@ -410,6 +411,7 @@ void  balong_fb_device_free(struct platform_device *pdev)
     platform_device_put(pdev);
 }
 
+
 /**************************regulator********************************************/
 
 int vcc_cmds_tx(struct platform_device *pdev, struct vcc_desc *cmds, int cnt)
@@ -571,6 +573,7 @@ error:
     return ret;
 }
 
+
 int get_resource_from_dts(struct platform_device *pdev, struct balong_panel_info *pinfo)
 {
     struct device      *dev;
@@ -599,6 +602,12 @@ int get_resource_from_dts(struct platform_device *pdev, struct balong_panel_info
     if (ret) {
         balongfb_loge("get three_lane_flag is fail \n");
         three_lane_flag = 0;
+    }
+
+    ret = of_property_read_u32(np, "ct_adjust_flag", &colortemp_adjust_flag);
+    if (ret) {
+        balongfb_loge("Failed to get the flag of color temperature! \n");
+        colortemp_adjust_flag = 0;
     }
 
     balongfb_logi("pinfo->dsi_bit_clk_rate = %d \n", pinfo->mipi.dphy_freq);

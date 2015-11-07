@@ -628,6 +628,7 @@ static inline void mmc_free_ext_csd(u8 *ext_csd)
 	kfree(ext_csd);
 }
 
+
 static int mmc_compare_ext_csds(struct mmc_card *card, unsigned bus_width)
 {
 	u8 *bw_ext_csd;
@@ -708,6 +709,7 @@ MMC_DEV_ATTR(rel_sectors, "%#x\n", card->ext_csd.rel_sectors);
 MMC_DEV_ATTR(pre_eol_info, "0x%02X\n", card->ext_csd.pre_eol_info);
 MMC_DEV_ATTR(life_time_est_typ_a, "0x%02X\n", card->ext_csd.device_life_time_est_typ_a);
 MMC_DEV_ATTR(life_time_est_typ_b, "0x%02X\n", card->ext_csd.device_life_time_est_typ_b);
+
 
 static struct attribute *mmc_std_attrs[] = {
 	&dev_attr_cid.attr,
@@ -940,6 +942,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	 * respond.
 	 * mmc_go_idle is needed for eMMC that are asleep
 	 */
+
 
 	printk(KERN_INFO "mmc init begin cmd0,caps is 0x%x \n",host->caps);
 
@@ -1676,6 +1679,7 @@ static int mmc_resume(struct mmc_host *host)
 
 	return err;
 }
+
 
 /*
  * Callback for runtime_suspend.

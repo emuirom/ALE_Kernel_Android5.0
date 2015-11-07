@@ -1,12 +1,4 @@
-/*
- * FileName:
- * Description:
- * Version:
- * Function List:
- *                 1.
- * History:
- *     <author>   <time>    <version >   <desc>
- */
+
 
 #ifndef _TEEK_NS_CLIENT_H_
 #define _TEEK_NS_CLIENT_H_
@@ -64,6 +56,7 @@
 
 #define TEE_REQ_FROM_USER_MODE   0x0
 #define TEE_REQ_FROM_KERNEL_MODE 0x1
+
 
 /* Max sizes for login info buffer comming from teecd */
 #define MAX_PACKAGE_NAME_LEN 255
@@ -137,6 +130,8 @@ typedef struct tag_TC_NS_Shared_MEM{
     struct list_head head;
 } TC_NS_Shared_MEM;
 
+
+
 typedef struct tag_TC_NS_Service{
     unsigned char uuid[16];
     struct mutex session_lock;
@@ -159,9 +154,11 @@ typedef struct tag_TC_NS_Session{
     struct mutex ta_session_lock;
 } TC_NS_Session;
 
+
 TC_NS_Service *tc_find_service(struct list_head *services, char *uuid);
 TC_NS_Session *tc_find_session(struct list_head *session_list,
 					  unsigned int session_id);
+
 
 int TC_NS_ClientOpen(TC_NS_DEV_File **dev_file, uint8_t kernel_api);
 int TC_NS_ClientClose(TC_NS_DEV_File *dev);
@@ -172,6 +169,7 @@ int TC_NS_OpenSession(TC_NS_DEV_File *dev_file, TC_NS_ClientContext
 int TC_NS_CloseSession(TC_NS_DEV_File *dev_file,
 				   TC_NS_ClientContext *context);
 int TC_NS_Send_CMD(TC_NS_DEV_File *dev_file, TC_NS_ClientContext *context);
+
 
 unsigned int TC_NS_SMC(unsigned int cmd_addr);
 uint32_t TC_NS_get_uid(void);

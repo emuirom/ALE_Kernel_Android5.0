@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  y00285329
+ * Email:	  yinxuerui@huawei.com
  * Date:	  2014-12-08
  *
  * This program is free software; you can redistribute it and/or modify
@@ -397,6 +399,7 @@ imx179_plk_config(
 	return ret;
 }
 
+
 //need modify
 void extisp_power_on(int on)
 {
@@ -406,6 +409,7 @@ void extisp_power_on(int on)
 		hw_sensor_power_down(&s_imx179_plk);
 }
 EXPORT_SYMBOL(extisp_power_on);
+
 
 static int32_t
 imx179_plk_platform_probe(

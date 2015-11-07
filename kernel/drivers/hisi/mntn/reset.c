@@ -24,6 +24,7 @@
 #define MDEBUG_LEVEL    0
 #define MLOG_TAG        "reset"
 
+
 #include <linux/module.h>           /* For module specific items */
 #include <linux/moduleparam.h>      /* For new moduleparam's */
 #include <linux/types.h>            /* For standard types (like size_t) */
@@ -71,6 +72,7 @@
 #define DRV_RESET_BLK_MAX         (50)
 #define DRV_RESET_BLK_DEV          "/dev/block/mmcblk0p"
 
+
 static int in_suspend_state = 0;
 static struct workqueue_struct *reset_wq = NULL;
 static struct wake_lock reset_wake_lock;
@@ -81,8 +83,10 @@ static void __iomem *gic_base_addr = NULL;
 static unsigned long ap_dmac_base = 0;
 static unsigned long hifi_wdt_addr = 0;
 
+
 static unsigned int s_file_store_ok = FALSE;
 static ereset_irq_type s_reset_irq_type = BSP_RESET_NONE;
+
 
 static char *reboot_reason[] = {"modem_panic", "modem_freeze", "modem_reboot", \
                                 "hifi_freeze", "mcu_panic" };
@@ -94,6 +98,7 @@ static struct delayed_work init_reset_irq_work;
 static struct delayed_work delay_to_do_sh_work;
 
 static unsigned int   g_cpu_status;
+
 
 void hifi_freeze_give_semaphone(void);
 void android_freeze_give_semaphone(void);
@@ -174,16 +179,7 @@ static void power_on_core_do_work(void)
 
     return;
 }
-/*****************************************************************************
- Description : reset work queue and notifier register declare, such as:
-                    struct blocking_notifier_head hifi_freeze_notifier_list
-                    struct work_queue hifi_freeze_work
-                    hifi_freeze_do_work()           to launch work queue
-                    hifi_freeze_regsister_notifier()    for mntn to register handle
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
+
 #define RESET_WORK_DECLARE(name, type)\
 \
 static BLOCKING_NOTIFIER_HEAD(name ## _notifier_list);\
@@ -221,6 +217,7 @@ int name ## _unregsister_notifier(struct notifier_block *n)\
     return  blocking_notifier_chain_unregister(&name ## _notifier_list, n);\
 }\
 EXPORT_SYMBOL(name ## _unregsister_notifier);
+
 
 #define RESET_WORK_INIT(name)\
 INIT_WORK(&name ## _work, name ## _do_work)
@@ -264,22 +261,16 @@ static int reset_pm_notify(struct notifier_block *notify_block,
     return 0;
 }
 
+
 static void print_banner(char *info)
 {
-/*DEEP_SLEEP_FOR_LOG DTS:2013081800468 modifier: yuanfang 00241633 begin*/
     printk(KERN_ERR "############################\n");
     printk(KERN_ERR "timestamp: %d\n", omTimerGet());
     printk(KERN_ERR " %s\n", info);
     printk(KERN_ERR "############################\n");
-/*DEEP_SLEEP_FOR_LOG DTS:2013081800468 modifier: yuanfang 00241633 end*/
 }
 
-/*****************************************************************************
- Description : disable all reset irq, we just catch the first exception
-  History
-  1.Date: 2012/12/22
-    Modification : Created function
-*****************************************************************************/
+
 static void prepare_reset(void)
 {
     wake_lock(&reset_wake_lock);
@@ -300,13 +291,6 @@ static void prepare_reset(void)
 
     return;
 }
-
-/*****************************************************************************
- Description : stop hifi watchdog1
-  History
-  1.Date: 2013/10/14
-    Modification : Created function
-*****************************************************************************/
 static void stop_watchdog1(void)
 {
     if(!hifi_wdt_addr){
@@ -341,12 +325,7 @@ void do_hifi_runstall(void)
     *(volatile unsigned int *)SOC_PERI_SCTRL_SC_DSP_SUBSYS_CTRL0_ADDR(sctrl_off) = runstall_val.value;
 }
 /*reset system after saving log*/
-/*****************************************************************************
- Description : hifi freeze irq handle ,to launch hifi_freeze work queue,
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
+
 static irqreturn_t hifi_freeze_irq(int irqno, void *param)
 {
     SOC_PERI_SCTRL_SC_DSP_SUBSYS_CTRL0_UNION runstall_val;
@@ -379,6 +358,7 @@ static irqreturn_t hifi_freeze_irq(int irqno, void *param)
     writel(0, (void __iomem *)SOC_EDMAC_CX_CONFIG_ADDR(ap_dmac_base, 4));
     writel(0, (void __iomem *)SOC_EDMAC_CX_CONFIG_ADDR(ap_dmac_base, 5));
 
+
 /*Modify_for_c_reset, l00212112,20130511 ,starts*/
     /*clean hifi's wdt int*/
     reset_clean_wdt_int(BSP_RESET_MODULE_HIFI);
@@ -391,13 +371,9 @@ static irqreturn_t hifi_freeze_irq(int irqno, void *param)
     return IRQ_HANDLED;
 }
 
+
 /*Modify_for_c_reset, l00212112,20130511 ,starts*/
-/*****************************************************************************
- Description : mcu freeze irq handle ,to launch mcu_freeze work queue,
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
+
 static irqreturn_t mcu_freeze_irq(int irqno, void *param)
 {
     print_banner("oops : mcu freeze ....\n");
@@ -410,12 +386,6 @@ static irqreturn_t mcu_freeze_irq(int irqno, void *param)
     return IRQ_HANDLED;
 }
 #ifndef _DRV_LLT_
-/*****************************************************************************
- Description : trigger c core's fiq or m core's nmi
-  History
-  1.Date: 2014/1/21
-    Modification : Created function
-*****************************************************************************/
 static int fiq_nmi_debug = 0;
 void acore_trigger_othercore_fiq(struct work_struct *work)
 {
@@ -503,12 +473,7 @@ void mcu_puzzle_give_semaphone(void)
     /*do nothing*/
 }
 
-/*****************************************************************************
- Description : enable all reset irq,
-  History
-  1.Date: 2013/5/10
-    Modification : Created function
-*****************************************************************************/
+
 void finish_reset_sub(void)
 {
     platform_ddr_protect_init(1); /*just for compile by x00195127*/
@@ -561,6 +526,7 @@ void BSP_CPU_StateSet(unsigned int iOff,unsigned int offset)
 
     }
 }
+
 
 /*****************************************************************************
  函 数 名  : BSP_CPU_StateGet
@@ -619,6 +585,7 @@ void reset_clean_wdt_int(ereset_module emodule)
 #endif
 }
 
+
 /*Modify_for_c_reset, l00212112,20130511, ends*/
 #ifndef _DRV_LLT_
 /*****************************************************************************
@@ -668,12 +635,7 @@ static void delay_to_runsh_do_work(struct work_struct *work)
 }
 #endif
 
-/*****************************************************************************
- Description : mcu panic irq handle ,to launch mcu_panic work queue,
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
+
 static void mcu_panic_irq(unsigned int param)
 {
     print_banner("oops : mcu panic ...");
@@ -694,19 +656,13 @@ static void mcu_panic_irq(unsigned int param)
 
     return;
 }
-
-/*****************************************************************************
- Description : reset device module initialize, create workqueue, initilize work, connect irq handle
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
 static void init_reset_irq_do_work(struct work_struct *work)
 {
     int ret;
 
     hifi_wdt_addr = (unsigned long)(ioremap_nocache(SOC_Watchdog2_BASE_ADDR, 4096));
     ap_dmac_base = (unsigned long)(ioremap_nocache(SOC_AP_DMAC_BASE_ADDR, 4096));
+
 
     wake_lock_init(&reset_wake_lock, WAKE_LOCK_SUSPEND, "reset_wake_lock");
 
@@ -730,12 +686,15 @@ static void init_reset_irq_do_work(struct work_struct *work)
         printk(KERN_ERR "failed to install hifi freezing irq handle (%d)\n", ret);
     }
 
+
 /*Modify_for_c_reset, l00212112,20130511, starts*/
     ret = request_irq(IRQ_CM3WD0, mcu_freeze_irq, 0, "mcu_freeze",  NULL);
     if (0 != ret) {
         printk(KERN_ERR "failed to install mcu freezing irq handle (%d)\n", ret);
     }
 /*Modify_for_c_reset, l00212112,20130511, ends*/
+
+
 
     ret = BSP_IPC_IntConnect(IPC_ACPU_INI_SRC_MCU_EXC_REBOOT, mcu_panic_irq, 0);
     if (0 != ret){
@@ -745,6 +704,7 @@ static void init_reset_irq_do_work(struct work_struct *work)
 
     return;
 }
+
 
 static int reset_module_init(void)
 {
@@ -756,26 +716,23 @@ static int reset_module_init(void)
     /*init delayed work*/
     INIT_DELAYED_WORK(&init_reset_irq_work, init_reset_irq_do_work);
 
+
     /*delay 2 second*/
     queue_delayed_work(reset_wq, &init_reset_irq_work, RESET_MOUDLE_DELAY_TIME*HZ);
 
     return 0;
 }
-
-/*****************************************************************************
- Description : reset device module exit, free irqs ,release work queue
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
 static void __exit reset_device_module_exit(void)
 {
+
 
     BSP_IPC_IntDisonnect(IPC_ACPU_INI_SRC_MCU_EXC_REBOOT, mcu_panic_irq, 0);
 
     free_irq(IRQ_CM3WD0, NULL);
 
     free_irq(IRQ_WD1, NULL);
+
+
 
     iounmap((void*)ap_dmac_base);
     iounmap((void*)hifi_wdt_addr);
@@ -785,12 +742,8 @@ static void __exit reset_device_module_exit(void)
     return;
 }
 
-/*****************************************************************************
- Description :android freeze flag check and initilize, if freeze reset, launch workqueue to record
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
+
+
 static int __init system_freeze_flag_init(void)
 {
     /*unsigned long sctrl_base = (unsigned long)HISI_VA_ADDRESS(SOC_SC_ON_BASE_ADDR);*/
@@ -805,12 +758,8 @@ static int __init system_freeze_flag_init(void)
     return 0;
 }
 
-/*****************************************************************************
- Description :android freeze flag check exit, just unregister the notifier caller
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
+
+
 static void __exit system_freeze_flag_exit(void)
 {
     /*to some code when module exit*/
@@ -880,13 +829,7 @@ static struct notifier_block android_reboot_notifier = {
     .priority = INT_MAX,
 };
 
-/*****************************************************************************
- Description :android reboot flag check and initilize, if freeze reset,
-              launch workqueue to record
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
+
 static int __init android_reboot_flag_init(void)
 {
     unsigned long addr = (unsigned long) HISI_VA_ADDRESS(MEMORY_AXI_ANDROID_REBOOT_FLAG_ADDR);
@@ -902,12 +845,7 @@ static int __init android_reboot_flag_init(void)
     return 0;
 }
 
-/*****************************************************************************
- Description :android freeze flag check exit, just unregister the notifier caller
-  History
-  1.Date: 2012/9/13
-    Modification : Created function
-*****************************************************************************/
+
 static void __exit android_reboot_flag_exit(void)
 {
     /*to some code when module exit*/
@@ -920,6 +858,7 @@ arch_initcall(system_freeze_flag_init);
 module_init(android_reboot_flag_init);
 
 module_init(reset_module_init);
+
 
 module_exit(android_reboot_flag_exit);
 
@@ -1026,6 +965,7 @@ int drv_read_bin(const char *partion_name, unsigned int offset, unsigned int len
 
     filp_close(fp, NULL);
 
+
     /*释放资源*/
     if(NULL != pathname) {
        kfree(pathname);
@@ -1053,6 +993,8 @@ error:
 
 }
 EXPORT_SYMBOL(drv_read_bin);
+
+
 
 MODULE_DESCRIPTION("Hisilicon device RESET Management module");
 MODULE_LICENSE("GPL");

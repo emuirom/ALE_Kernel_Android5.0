@@ -18,7 +18,6 @@ Problem NO.         Name        Time         Reason
 #ifndef	__BOARD_SENSORS_H__
 #define	__BOARD_SENSORS_H__
 
-/* zkf55108 2011/10/26 add begin */
 /*Device Id Name*/
 #define AKM8975C_I2C_NAME		"akm8975"
 #define	LIS3DH_I2C_NAME			"lis3dh_acc"
@@ -91,5 +90,4 @@ int set_gyro_selfTest_result(enum input_sensor name, const char *result);
 int set_selftest(int value);
 int set_selftest_lm330(int value);
 
-/* zkf55108 2011/10/26 add end */
 #endif

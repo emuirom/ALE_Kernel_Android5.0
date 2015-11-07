@@ -116,8 +116,10 @@ extern u8* balongfd_reg_base_ade;
 extern u8* balongfd_reg_base_dsi0;
 //extern u32 g_smmu_flag;
 
+
 /* ADE */
 #define ADE_CH_SECU_LINE	11
+
 
 #define BALONGFB_DEFAULT_BGR_FORMAT	ADE_RGB
 
@@ -369,6 +371,7 @@ struct balong_fb_data_type {
     struct work_struct video_idle_work;
     struct workqueue_struct *video_idle_wq;
 
+
     bool cmd_mode_refresh;
     bool cmd_bl_can_set;
     char reserved2[2];
@@ -442,6 +445,7 @@ struct balong_fb_data_type {
 
     struct semaphore mipi_read_sem;
 
+
 #ifdef CONFIG_HAS_EARLYSUSPEND
     struct early_suspend early_suspend;
 #endif
@@ -503,6 +507,8 @@ extern char g_lcd_name_buf[100];
 #define VSYNC_CTRL_EXPIRE_COUNT    (4)
 
 extern u32 three_lane_flag;
+/* Define a flag for adjusting of color temperature. */
+extern u32 colortemp_adjust_flag;
 
 /******************************************************************************
  ** FUNCTIONS PROTOTYPES

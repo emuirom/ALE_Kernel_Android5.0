@@ -1534,28 +1534,6 @@ int hissc_adcl_pga_en_pga_power_mode_event(struct snd_soc_dapm_widget *w,
 	return 0;
 }
 
-int hissc_adcl_fm_pga_en_pga_power_mode_event(struct snd_soc_dapm_widget *w,
-				struct snd_kcontrol *kcontrol, int event)
-{
-	switch (event) {
-	case SND_SOC_DAPM_PRE_PMU:
-		logi("[AUDIO]inform lpm3 to remote sleep");
-		/* inform lpm3 while fm smartpa start */
-		BSP_IPC_IntSend(IPC_CORE_MCU, (IPC_INT_LEV_E)IPC_MCU_INT_SRC_ACPU_I2S_REMOTE_SLEEP);
-		break;
-	case SND_SOC_DAPM_POST_PMD:
-		logi("[AUDIO]inform lpm3 to remote invalid");
-		/* inform lpm3 while fm smartpa stop */
-		BSP_IPC_IntSend(IPC_CORE_MCU, (IPC_INT_LEV_E)IPC_MCU_INT_SRC_ACPU_I2S_REMOTE_INVALID);
-		break;
-	default:
-		loge("event=%d", event);
-		break;
-	}
-
-	return 0;
-}
-
 int hissc_adcr_pga_en_pga_power_mode_event(struct snd_soc_dapm_widget *w,
 				struct snd_kcontrol *kcontrol, int event)
 {
@@ -1776,14 +1754,18 @@ static int hissc_pll_supply_power_mode_event(struct snd_soc_dapm_widget *w,
 	case SND_SOC_DAPM_PRE_PMU:
 		ret = clk_prepare_enable(priv->codec_soc);
 		if (ret) {
-			loge("codec 49.15M clken fail\n");
+			loge("codec 49.15M clken fail \n");
 		}
+		logi("[AUDIO] inform lpm3 to remote sleep. \n");
+		BSP_IPC_IntSend(IPC_CORE_MCU, (IPC_INT_LEV_E)IPC_MCU_INT_SRC_ACPU_I2S_REMOTE_SLEEP);
 		break;
 	case SND_SOC_DAPM_POST_PMD:
+		logi("[AUDIO] inform lpm3 to remote invalid. \n");
+		BSP_IPC_IntSend(IPC_CORE_MCU, (IPC_INT_LEV_E)IPC_MCU_INT_SRC_ACPU_I2S_REMOTE_INVALID);
 		clk_disable_unprepare(priv->codec_soc);
 		break;
 	default :
-		loge("power mode event err : %d\n", event);
+		loge("power mode event err : %d \n", event);
 		break;
 	}
 
@@ -2905,15 +2887,6 @@ static const struct snd_soc_dapm_widget hissc_dapm_widgets[] = {
 		hissc_adcl_pga_en_pga_power_mode_event,
 		(SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD)),
 
-	SND_SOC_DAPM_PGA_E("ADCL_FM_EN PGA",
-		HISSC_DDR_CODEC_VIR1_ADDR,
-		DDR_CODEC_BIT8,
-		0/* not INVERT */,
-		NULL,
-		0,
-		hissc_adcl_fm_pga_en_pga_power_mode_event,
-		(SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD)),
-
 	SND_SOC_DAPM_MIXER("S2_OL_MIXER_EN MIXER",
 		HISSC_IF_CLK_EN_CFG_ADDR,
 		HISSC_S2_OL_MIXER_EN_BIT_START,
@@ -3372,8 +3345,7 @@ static const struct snd_soc_dapm_route hissc_route_map[] =
 	{"SMT_LINEPGAR_PD PGA",                        NULL,                    "SMT_LINEIN_R INPUT"},
 	{"SMT_ADCL_PD MIXER",                         "MAINPGA",             "SMT_MAINPGA_PD PGA"},
 	{"SMT_ADCL_PD MIXER",                         "AUXPGA",              "SMT_AUXPGA_PD PGA"},
-	{"ADCL_FM_EN PGA",                             NULL,                 "SMT_LINEPGAL_PD PGA"},
-	{"SMT_ADCL_PD MIXER",                         "LINEINL",               "ADCL_FM_EN PGA"},
+	{"SMT_ADCL_PD MIXER",                         "LINEINL",               "SMT_LINEPGAL_PD PGA"},
 	{"SMT_ADCL_PD MIXER",                         "LINEINR",               "SMT_LINEPGAR_PD PGA"},
 	{"SMT_ADCR_PD MIXER",                         "MAINPGA",            "SMT_MAINPGA_PD PGA"},
 	{"SMT_ADCR_PD MIXER",                         "AUXPGA",              "SMT_AUXPGA_PD PGA"},
@@ -3520,6 +3492,10 @@ static const struct snd_soc_dapm_route hissc_route_map[] =
 	{"S1_IF_CLK_EN PGA",                          NULL,                  "PLL"},
 	{"S2_IF_CLK_EN PGA",                          NULL,                  "PLL"},
 	{"S3_IF_CLK_EN PGA",                          NULL,                  "PLL"},
+	{"DACL_MIXER_EN MIXER",                    NULL,                  "PLL"},
+	{"DACR_MIXER_EN MIXER",                   NULL,                  "PLL"},
+	{"ADCL_PGA_EN PGA",                          NULL,                  "PLL"},
+	{"ADCR_PGA_EN PGA",                         NULL,                   "PLL"},
 	{"SMT_LINEPGAL_PD PGA",                    NULL,                  "Backup_PLL"},
 	{"SMT_LINEPGAR_PD PGA",                   NULL,                  "Backup_PLL"},
 

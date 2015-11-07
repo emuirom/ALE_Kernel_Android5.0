@@ -4162,6 +4162,7 @@ static int cyttsp4_core_probe(struct cyttsp4_core *core)
 		/* use edge triggered interrupts */
 		irq_flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
 
+
 	rc = request_threaded_irq(cd->irq, cyttsp4_hard_irq, cyttsp4_irq,
 			irq_flags, dev_name(dev), cd);
 	if (rc < 0) {

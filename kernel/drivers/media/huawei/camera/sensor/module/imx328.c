@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00145353
+ * Email:	  alan.hefeng@huawei.com
  * Date:	  2013-12-27
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+
 #include <linux/module.h>
 #include <linux/printk.h>
 #include <linux/of.h>
@@ -31,6 +34,8 @@
 #include "hw_csi.h"
 
 #define I2S(i) container_of(i, sensor_t, intf)
+
+
 
 extern struct hw_csi_pad hw_csi_pad;
 static hwsensor_vtbl_t s_imx328_vtbl;
@@ -62,6 +67,8 @@ struct sensor_power_setting hw_imx328_power_setting[] = {
         .delay = 1,
     },
 
+
+
 	{
 		.seq_type = SENSOR_IOVDD,
 		.data = (void*)"common-iovdd",
@@ -69,6 +76,7 @@ struct sensor_power_setting hw_imx328_power_setting[] = {
 		.sensor_index = SENSOR_INDEX_INVALID,
 		.delay = 1,
 	},
+
 
 	{
 		.seq_type = SENSOR_VCM_AVDD,
@@ -100,6 +108,7 @@ struct sensor_power_setting hw_imx328_power_setting[] = {
 		.delay = 1,
 	},
 
+
 	{
 		.seq_type = SENSOR_MCLK,
 		.sensor_index = SENSOR_INDEX_INVALID,
@@ -113,6 +122,7 @@ struct sensor_power_setting hw_imx328_power_setting[] = {
         .sensor_index = SENSOR_INDEX_INVALID,
         .delay = 1,
     },
+
 
 	{
 		.seq_type = SENSOR_VCM_PWDN,
@@ -163,6 +173,7 @@ imx328_get_name(
     return sensor->board_info->name;
 }
 
+
 int
 imx328_power_up(
         hwsensor_intf_t* si)
@@ -186,6 +197,7 @@ imx328_power_down(
 	ret = hw_sensor_power_down(sensor);
 	return ret;
 }
+
 
 int imx328_csi_enable(hwsensor_intf_t* si)
 {
@@ -219,6 +231,7 @@ int imx328_csi_disable(hwsensor_intf_t* si)
 
     return 0;
 }
+
 
 static int
 imx328_match_id(
@@ -268,6 +281,7 @@ static ssize_t imx328_powerctrl_store(struct device *dev,
 
 	return count;
 }
+
 
 static struct device_attribute imx328_powerctrl =
     __ATTR(power_ctrl, 0664, imx328_powerctrl_show, imx328_powerctrl_store);

@@ -43,6 +43,7 @@ int app_info_set(const char * name, const char * value)
 
 EXPORT_SYMBOL(app_info_set);
 
+
 static int app_info_proc_show(struct seq_file *m, void *v)
 {
     struct info_node *node;

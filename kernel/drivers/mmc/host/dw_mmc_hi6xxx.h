@@ -34,6 +34,7 @@
 #define EMMC_CS_BOARD               (12345678)
 #define SD_CS_BOARD                   (10234567)
 
+
 #define EMMC_TUNING_FAIL            (87654321)
 #define EMMC_TUNING_SUCCESS         (0)
 

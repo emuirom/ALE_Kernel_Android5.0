@@ -24,9 +24,11 @@ unsigned int __machine_arch_type;
 #include "soc_baseaddr_interface.h"
 #include "soc_ao_sctrl_interface.h"
 
+
 #ifdef CONFIG_SRECORDER
 
 #include <linux/srecorder.h>
+
 
 /*----local macroes------------------------------------------------------------------*/
 
@@ -34,7 +36,9 @@ unsigned int __machine_arch_type;
 #define CRASH_DEFAULT_TIME_POWER_COLLAPSE "Crash time: Unknown\n"
 #define LOG_BUF_MASK(log_buf_len) ((log_buf_len) - 1)
 
+
 /*----local prototypes----------------------------------------------------------------*/
+
 
 /*----local variables------------------------------------------------------------------*/
 
@@ -73,6 +77,7 @@ static const unsigned long s_crc32tab[256] =
     0xBDBDF21C, 0xCABAC28A, 0x53B39330, 0x24B4A3A6, 0xBAD03605, 0xCDD70693, 0x54DE5729, 0x23D967BF,
     0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94, 0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
 };
+
 
 /*----local function prototypes---------------------------------------------------------*/
 
@@ -121,6 +126,7 @@ static void icedcc_putc(int ch)
 
 	asm("mcr p14, 0, %0, c0, c5, 0" : : "r" (ch));
 }
+
 
 #elif defined(CONFIG_CPU_XSCALE)
 
@@ -209,6 +215,7 @@ asmlinkage void __div0(void)
 
 extern int do_decompress(u8 *input, int len, u8 *output, void (*error)(char *x));
 
+
 #ifdef CONFIG_SRECORDER
 void *__memcpy(void *dest, const void *src, size_t count)
 {
@@ -223,6 +230,7 @@ void *__memcpy(void *dest, const void *src, size_t count)
     return dest;
 }
 
+
 void *__memset(void *s, int c, size_t count)
 {
     char *xs = s;
@@ -234,6 +242,7 @@ void *__memset(void *s, int c, size_t count)
 
     return s;
 }
+
 
 /**
     @function: static inline int strcpy_valid_char(char *pdst, char *psrc, int bytes_to_write)
@@ -269,6 +278,7 @@ static inline int strcpy_valid_char(char *pdst, char *psrc, int bytes_to_write)
     return j;
 }
 
+
 /**
     @function: static inline void copy_data(char *pdst, char *psrc, int bytes_to_copy)
     @brief: copy data form psrc to pdst
@@ -288,6 +298,7 @@ static inline void copy_data(char *pdst, char *psrc, int bytes_to_copy)
         *pdst++ = *psrc++;
     }
 }
+
 
 /**
     @function: static inline int str_len(char *psrc)
@@ -310,6 +321,7 @@ static inline int str_len(char *psrc)
 
     return psrc - ptemp;
 }
+
 
 /**
     @function: static inline void write_info_header(unsigned long header_addr,
@@ -348,6 +360,7 @@ static inline void write_info_header(unsigned long header_addr,
     copy_data((char *)(header_addr + sizeof(srecorder_info_header_t) + keyword_len), "\n", 1); /* 1 is the length of "\n" */
 }
 
+
 /**
     @function: unsigned long get_crc32(unsigned char const *pbuf, unsigned long data_len)
     @brief: Use CRC32 to do data check
@@ -378,6 +391,7 @@ static unsigned long get_crc32(unsigned char const *pbuf, unsigned long data_len
 
     return crc32 ^= CRC32_SEED_VALUE;
 }
+
 
 static inline unsigned long dump_need_reparsed_dmesg(char *pdst, char *psrc, unsigned log_buf_len)
 {
@@ -431,6 +445,7 @@ static inline unsigned long dump_dmesg(char *pdst, char *psrc, unsigned log_end,
     return (log_header_size + keyword_len + data_len);
 }
 
+
 #ifdef CONFIG_POWERCOLLAPSE
 #ifdef CONFIG_DUMP_LOGCAT
 /**
@@ -475,6 +490,7 @@ static inline unsigned long dump_logcat(char *pdst, logcat_buf_info *plogcat_buf
     return (log_header_size + keyword_len + data_len);
 }
 #endif
+
 
 #ifdef CONFIG_DUMP_LOGCAT
 /**
@@ -613,6 +629,7 @@ decompress_kernel(unsigned long output_start, unsigned long free_mem_ptr_p,
 
         /* check nff */
 
+
             /* |mem_header | prev_log | nff_log_header | nff_log_keyword | nff_log */
 
             /* add boot nff reason and time */
@@ -620,6 +637,7 @@ decompress_kernel(unsigned long output_start, unsigned long free_mem_ptr_p,
             /* dump dmesg */
 
             /* dump logcat */
+
 
         /* 2, check the validity of SRecorder's reserved memory header */
         pmem_header = (srecorder_reserved_mem_header_t *)pmem_info->srecorder_log_buf;

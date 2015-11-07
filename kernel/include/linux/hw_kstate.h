@@ -3,6 +3,7 @@
  *
  * File name: hw_kstate.h
  * Description: This file use to send kernel state
+ * Author: gavin.yangsong@huawei.com
  * Version: 0.1
  * Date: 2014/07/17
  */

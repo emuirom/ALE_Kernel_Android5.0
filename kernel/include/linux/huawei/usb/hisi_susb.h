@@ -122,6 +122,7 @@ int dwc_dev_insert_init(struct lm_device *);
 int dwc_host_insert_init(struct lm_device *);
 void dwc_dev_draw_init(struct lm_device *);
 void dwc_host_draw_init(struct lm_device *);
+extern unsigned int get_pd_charge_flag(void);
 void dwc_otg_set_hibernation(struct lm_device *, int);
 void hiusb_hibernation_init(void);
 int hiusb_is_host_mode(struct lm_device *);

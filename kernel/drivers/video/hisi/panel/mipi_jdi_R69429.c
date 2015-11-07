@@ -31,6 +31,8 @@ static struct platform_device *hisifb_pdev  = NULL;
 
 static int cabc_wanted = CABC_OFF;
 
+
+
 static int g_IE_SRE_level = 0x80;
 static int g_CABC_mode = 0x01;
 
@@ -116,6 +118,7 @@ static char back_light_control4[] = {
     0xff,0x01,0x38,0x04,0x04,0x44,0x20,         //PWM_DIV = 0x01, PWM_CYCLE=0x38  -->45khz
  };
 
+
 static char basic_ce_cmd[] = {
     0xCA,
     0x01,0x80,0xa0,0xa0,0xff,0x90,0x80,0x28,
@@ -123,6 +126,7 @@ static char basic_ce_cmd[] = {
     0x30,0xc8,0x0C,0x0C,0x09,0x07,0x08,0x08,
     0x30,0xa8,0x0e,0x12,0x20,0x18,0x20,0x18,
 };
+
 
 static char china_back_light_control1[] = {
     0xB8,
@@ -414,6 +418,7 @@ static struct gpio_desc jdi_lcd_gpio_free_cmds[] = {
 
 };
 
+
 static struct gpio_desc jdi_lcd_gpio_normal_cmds[] = {
     /* AVDD_5.5V*/
     {DTYPE_GPIO_OUTPUT, WAIT_TYPE_MS, 0,
@@ -471,6 +476,7 @@ static struct gpio_desc jdi_lcd_gpio_lowpower_cmds[] = {
 ** LCD GPIO
 */
 
+
 static void jdi_power_on(struct platform_device* pdev)
 {
     HISI_FB_INFO("%s suc!\n", __func__);
@@ -526,6 +532,7 @@ static void jdi_power_off(struct platform_device* pdev)
 
 }
 
+
 /******************************************************************************/
 
 static int cabc_mode = 1; /* allow application to set cabc mode to ui mode */
@@ -541,6 +548,7 @@ static ssize_t mipi_jdi_lcd_info_show(struct platform_device *dev, char *buf)
 
     return ret;
 }
+
 
 static ssize_t get_ce_mode(struct device *dev,
     struct device_attribute *attr, char *buf)
@@ -583,6 +591,7 @@ static ssize_t set_ce_mode(struct device *dev,
 
 	return snprintf((char *)buf, 16,"%d\n", ce_mode);
 }
+
 
 static DEVICE_ATTR(color_enhance_mode, 0664, get_ce_mode, set_ce_mode);
 
@@ -628,6 +637,7 @@ static int mipi_jdi_panel_on(struct platform_device *pdev)
 //		{0xDA, 0x00, 0x00, "RDID1"},
 	};
 #endif
+
 
     BUG_ON(pdev == NULL);
     
@@ -831,6 +841,7 @@ static int mipi_jdi_panel_set_fastboot(struct platform_device *pdev)
     return 0;
 }
 
+
 static int mipi_jdi_panel_lcd_cabc_mode_show(struct device *dev,
     struct device_attribute *attr, char *buf)
 {
@@ -938,6 +949,7 @@ static ssize_t mipi_jdi_panel_lcd_cabc_mode_store(struct platform_device *pdev,
     return snprintf((char *)buf, count, "%d\n", cabc_mode);
 }
 
+
 static int mipi_jdi_panel_set_sre(struct platform_device* pdev, int enable)
 {
     struct hisi_fb_data_type* hisifd = NULL;
@@ -985,6 +997,7 @@ static int mipi_jdi_panel_set_sre(struct platform_device* pdev, int enable)
     HISI_FB_INFO("%s exit succ!SRE enable = %d reg0x55_value = 0x%x\n", __func__, enable,  g_CABC_mode | g_IE_SRE_level);
     return 0;
 }
+
 
 static ssize_t mipi_jdi_panel_lcd_check_reg_show(struct platform_device *pdev, char *buf)
 {
@@ -1381,6 +1394,7 @@ static int mipi_jdi_panel_set_display_region(struct platform_device *pdev,
     return 0;
 }
 
+
 /*for esd check*/
 static int mipi_jdi_panel_check_esd(struct platform_device* pdev)
 {
@@ -1451,6 +1465,7 @@ static struct hisi_fb_panel_data jdi_panel_data = {
     .set_display_region = mipi_jdi_panel_set_display_region,
 };
 
+
 /*******************************************************************************
 **
 */
@@ -1515,6 +1530,8 @@ static int mipi_jdi_probe(struct platform_device *pdev)
     pinfo->vsync_ctrl_type = (VSYNC_CTRL_ISR_OFF |
         VSYNC_CTRL_MIPI_ULPS);
     pinfo->frc_enable = 0;
+
+
 
     if (NULL != strstr(saved_command_line, "androidboot.swtype=factory"))
     {
@@ -1604,13 +1621,6 @@ static int mipi_jdi_probe(struct platform_device *pdev)
     jdi_sysfs_init(pdev);
 //	sysfs_merge_group(hisifb_pdev, &jdi_attr_group);
 //    jdi_sysfs_init(pdev);
-
-/*  rc = sysfs_create_link(NULL,&pdev->dev.kobj,"lcd");                                                                                                      
-    if (rc) {
-        HISI_FB_DEBUG("Fail create lcd link rc=%d\n", rc);
-        return -1;
-    }
-*/
 //  pr_info("%s exit succ!\n",__func__);
     return 0;
 

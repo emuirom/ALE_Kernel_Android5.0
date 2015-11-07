@@ -120,6 +120,7 @@ typedef union {
     u32             ul32;
 } MIPIDSI_PWR_UP_UNION;
 
+
 typedef union {
     struct {
         u32         tx_esc_clk_division : 8;
@@ -532,6 +533,7 @@ typedef union {
     u32             ul32;
 }MIPIDSI_PHY_TST_CTRL0_UNION;
 
+
 /* D-PHY test interface control 1 */
 typedef union {
     struct {
@@ -542,6 +544,7 @@ typedef union {
     } bits;
     u32             ul32;
 }MIPIDSI_PHY_TST_CTRL1_UNION;
+
 
 /* interrupt status register 0 */
 typedef union {
@@ -571,6 +574,7 @@ typedef union {
     } bits;
     u32             ul32;
 }MIPIDSI_INT_ST0_UNION;
+
 
 /* interrupt status register 1 */
 typedef union {
@@ -653,6 +657,7 @@ enum {
     CMD_MODE = 0,
     HSPD_MODE
 };
+
 
 extern void set_MIPIDSI_PWR_UP( u32 nVal );
 extern void set_MIPIDSI_PWR_UP_shutdownz( u32 nVal );

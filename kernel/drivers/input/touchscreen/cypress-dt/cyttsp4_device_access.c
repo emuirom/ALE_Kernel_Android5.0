@@ -292,6 +292,7 @@ static int cyttsp4_grpdata_show_operational_regs(struct device *dev, u8 *ic_buf,
 		return -EINVAL;
 	}
 
+
 	/* cmd result already put into dad->return_buf */
 	for (i = 0; i < num_read; i++)
 		ic_buf[i] = dad->return_buf[dad->ic_grpoffset + i];
@@ -1517,6 +1518,7 @@ static ssize_t cyttsp4_get_panel_data_show(struct device *dev,
 	int returned_element;
 	u8 element_start_offset = cmd_param_ofs
 		+ CY_CMD_CAT_RETRIEVE_PANEL_SCAN_RET_SZ;
+
 
 	rc = cyttsp4_request_exclusive(dad->ttsp,
 			CY_DA_REQUEST_EXCLUSIVE_TIMEOUT);

@@ -15,6 +15,8 @@
 #include <linux/huawei/rdr_area.h>
 #include <linux/huawei/hisi_ringbuffer.h>
 
+
+
 /*
  ***************************************************************************
  * rdr private interface
@@ -27,6 +29,7 @@
 extern spinlock_t g_rdr_dump_stack_lock;
 extern atomic_t rdr_crit_dump_stack;
 s32 rdr_mem_init(void);
+
 
 extern u32 *g_rdr_dump_stack;
 extern int g_rdr_dump_stack_len;
@@ -53,5 +56,6 @@ void rdr_hung_task_hook_add(rdr_funcptr_2 p_hook_func);
 void rdr_cpu_on_off_hook_add(rdr_funcptr_3 p_hook_func);
 void dump_stack_add_hook(rdr_funcptr_1 fn);
 int rdr_get_not_dump_stack(void);
+
 
 #endif	/* End #define __RDR_PRIVATE_H__ */

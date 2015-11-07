@@ -1,13 +1,4 @@
-/*
- * FileName:
- * Author:         h00211444  Version: 0.0.1  Date: 2012-12-25
- * Description:
- * Version:
- * Function List:
- *                 1.
- * History:
- *     <author>   <time>    <version >   <desc>
- */
+
 
 #ifndef _TC_NS_CLIENT_H_
 #define _TC_NS_CLIENT_H_

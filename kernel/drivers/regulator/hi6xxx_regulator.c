@@ -3,6 +3,7 @@
  *
  * Copyright (c) 2011 Hisilicon.
  *
+ * Dongbin Yu <yudongbin@huawei.com>
  *
  * this regulator's probe function will be called lots of times,,
  * because of there are lots of regulator nodes in dtb.
@@ -630,6 +631,7 @@ static unsigned int hi6xxx_regulator_scharge_get_optimum_mode(struct regulator_d
     return 0;
 }
 
+
 static struct regulator_ops hi6xxx_regulator_scharge_rops = {
 	.is_enabled = hi6xxx_regulator_scharge_is_enabled,
 	.enable = hi6xxx_regulator_scharge_enable,
@@ -676,6 +678,7 @@ static int hi6xxx_regualtor_mtcmos_dt_parse(struct hi6xxx_regulator *sreg,
     printk(KERN_INFO"for stub\n\r");
 	return ret;
 }
+
 
 static const struct hi6xxx_regulator hi6xxx_regulator_pmic = {
 	.rdesc = {
@@ -1104,6 +1107,7 @@ static int hi6xxx_regulator_remove(struct platform_device *pdev)
 {
 	return 0;
 }
+
 
 static struct platform_driver hi6xxx_regulator_driver = {
 	.driver = {

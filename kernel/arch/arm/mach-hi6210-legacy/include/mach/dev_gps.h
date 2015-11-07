@@ -15,12 +15,10 @@
  *
  */
 
-/* Begin: Added by p00185344 for GPS BCM47511 */
 #ifdef CONFIG_GPS_BCM_47511
 #define GPIO_GPS_BCM_VBAT_ENABLE_NAME     "gpio_gps_bcm_vbat_enable"
 #define GPIO_GPS_BCM_RESET_NAME           "gpio_gps_bcm_reset"
 #define GPIO_GPS_BCM_VDDIO_ENABLE_NAME    "gpio_gps_bcm_vddio_enable"
 #define GPIO_GPS_BCM_REFCLK_NAME          "gpio_gps_bcm_refclk"
 #endif
-/* End: Added by p00185344 for GPS BCM47511 */
 

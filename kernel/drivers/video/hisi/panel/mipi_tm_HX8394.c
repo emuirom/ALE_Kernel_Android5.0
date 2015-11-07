@@ -124,6 +124,7 @@ static char tm_power_on_param13[] =
     0x30, 0x14,
 };
 
+
 static char tm_power_on_PWM[] =
 {
     0xC9,

@@ -1,21 +1,4 @@
-/******************************************************************************
 
-                  版权所有 (C), 2001-2011, 华为技术有限公司
-
- ******************************************************************************
-  文 件 名   : drv_mailbox.h
-  版 本 号   : 初稿
-  作    者   : 莫南 00176101
-  生成日期   : 2012年9月20日
-  最近修改   :
-  功能描述   : 跨核邮箱接口头文件
-  函数列表   :
-  修改历史   :
-  1.日    期   : 2012年9月20日
-    作    者   : 苏庄銮 59026
-    修改内容   : 创建文件
-
-******************************************************************************/
 #ifndef __DRV_MAILBOX_H__
 #define __DRV_MAILBOX_H__
 
@@ -193,7 +176,7 @@ enum MAILBOX_MAILCODE_ENUM
 
     /* CCPU->MCU IFC调用号定义在这里 */
     MAILBOX_MAILCODE_ITEM_BEGIN(CCPU, MCU, IFC),
-    MAILBOX_IFC_CCPU_TO_MCU_TEST_CMP,  /* s00227525 */
+    MAILBOX_IFC_CCPU_TO_MCU_TEST_CMP,
     MAILBOX_IFC_CCPU_TO_MCU_TEST,
     MAILBOX_IFC_CCPU_TO_MCU_MCA,
     MAILBOX_MAILCODE_ITEM_END(CCPU, MCU, IFC),
@@ -210,7 +193,7 @@ enum MAILBOX_MAILCODE_ENUM
 
     /* CCPU->ACPU IFC编号定义在这里 */
     MAILBOX_MAILCODE_ITEM_BEGIN(CCPU, ACPU, IFC),
-    MAILBOX_IFC_CCPU_TO_ACPU_TEST_CMP, /* s00227525 */
+    MAILBOX_IFC_CCPU_TO_ACPU_TEST_CMP,
     MAILBOX_IFC_CCPU_TO_ACPU_TEST,
     MAILBOX_IFC_CCPU_TO_ACPU_PRINT,
     MAILBOX_IFC_CCPU_TO_ACPU_FOPEN,
@@ -243,7 +226,7 @@ enum MAILBOX_MAILCODE_ENUM
 
     /* ACPU->MCU IFC远程函数调用邮编号定义在这里 */
     MAILBOX_MAILCODE_ITEM_BEGIN(ACPU, MCU, IFC),
-    MAILBOX_IFC_ACPU_TO_MCU_TEST_CMP, /* s00227525 */
+    MAILBOX_IFC_ACPU_TO_MCU_TEST_CMP,
     MAILBOX_IFC_ACPU_TO_MCU_TEST,
     MAILBOX_IFC_ACPU_TO_MCU_HUTAF_HLT,
 	MAILBOX_IFC_ACPU_TO_MCU_MCA,
@@ -269,7 +252,7 @@ enum MAILBOX_MAILCODE_ENUM
 
     /* ACPU->CCPU IFC号定义在这里 */
     MAILBOX_MAILCODE_ITEM_BEGIN(ACPU, CCPU, IFC),
-    MAILBOX_IFC_ACPU_TO_CCPU_TEST_CMP, /* s00227525 */
+    MAILBOX_IFC_ACPU_TO_CCPU_TEST_CMP,
     MAILBOX_IFC_ACPU_TO_CCPU_TEST,
     MAILBOX_IFC_ACPU_TO_CCPU_PRINT,
     MAILBOX_IFC_ACPU_TO_CCPU_FOPEN,
@@ -283,8 +266,8 @@ enum MAILBOX_MAILCODE_ENUM
     MAILBOX_IFC_ACPU_TO_CCPU_ACCESS,
     MAILBOX_IFC_ACPU_TO_CCPU_MKDIR,
     MAILBOX_IFC_ACPU_TO_CCPU_RMDIR,
-    MAILBOX_IFC_ACPU_TO_CCPU_BASE_TEST2, /* s00227525 */
-    MAILBOX_IFC_ACPU_TO_CCPU_BASE_TEST1,  /* s00227525 */
+    MAILBOX_IFC_ACPU_TO_CCPU_BASE_TEST2,
+    MAILBOX_IFC_ACPU_TO_CCPU_BASE_TEST1,
 	MAILBOX_IFC_ACPU_TO_CCPU_PMIC_IRQEVENT,
     MAILBOX_IFC_ACPU_TO_CCPU_SYSTEMERROR,
     MAILBOX_IFC_ACPU_TO_CCPU_RST_MODEM,
@@ -333,9 +316,9 @@ enum MAILBOX_MAILCODE_ENUM
 
     /* MCU->CCPU ifc邮编号定义在这里 */
     MAILBOX_MAILCODE_ITEM_BEGIN(MCU, CCPU, IFC),
-    MAILBOX_IFC_MCU_TO_CCPU_TEST_CMP, /* s00227525 */
-    MAILBOX_IFC_MCU_TO_CCPU_BASE_TEST2, /* s00227525 */
-    MAILBOX_IFC_MCU_TO_CCPU_BASE_TEST1, /* s00227525 */
+    MAILBOX_IFC_MCU_TO_CCPU_TEST_CMP,
+    MAILBOX_IFC_MCU_TO_CCPU_BASE_TEST2,
+    MAILBOX_IFC_MCU_TO_CCPU_BASE_TEST1,
     MAILBOX_IFC_MCU_TO_CCPU_TEST,
     MAILBOX_MAILCODE_ITEM_END(MCU, CCPU, IFC),
 
@@ -357,7 +340,7 @@ enum MAILBOX_MAILCODE_ENUM
 
     /* MCU->ACPU 远程函数调用邮编号定义在这里 */
     MAILBOX_MAILCODE_ITEM_BEGIN(MCU, ACPU, IFC),
-    MAILBOX_IFC_MCU_TO_ACPU_TEST_CMP, /* s00227525 */
+    MAILBOX_IFC_MCU_TO_ACPU_TEST_CMP,
     MAILBOX_IFC_MCU_TO_ACPU_TEST,
     MAILBOX_IFC_MCU_TO_ACPU_PRINT,
     MAILBOX_MAILCODE_ITEM_END(MCU, ACPU, IFC),
@@ -435,25 +418,6 @@ enum MAILBOX_MAILCODE_ENUM
 
 /*注册远程调用执行函数*/
 #define MAILBOX_IFC_REG(id, name) mailbox_ifc_register_exec(id ,IFC_GEN_EXEC_NAME(name));
-
-/*****************************************************************************
- 函 数 名  : mb_msg_cb
- 功能描述  : 邮箱数据接收处理回调函数, 目标邮箱有邮件数据到达时被调用
-             邮箱用户实现并通过MAILBOX_RegisterRecvFunc注册
- 输入参数  : UserHandle -- 用户句柄
-             MailHandle -- 邮箱句柄
-             MailLen    -- 本次到达邮件数据长度
- 输出参数  : 无
- 返 回 值  : 无
- 调用函数  :
- 被调函数  :
-
- 修改历史      :
-  1.日    期   : 2012年9月24日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 typedef void (*mb_msg_cb)(
                 void                   *user_handle,
                 void                   *mail_handle,
@@ -467,67 +431,19 @@ typedef void (*mb_msg_cb)(
   10 函数声明
 *****************************************************************************/
 
-/*****************************************************************************
- 函 数 名  : DRV_MAILBOX_SENDMAIL
- 功能描述  : 邮箱用户发送邮件数据
- 输入参数  : MailCode   -- 邮编, 指定邮件发送目标
-             pData      -- 指向邮件数据的指针
-             Length     -- 待发送数据长度, 单位byte
- 输出参数  : 无
- 返 回 值  : 正确:MAILBOX_OK / 错误:MAILBOX_ERRO或者其他错误码
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年9月28日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 unsigned int DRV_MAILBOX_SENDMAIL(
                 unsigned int           MailCode,
                 void                   *pData,
                 unsigned int           Length);
 
-/*****************************************************************************
- 函 数 名  : DRV_MAILBOX_REGISTERRECVFUNC
- 功能描述  : 注册邮件数据接收函数
- 输入参数  : MailCode   -- 数据接收函数处理的对象邮编
-             pFun       -- 邮件数据接收处理函数指针
-             UserHandle -- 用户定义句柄, 数据接收函数被调用时会作为入参, 无则填空
- 输出参数  : 无
- 返 回 值  : 正确:MAILBOX_OK / 错误:MAILBOX_ERRO或者其他错误码
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年9月29日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 unsigned int DRV_MAILBOX_REGISTERRECVFUNC(
                 unsigned int           MailCode,
                 mb_msg_cb               pFun,
                 void                   *UserHandle);
 
-/*****************************************************************************
- 函 数 名  : DRV_MAILBOX_READMAILDATA
- 功能描述  : 邮箱用户在数据接收回调函数中调用, 从邮箱中读取一封最先到达的邮件
- 输入参数  : MailHandle -- 邮箱句柄, 数据接收回调函数入参
-             pData      -- 保存待读出数据的缓存地址
-             *pSize     -- 缓存长度, 单位byte, 需要大于待读取邮件长度
- 输出参数  : *pSize     -- 实际读取长度, 单位byte
- 返 回 值  : 正确:MAILBOX_OK / 错误:MAILBOX_ERRO或者其他错误码
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年10月26日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 unsigned int DRV_MAILBOX_READMAILDATA(
                 void                   *MailHandle,
                 unsigned char          *pData,

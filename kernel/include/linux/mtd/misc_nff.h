@@ -23,10 +23,12 @@ struct MISC_struct {
 	struct mtd_info *mtd;
 };
 
+
 struct misc_info_user {
 	unsigned long misc_operation;             /*0-write,1-read*/
 	unsigned char misc_data[MISC_PWSTATE_DATA_SIZE+1];
 };
+
 
 #endif
 

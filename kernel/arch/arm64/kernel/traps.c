@@ -329,6 +329,7 @@ void exc_hook_delete(void)
 }
 #endif
 
+
 #ifdef CONFIG_PREEMPT
 #define S_PREEMPT " PREEMPT"
 #else
@@ -511,6 +512,7 @@ asmlinkage long do_ni_syscall(struct pt_regs *regs)
 
 	return sys_ni_syscall();
 }
+
 
 #ifdef CONFIG_SMP
 extern void smp_send_cpus_backtrace(struct pt_regs *regs);

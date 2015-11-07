@@ -85,16 +85,7 @@ $(HI6XXX_MODEM_DRV_DIR):
 	@touch $(HI6XXX_MODEM_DRV_DIR)/Kconfig
 endif
 
-HISI_PILOT_DRV_DIR := $(shell pwd)/vendor/hisi_pilot/
 HISI_PILOT_KERNEL_DIR := $(shell pwd)/kernel/drivers/hisi_pilot/
-ifeq ($(wildcard $(HISI_PILOT_DRV_DIR)),)
-$(HISI_PILOT_DRV_DIR):
-	@rm $(HISI_PILOT_KERNEL_DIR)/Makefile
-	@rm $(HISI_PILOT_KERNEL_DIR)/Kconfig
-	@touch $(HISI_PILOT_KERNEL_DIR)/Makefile
-	@touch $(HISI_PILOT_KERNEL_DIR)/Kconfig
-endif
-
 
 $(KERNEL_GEN_CONFIG_PATH): FORCE
 	+$(shell $(shell pwd)/device/hisi/customize/build_script/kernel-config.sh -f $(KERNEL_COMMON_DEFCONFIG) -d $(KERNEL_PRODUCT_CONFIGS) -o $(KERNEL_GEN_CONFIG_PATH))
@@ -116,7 +107,7 @@ else
 ifeq ($(HISI_PILOT_LIBS), true)
 $(KERNEL_CONFIG): $(KERNEL_GEN_CONFIG_PATH) $(HI3XXX_MODEM_DIR) $(HI6XXX_MODEM_DRV_DIR) HISI_PILOT_PREBUILD
 else
-$(KERNEL_CONFIG): $(KERNEL_GEN_CONFIG_PATH) $(HI3XXX_MODEM_DIR) $(HI6XXX_MODEM_DRV_DIR) $(HISI_PILOT_DRV_DIR)
+$(KERNEL_CONFIG): $(KERNEL_GEN_CONFIG_PATH) $(HI3XXX_MODEM_DIR) $(HI6XXX_MODEM_DRV_DIR)
 endif
 	mkdir -p $(KERNEL_OUT)
 	$(MAKE) -C kernel O=../$(KERNEL_OUT) ARCH=$(KERNEL_ARCH_PREFIX) CROSS_COMPILE=$(CROSS_COMPILE_PREFIX) $(KERNEL_GEN_CONFIG_FILE)
@@ -145,7 +136,9 @@ HISI_PILOT_PREBUILD:
 	$(hide) cp -rf $(HISI_PILOT_TOPDIR)kernel/include/huawei_platform kernel/include/.
 	$(hide) cp -rf $(HISI_PILOT_TOPDIR)kernel/drivers/huawei_platform kernel/drivers/
 	$(hide) cp -rf $(HISI_PILOT_TOPDIR)kernel/drivers/huawei_platform_legacy kernel/drivers/
-	$(hide) cp -rf $(HISI_PILOT_TOPDIR)kernel/drivers/hisi/modem_hi6xxx kernel/drivers/hisi/. 
+	$(hide) cp -rf $(HISI_PILOT_TOPDIR)kernel/drivers/hisi/modem_hi6xxx kernel/drivers/hisi/.
+	$(hide) cp $(HISI_PILOT_KERNEL_DIR)/Makefile.pilot $(HISI_PILOT_KERNEL_DIR)/Makefile
+	$(hide) cp $(HISI_PILOT_KERNEL_DIR)/Kconfig.pilot $(HISI_PILOT_KERNEL_DIR)/Kconfig
 ifeq ($(TARGET_VERSION_MODE),factory)
 	$(hide) cd kernel/drivers/; ln -s ../../vendor/hisi_pilot/libs_factory/kernel/drivers/device-depend-arm64 device-depend-arm64
 else

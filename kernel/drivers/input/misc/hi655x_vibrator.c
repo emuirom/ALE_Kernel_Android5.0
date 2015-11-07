@@ -38,6 +38,7 @@
 #include <linux/hkadc/hisi_adc_hal.h>
 #endif
 
+
 struct k3_vibrator_data {
 	struct timed_output_dev dev;
 	struct k3_vibrator_platform_data *plat_data;
@@ -218,6 +219,7 @@ static int k3_vibrator_get_vout(struct platform_device *pdev){
 		return -EPERM;
 	}
 
+
 	if (-1 == min_voltage || -1 == max_voltage) return 0;
 
 	if (regulator_set_voltage(k3_vibrator_vout_reg, min_voltage, max_voltage)){
@@ -242,6 +244,7 @@ static ssize_t k3_vibrator_status(struct device_driver *driver, const char *buf,
 }
 
 static DRIVER_ATTR(state, 644, NULL,  k3_vibrator_status);
+
 
 static struct platform_driver k3_vibrator_driver;
 #if 0

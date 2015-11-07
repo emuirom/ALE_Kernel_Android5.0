@@ -1,22 +1,4 @@
-/******************************************************************************
 
-                  版权所有 (C), 2001-2011, 华为技术有限公司
-
- ******************************************************************************
-  文 件 名   : test_drv_mailbox.c
-  版 本 号   : 初稿
-  作    者   : 莫南 00176101
-  生成日期   : 2012年11月20日
-  最近修改   :
-  功能描述   : mailbox A核  linux平台板侧ST测试功能接口文件
-  函数列表   :
-
-  修改历史   :
-  1.日    期   : 2012年11月30日
-    作    者   : 陈易超 00209607
-    修改内容   : 创建文件
-
-******************************************************************************/
 
 /*****************************************************************************
   1 头文件包含
@@ -131,23 +113,6 @@ MAILBOX_LOCAL unsigned int test_mailbox_get_bound_width(
     }
     return bound_width;
 }
-
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_pack
- 功能描述  : 发送数据获取并且打包
- 输入参数  : unsigned long RecevCode   -- 传递给目标CPU的通道号，目标CPU将使用此通道将消息原封不同送回。
-             unsigned long size        -- 消息数据区大小。
- 输出参数  : 无
- 返 回 值  : 无
- 调用函数  :
- 被调函数  :
-
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 MAILBOX_EXTERN unsigned int test_mailbox_get_time_stamp(void)
 {
     static unsigned int time_us = 0;
@@ -162,22 +127,7 @@ MAILBOX_EXTERN unsigned int test_mailbox_get_time_stamp(void)
     return  time_us;
 }
 
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_pack
- 功能描述  : 发送数据获取并且打包
- 输入参数  : unsigned long RecevCode   -- 传递给目标CPU的通道号，目标CPU将使用此通道将消息原封不同送回。
-             unsigned long size        -- 消息数据区大小。
- 输出参数  : 无
- 返 回 值  : 无
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 char* test_mailbox_msg_pack(unsigned int recv_code, unsigned int size)
 {
     struct mb_st_msg *usr_msg = MAILBOX_NULL;
@@ -205,44 +155,13 @@ char* test_mailbox_msg_pack(unsigned int recv_code, unsigned int size)
     return (char*)usr_msg;
 }
 
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_discard
- 功能描述  : 发送打包数据丢弃
- 输入参数  :  void * buff
- 输出参数  : 无
- 返 回 值  : 无
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 void test_mailbox_msg_discard(void * buff)
 {
     kfree(buff);
 }
 
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_cb
- 功能描述  : 板侧邮箱测试模拟用户回调函数
- 输入参数  :  UserHandle -- 用户句柄
-              MailHandle -- 邮箱句柄
-              MailLen    -- 本次到达邮件数据长度
- 输出参数  : 无
- 返 回 值  : unsigned long
-             成功OK, 异常返回值
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 void test_mailbox_msg_cb(
                 void                   *usr_handle,
                 void                   *mail_handle,
@@ -331,30 +250,6 @@ void test_mailbox_msg_cb(
         kfree(buff);
     }
 }
-
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_send_entry
- 功能描述  : 板侧邮箱消息打包发送测试函数
- 输入参数  :  unsigned long SendMailCode -- 目标邮编号
-              unsigned long RecvMailCode -- 接收的邮编号
-              unsigned long MsgLen       -- 消息长度
-              unsigned long MsgNum       -- 消息数目
-              unsigned long DelayTick    -- 消息发送间隙延时tick数
-              unsigned long DelayNum     -- 每个间隙的消息发送数
-              unsigned long TryTimes     --  发送满时的重试次数
-              struct tm_mb_cb * mb_cb_handle -- 回调句柄
- 输出参数  : 无
- 返 回 值  : unsigned long
-             成功OK, 异常返回值
- 调用函数  :
- 被调函数  :
-
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 void test_mailbox_msg_send_entry(void* _proc)
 {
     struct test_mailbox_proc *mb_proc = _proc;
@@ -381,31 +276,7 @@ void test_mailbox_msg_send_entry(void* _proc)
     kfree(mb_proc);
 }
 
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_create_task
- 功能描述  : 板侧邮箱测试任务创建函数
- 输入参数  :  FUNCPTR entryPtr -- 任务入口，测试函数主体
-              unsigned long TaskNum      -- 任务标号
-              unsigned long Priority     -- 任务优先级
-              unsigned long SendMailCode -- 目标邮编号
-              unsigned long RecvMailCode -- 接收的邮编号
-              unsigned long SendLen      -- 消息长度
-              unsigned long SendNum      -- 消息数目
-              unsigned long DelayTick    -- 消息发送间隙延时tick数
-              unsigned long DelayNum     -- 每个间隙的消息发送数
-              struct tm_mb_cb * mb_cb_handle -- 回调句柄
- 输出参数  : 无
- 返 回 值  : unsigned long
-             成功OK, 异常返回值
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 void test_mailbox_msg_create_task(FUNCPTR entryPtr,
                 unsigned int TaskNum,
                 unsigned int Priority,
@@ -437,28 +308,7 @@ void test_mailbox_msg_create_task(FUNCPTR entryPtr,
     kthread_run((int (*)(void *))test_mailbox_msg_send_entry, (void*)pEntryParam, TaskName);
 }
 
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_process
- 功能描述  : 板侧邮箱消息打包发送测试函数
- 输入参数  :  unsigned long SendMailCode -- 目标邮编号
-              unsigned long RecvMailCode -- 接收的邮编号
-              unsigned long MsgLen       -- 消息长度
-              unsigned long MsgNum       -- 消息数目
-              unsigned long DelayTick    -- 消息发送间隙延时tick数
-              unsigned long DelayNum     -- 每个间隙的消息发送数
-              struct tm_mb_cb * mb_cb_handle -- 回调句柄
- 输出参数  : 无
- 返 回 值  : unsigned long
-             成功OK, 异常返回值
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 void test_mailbox_msg_process(
                 unsigned int mail_code,
                 unsigned int recv_code,
@@ -538,25 +388,7 @@ void test_mailbox_msg_process(
 
 }
 
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_get_code
- 功能描述  : 邮箱测试通道获取接口
- 输入参数  :
-             unsigned long DstId           -- 测试的目标CPU号
-             unsigned long CarrierID       -- 测试通道载体号
-             unsigned long *pSendMailCode  -- 指向发送通道的指针
-             unsigned long *pRecvMailCode  -- 指向接收通道的指针
- 输出参数  : 无
- 返 回 值  : unsigned long
-             成功OK, 异常返回值
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-*****************************************************************************/
 unsigned int test_mailbox_msg_get_code(
                 unsigned int dst_id,
                 unsigned int carrier_id,
@@ -572,30 +404,7 @@ unsigned int test_mailbox_msg_get_code(
 
 }
 
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_multi_send
- 功能描述  : 板侧邮箱ST多线程压力测试实现函数
- 输入参数  : unsigned long DstId    -- 测试的目标CPU号
-             unsigned long CarrierID-- 测试通道载体号
-             unsigned long TaskNum  -- 并发测试任务数
-             unsigned long MsgLen   -- 发送消息的长度
-             unsigned long MsgNum   -- 发送消息的数量
-             unsigned long Priority -- 任务的优先级
-             unsigned long DelayTick-- 每次延迟的tick数
-             unsigned long DelayNum -- 每隔多少消息进行一次延迟
-             unsigned long TryTimes --　发送失败(满)的重试次数。
- 输出参数  : 无
- 返 回 值  : unsigned long
-             成功OK, 异常返回值
-调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年10月16日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 unsigned int test_mailbox_msg_multi_send(
                 unsigned int dst_id,
                 unsigned int carrier_id,
@@ -722,26 +531,7 @@ unsigned int test_mailbox_msg_multi_send(
 
 }
 
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_single_test
- 功能描述  : 邮箱单任务测试入口
- 输入参数  :
-             unsigned long DstId    -- 测试的目标CPU号
-             unsigned long MsgLen   -- 发送消息的长度
-             unsigned long MsgNum   -- 发送消息的数量
-             unsigned long DelayNum -- 每隔多少消息进行一次延迟
 
- 输出参数  : 无
- 返 回 值  : unsigned long
-             成功OK, 异常返回值
- 调用函数  :
- 被调函数  :
-
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-*****************************************************************************/
 unsigned int test_mailbox_msg_single_test(
                 unsigned int DstId,
                 unsigned int MsgLen,
@@ -767,26 +557,7 @@ unsigned int test_mailbox_msg_single_test(
             );
 }
 
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_multi_test
- 功能描述  : 邮箱多任务测试入口
- 输入参数  :
-             unsigned long DstId    -- 测试的目标CPU号
-             unsigned long TaskNum  -- 并发任务数
-             unsigned long MsgNum   -- 每个任务发送的消息数
-             unsigned long DelayNum -- 每隔多少消息进行一次延迟
 
- 输出参数  : 无
- 返 回 值  : unsigned long
-             成功OK, 异常返回值
- 调用函数  :
- 被调函数  :
-
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-*****************************************************************************/
 unsigned int test_mailbox_msg_multi_test(
                 unsigned int dst_id,
                 unsigned int task_num,
@@ -812,22 +583,7 @@ unsigned int test_mailbox_msg_multi_test(
             );
 }
 
-/*****************************************************************************
- 函 数 名  : test_mailbox_init
- 功能描述  : 邮箱板侧测试模块初始化
- 输入参数  : unsigned long ChannelID -- 需要注册测试的接收通道号
 
- 输出参数  : 无
- 返 回 值  : unsigned long
-             成功OK, 异常返回值
- 调用函数  :
- 被调函数  :
-
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-*****************************************************************************/
 void test_mailbox_init(void)
 {
     struct tm_mb_handle *mb_handle = &g_test_mailbox_handle;
@@ -842,22 +598,7 @@ void test_mailbox_init(void)
     mb_handle->init_flag = TEST_MAILBOX_INIT_FLAG;
 }
 
-/*****************************************************************************
- 函 数 名  : test_mailbox_msg_reg
- 功能描述  : 邮箱板侧测试通道初始化，为此通道的保留测试MailCode注册用户回调函数。
- 输入参数  : unsigned long ChannelID -- 需要注册测试的接收通道号
 
- 输出参数  : 无
- 返 回 值  : unsigned long
-             成功OK, 异常返回值
- 调用函数  :
- 被调函数  :
-
- 修改历史      :
-  1.日    期   : 2012年11月20日
-    作    者   : 莫南 00176101
-    修改内容   : 新生成函数
-*****************************************************************************/
 void test_mailbox_msg_reg(unsigned int channel_id)
 {
     /*通道中的第一个mail_code为保留测试号，这个mail_code和此通道的channel_id一致*/

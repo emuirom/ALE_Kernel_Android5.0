@@ -28,17 +28,22 @@
 
 #include "hw_soft_3a.h"
 
+#define MIN_SUPPORT_LONG_EXPO       100     //Minimum support expo time unit:us
+#define SEGMENT_SUPPORT_LONG_EXPO   700000  //Segmetation for rear sensor two group setting for BShutter algo unit:us
+#define MAX_SUPPORT_LONG_EXPO       3000000 //Maxmum support expo time unit:us
+#define SEGMENT_EXPO_TIME_TO_LINE   2000000 //Segmetation for translation from expo time to expo line, to ensure the kernel integer division accuracy unit:us
+
 typedef enum {
 	CAMERA_3A_UNLOCKED =0,
 	CAMERA_3A_LOCKED = 1,
 } camera_3a_state;
+
 
 typedef struct {
 	u32 id;
 	u32 value;
 } camera_capability;
 
-/* add by c00144034 for ZSL end */
 
 typedef struct _sensor_reg_t {
 	u32 subaddr;
@@ -59,6 +64,7 @@ typedef enum{
 	OTP_ALL_INVALID_USER,
 }sensor_otp_status_user;
 
+
 typedef struct _sensor_setting_t {
 	const sensor_reg_t *setting;
 	u32 seq_size;
@@ -78,6 +84,12 @@ struct i2c_t {
 	i2c_length val_bits;
 };
 
+typedef enum _ecgc_support_type_s {
+	ECGC_TYPE_NORMAL_BSHUTTER_SHORT = 0,//This is used for normal snapshot and B shutter shot expo
+	ECGC_TYPE_BSHUTTER_LONG,           //For B shutter long expo only
+	ECGC_TYPE_MAX                   //not support  B shutter long expo only
+} ecgc_support_type_s;
+
 /* For sensor framesize definition */
 typedef struct _framesize_s {
 	u32 left;
@@ -87,17 +99,47 @@ typedef struct _framesize_s {
 	u32 hts;		/* horizontal total size */
 	u32 vts;		/* vertical total size */
 	u32 fps;
-	u32 fps_es; /* add by c00168914 for es_chip */
-	u32 banding_step_50hz; /* add by y00215412 for cs chip 25fps */
-	u32 banding_step_60hz; /* add by y00215412 for cs chip 25fps */
+	u32 fps_es;
+	u32 banding_step_50hz;
+	u32 banding_step_60hz;
 	u32 capture_ratio;
 	camera_setting_view_type view_type;
 	camera_resolution_type resolution_type;
 	bool summary;
 	bool zsl_only;
+	ecgc_support_type_s ecgc_support_type; //use this segment to diff long_expo setting support
 	sensor_setting_t sensor_setting;	/* sensor setting for cmdset */
 	u32 lane_clk;
 } framesize_s;
+
+typedef struct _b_shutter_ae_iso_s {
+	int long_expo_expo;
+	int long_expo_iso;
+} b_shutter_ae_iso_s;
+
+typedef struct _b_shutter_aecagc_s {
+	int expo;
+	int gain;
+	int vts;
+} b_shutter_aecagc_s;
+
+typedef struct _b_shutter_hdr_aeciso_s{
+	int hdrCounter;
+	b_shutter_ae_iso_s b_shutter_ae_iso[40];
+}b_shutter_hdr_aeciso_s;
+
+typedef struct _b_shutter_hdr_aecagc_s{
+	int hdrCounter;
+	b_shutter_aecagc_s b_shutter_aec_agc[40];
+	int currExcuteOrder;
+}b_shutter_hdr_aecagc_s;
+
+typedef struct _b_shutter_tryae_aecagc_s {
+	int tryae_expo;
+	int tryae_gain;
+	int tryae_vts;
+	int tryae_set_vts_flag;
+} b_shutter_tryae_aecagc_s;
 
 /* For ISP coordinate structure */
 typedef struct _coordinate_s {
@@ -126,12 +168,14 @@ typedef struct crop_rect_s {
 	u32 crop_height;
 } crop_rect_s;
 
+
 typedef struct _axis_triple {
 	int x;
 	int y;
 	int z;
 	struct timeval time;
 } axis_triple;
+
 
 /*default should be designed as center area focus*/
 typedef struct _focus_area_s {
@@ -179,16 +223,11 @@ typedef struct _vcm_info_s {
 	u32 motorResTime;	/* response time, in unit of ms */
 	u32 motorDelayTime;	/* delay time of each step in stride divide case */
 	u32 strideDivideOffset;
-	/* added by z00221179 2013/03/30 start. this variable is uesed for sonyimx134 otp */
 	u32 startCurrentOffset;
-	/* added by z00221179 2013/03/30 end. this variable is uesed for sonyimx134 otp */
 
 	FOCUS_RANGE moveRange;/*0:Auto; 1:Infinite; 2:Macro*/
 
-	/*
-	 * return value: void
-	 * output value: vcm_start/vcm_end is 0 mean has otp, but no vcm code otp.
-	 */
+
 	void (*get_vcm_otp) (u16 *vcm_start, u16 *vcm_end);
 	/*fastShotOffset*/
 	u32 fastShotOffset;
@@ -209,7 +248,6 @@ typedef struct {
 	 */
 	int (*isp_set_focus_area) (focus_area_s *area, u32 zoom);
 	int (*isp_get_focus_result) (focus_result_s *result);
-	/* revised by y00215412 2012-09-21 for zoom focus. */
 	int (*isp_set_focus_zoom) (u32 zoom);
 	int (*isp_set_sharpness_zoom) (u32 zoom);
 
@@ -241,7 +279,6 @@ typedef struct {
 	int (*isp_get_actual_iso) (void);
 	int (*isp_get_exposure_time) (void);
 
-	/* added by ykf63300 2012-05-22 */
 	int (*isp_get_focus_distance) (void);
 	void (*isp_set_fps_lock) (int);
 	u32 (*isp_get_awb_gain)(int withShift);
@@ -271,6 +308,7 @@ typedef struct _image_setting {
 	u16 *ccm_param;
 	u8 *awb_param;
 } image_setting_t;
+
 
 typedef struct _ccm_gain {
 	u16 b_gain;
@@ -312,7 +350,7 @@ typedef struct _camera_sensor {
 
 	int (*check_sensor) (void);
 	int (*init_reg) (void);
-	int (*init_isp_reg)(void);//add by z00221179 for sonyimx134 2013/4/24
+	int (*init_isp_reg)(void);
 	int (*stream_on) (camera_state state);
 
 	/* get camera clock */
@@ -342,7 +380,7 @@ typedef struct _camera_sensor {
 	int (*enum_framesizes) (struct v4l2_frmsizeenum *framesizes);
 	int (*try_framesizes) (struct v4l2_frmsizeenum *framesizes);
 	int (*set_framesizes) (camera_state state,
-			       struct v4l2_frmsize_discrete *fs, int flag, camera_setting_view_type view_type,bool zsl_preview);
+			       struct v4l2_frmsize_discrete *fs, int flag, camera_setting_view_type view_type,bool zsl_preview,camera_b_shutter_mode b_shutter_mode,ecgc_support_type_s ecgc_type);
 	int (*get_framesizes) (camera_state state,
 			       struct v4l2_frmsize_discrete *fs);
 
@@ -399,6 +437,7 @@ typedef struct _camera_sensor {
 
 	void (*set_vts) (u16 vts);
 	u32 (*get_vts_reg_addr) (void);
+	u32 (*get_vts) (void);
 
 	/* effect */
 	void (*set_effect) (camera_effects effect);
@@ -489,6 +528,8 @@ typedef struct _camera_sensor {
 	void (*check_otp_status)(sensor_otp_status *status);
 	void (*get_sensor_reg)(int reg, int *value);
 	void (*set_sensor_reg)(int reg, int value);
+	u32  support_max_vts;
+	u32  support_expoline_offset;
 
 } camera_sensor;
 
@@ -533,6 +574,7 @@ camera_resolution_type camera_get_resolution_type(u32 width, u32 height);
 /* get camera count */
 int get_camera_count(void);
 void relocate_camera_sensor_by_name(sensor_index_t sensor_index,char *sensor_name);
+
 
 /* power core ldo */
 int camera_power_core_ldo(camera_power_state power);

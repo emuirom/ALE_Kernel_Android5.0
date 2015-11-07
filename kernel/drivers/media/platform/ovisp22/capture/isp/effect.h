@@ -45,7 +45,7 @@ typedef struct _ae_params_s {
 	u32 iso_min;
 
 	u16 auto_fps_th[4]; /* low2mid, mid2high,high2mid, mid2low */
-    u16 auto_fps_manual_iso_th[4]; /* low2mid, mid2high,high2mid, mid2low when manual ISO , add by c00220250 */
+    u16 auto_fps_manual_iso_th[4];
       
 	u32 fps[4]; /* fps_max, fps_middle, fps_min, fps_min_cap*/
 

@@ -444,6 +444,7 @@ static void __init map_reg_io(void)
 	return;
 }
 
+
 static void __init map_io(void)
 {
 	map_reg_io();
@@ -530,4 +531,5 @@ MACHINE_START(HI6210SFT, "hi6210sft")
 	.init_early 	 	= init_early,
 	.reserve	= k3v2_reserve,
 MACHINE_END
+
 

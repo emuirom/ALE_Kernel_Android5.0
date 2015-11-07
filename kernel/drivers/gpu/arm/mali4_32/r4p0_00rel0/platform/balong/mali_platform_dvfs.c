@@ -63,23 +63,6 @@ static void gpu_devfreq_set_maxfreq(void);
 static void gpu_devfreq_set_minfreq(void);
 static void gpu_devfreq_get_maxfreq(void);
 static void gpu_devfreq_get_minfreq(void);
-
-/*****************************************************************************
- function name  : mali_remark_clockrate
- description    : remark mali clock rate
- input vars     : profile id
- output vars    : NA
- return value   : void
- calls          : NA
-
- called         :
-
- history        :
-  1.data        : 06/06/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void mali_remark_clockrate(u32 profile_id)
 {
     if(MALI_FALSE == get_gpu_power_status())
@@ -92,22 +75,7 @@ void mali_remark_clockrate(u32 profile_id)
     }
 }
 
-/*****************************************************************************
- function name  : find_current_weight
- description    : performance prefer,so 90% has 3 weight ,95% has 5 weight
- input vars     : void
- output vars    : NA
- return value   : u32
- calls          : NA
 
- called         : decideNextStatus
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 u32 find_current_weight(u32 utilization)
 {
     u32         weight;
@@ -127,43 +95,13 @@ u32 find_current_weight(u32 utilization)
     return weight;
 }
 
-/*****************************************************************************
- function name  : get_mali_dvfs_status
- description    : get mali dvfs status to trace
- input vars     : void
- output vars    : NA
- return value   : mali_dvfs_status
- calls          : NA
 
- called         : mali_dvfs_status_update
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 mali_dvfs_status get_mali_dvfs_status(void)
 {
     return g_stMaliDvfsStatus.currentStep;
 }
 
-/*****************************************************************************
- function name  : decideNextStatus
- description    : using several s_auUtilization to decide include percent and extra outstanding
- input vars     : void
- output vars    : NA
- return value   : mali_dvfs_status
- calls          : find_current_weight
 
- called         : mali_dvfs_status_update
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 mali_dvfs_status decideNextStatus(void)
 {
     mali_dvfs_status    dvfsStatus = MALI_DVFS_BUTT;
@@ -211,24 +149,7 @@ mali_dvfs_status decideNextStatus(void)
     return dvfsStatus;
 }
 
-/*****************************************************************************
- function name  : mali_dvfs_status_update
- description    : as MALI_GPU_UTILIZATION_TIMEOUT we consider period = 50ms,every 250ms generate a decision
- input vars     : void
- output vars    : NA
- return value   : mali_dvfs_status
- calls          : get_mali_dvfs_status
-                  decideNextStatus
-                  pwrctrl_dfs_gpu_target
 
- called         : mali_dvfs_work_handler
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void mali_dvfs_status_update(u32 utilization)
 {
     mali_dvfs_status curStatus  = MALI_DVFS_BUTT;
@@ -265,23 +186,6 @@ void mali_dvfs_status_update(u32 utilization)
 
     return;
 }
-
-/*****************************************************************************
- function name  : mali_dvfs_work_handler
- description    : we consider period = 50ms,every 250ms generate a decision
- input vars     : struct work_struct *w
- output vars    : NA
- return value   : void
- calls          : NA
-
- called         : decideNextStatus
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void mali_dvfs_work_handler(struct work_struct *w)
 {
     MALI_DEBUG_PRINT(3, ("=== mali_dvfs_work_handler\n"));
@@ -289,21 +193,7 @@ void mali_dvfs_work_handler(struct work_struct *w)
     mali_dvfs_status_update(g_mali_dfs_var.dfs_Utilization);
 }
 
-/*****************************************************************************
- function name  : mali_dvfs_status_init
- description    : we consider period = 50ms,every 250ms generate a decision
- input vars     : maliDvfsStatus
- output vars    : NA
- return value   : mali_bool
- calls          : create_singlethread_workqueue
- called         : mali_platform_init
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 mali_bool mali_dvfs_status_init(mali_dvfs_status maliDvfsStatus)
 {
     /*default status
@@ -322,22 +212,6 @@ mali_bool mali_dvfs_status_init(mali_dvfs_status maliDvfsStatus)
 
     return MALI_TRUE;
 }
-
-/*****************************************************************************
- function name  : mali_dvfs_status_deinit
- description    : deinit dvfs by destroy workqueue
- input vars     : void
- output vars    : NA
- return value   : void
- calls          : destroy_workqueue
- called         : mali_platform_init
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void mali_dvfs_status_deinit(void)
 {
     if (mali_dvfs_wq)
@@ -348,21 +222,7 @@ void mali_dvfs_status_deinit(void)
     mali_dvfs_wq = NULL;
 }
 
-/*****************************************************************************
- function name  : mali_dvfs_handler
- description    : put utilization into work queue
- input vars     : utilization
- output vars    : NA
- return value   : mali_bool
- calls          : queue_work_on
- called         : mali_gpu_utilization_handler
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void mali_dvfs_handler(u32 utilization)
 {
     g_mali_dfs_var.dfs_Utilization = utilization;
@@ -370,22 +230,6 @@ void mali_dvfs_handler(u32 utilization)
     g_mali_dfs_var.dfs_GpuUtilization = utilization;
     /*add error handle here*/
 }
-
-/*****************************************************************************
- function name  : pwrctrl_g3d_dfs_init
- description    : init when system up
- input vars     : NA
- output vars    : NA
- return value   : NA
- calls          :
- called         :
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void pwrctrl_g3d_dfs_init(struct platform_device *pdev)
 {
     int ret;
@@ -471,21 +315,7 @@ void pwrctrl_g3d_dfs_init(struct platform_device *pdev)
 
     MALI_DEBUG_PRINT(2, (" init mali dvfs ok\n"));
 }
-/*****************************************************************************
- function name  : pwrctrl_dfs_gpu_target
- description    : act dvfs as required
- input vars     : step [-3,3]
- output vars    : NA
- return value   : int
- calls          :
- called         :
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 mali_bool pwrctrl_dfs_gpu_target(int step)
 {
     u32 targetProfile;
@@ -546,22 +376,6 @@ mali_bool pwrctrl_dfs_gpu_target(int step)
     }
     return MALI_TRUE;
 }
-
-/*****************************************************************************
- function name  : pwrctrl_dfs_gpu_disable
- description    : disable MALI dvfs
- input vars     : NA
- output vars    : NA
- return value   : int
- calls          :
- called         :
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void pwrctrl_dfs_gpu_disable(void)
 {
     if (1 == g_mali_dfs_var.dfs_DfsOn)//s_uwDebugFsDvfsOn
@@ -571,43 +385,11 @@ void pwrctrl_dfs_gpu_disable(void)
         mali_remark_clockrate(0);    //set gpu clock rate to 0MHZ
     }
 }
-
-/*****************************************************************************
- function name  : pwrctrl_dfs_gpu_enable
- description    : disable MALI dvfs
- input vars     : NA
- output vars    : NA
- return value   : int
- calls          :
- called         :
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void pwrctrl_dfs_gpu_enable(void)
 {
    /* powerup with old profile */
     mali_dfs_target_profile(g_mali_dfs_var.dfs_BakPrf);//s_uwDvfsBakPrf
 }
-
-/*****************************************************************************
- function name  : mali_find_dvfs_profile
- description    : using rate to find profile number
- input vars     : u32 rate
- output vars    : NA
- return value   : u32
- calls          :
- called         :
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 u32 mali_find_dvfs_profile(u32 rate)
 {
     u32 i;
@@ -626,21 +408,7 @@ u32 mali_find_dvfs_profile(u32 rate)
     return i;
 }
 
-/*****************************************************************************
- function name  : mali_get_target_profile
- description    : as to current profile and step, to get target profile
- input vars     : u32 curr
- output vars    : NA
- return value   : u32
- calls          :
- called         :
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 u32 mali_get_target_profile(u32 curr, int step)
 {
     u32 target;
@@ -694,22 +462,6 @@ u32 mali_get_target_profile(u32 curr, int step)
 
     return target;
 }
-
-/*****************************************************************************
- function name  : mali_dfs_to_profile
- description    : doing dfs action to target profile
- input vars     : u32 curr
- output vars    : NA
- return value   : int
- calls          :
- called         :
-
- history        :
-  1.data        : 07/05/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 int mali_dfs_set_pll(u32 target)
 {
     u32 i = 0;
@@ -759,21 +511,7 @@ int mali_dfs_set_div(u32 target)
     return -1;
 }
 
-/*****************************************************************************
- function name  : mali_dfs_target_profile
- description    : doing dfs action to target profile
- input vars     : u32 curr
- output vars    : NA
- return value   : u32
- calls          :
- called         :
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void mali_dfs_target_profile(u32 target)
 {
     if (1 == g_mali_dfs_var.dfs_DfsOn)
@@ -795,40 +533,12 @@ void mali_dfs_target_profile(u32 target)
     }
 }
 
-/*****************************************************************************
- function name  : pmqos_gpu_dfs_get_current_profile
- description    : doing avs and dfs action to target profile
- input vars     : u32 *profile_id
- output vars    : NA
- return value   : void
- calls          :
- called         :
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void pmqos_gpu_dfs_get_current_profile(u32 *profile_id)
 {
  //   *profile_id = g_mali_dfs_var.dfs_CurrPrf;
 }
-/*****************************************************************************
- function name  : pmqos_gpu_get_current_func
- description    : get curr pwrctrl
- input vars     : u32 *curr_func
- output vars    : NA
- return value   : void
- calls          :
- called         :
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void pmqos_gpu_get_current_func(unsigned int *curr_func)
 {
 #if 0
@@ -842,21 +552,7 @@ void pmqos_gpu_get_current_func(unsigned int *curr_func)
     }
 #endif
 }
-/*****************************************************************************
- function name  : pmqos_gpu_set_current_func
- description    : get curr pwrctrl
- input vars     : u32 *curr_func
- output vars    : NA
- return value   : void
- calls          :
- called         :
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void pmqos_gpu_set_current_func(unsigned int target_func)
 {
 #if 0
@@ -874,61 +570,19 @@ void pmqos_gpu_set_current_func(unsigned int target_func)
     }
 #endif
 }
-/*****************************************************************************
- function name  : pmqos_gpu_dfs_lock
- description    : lock profile
- input vars     : u32 *lock_profile
- output vars    : NA
- return value   : void
- calls          :
- called         :
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void pmqos_gpu_dfs_lock(u32 lock_profile)
 {
     g_mali_dfs_var.dfs_LockOn = 1;//to control the dvfs caculator and run
 
     g_mali_dfs_var.dfs_LockProfile = lock_profile;
 }
-/*****************************************************************************
- function name  : pmqos_gpu_dfs_unlock
- description    : lock profile
- input vars     : u32 *lock_profile
- output vars    : NA
- return value   : void
- calls          :
- called         :
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void pmqos_gpu_dfs_unlock(void)
 {
     g_mali_dfs_var.dfs_LockOn = 0;//to control the dvfs caculator and run
 }
-/*****************************************************************************
- function name  : pmqos_gpu_dfs_limit_max
- description    : limit the max frequence ,<xxKhz
- input vars     : u32 max_freq_limit
- output vars    : NA
- return value   : void
- calls          :
- called         :
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void pmqos_gpu_dfs_limit_max(u32 flag,u32 max_freq_limit)
 {
     u32 currPrf;
@@ -963,21 +617,7 @@ void pmqos_gpu_dfs_limit_max(u32 flag,u32 max_freq_limit)
     g_mali_dfs_var.dfs_limitMinRate = g_mali_dvfs_profile[g_mali_dfs_var.dfs_limitMinPrf].freq;
     gpu_devfreq_set_minfreq();
 }
-/*****************************************************************************
- function name  : pmqos_gpu_dfs_limit_min
- description    : limit the max frequence ,>xxKhz
- input vars     : u32 min_freq_limit
- output vars    : NA
- return value   : void
- calls          :
- called         :
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void pmqos_gpu_dfs_limit_min(u32 flag,u32 min_freq_limit)
 {
     u32 currPrf;

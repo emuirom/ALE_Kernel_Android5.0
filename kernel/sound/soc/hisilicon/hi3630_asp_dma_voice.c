@@ -68,6 +68,7 @@ static const struct of_device_id hi3630_asp_dma_voice_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, hi3630_asp_dma_voice_of_match);
 
+
 static const struct snd_pcm_hardware hi3630_asp_dma_voice_hardware = {
 	.info			= SNDRV_PCM_INFO_MMAP |
 				  SNDRV_PCM_INFO_MMAP_VALID |

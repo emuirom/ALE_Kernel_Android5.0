@@ -70,7 +70,9 @@ extern struct semaphore balong_fb_overlay_sem;
 extern struct semaphore balong_fb_backlight_sem;
 extern struct semaphore balong_fb_blank_sem;
 
+
 STATIC struct ade_compose_data_type *g_ade_pri_data = NULL;
+
 
 //module_param(major, uint, 0644);
 #if ADE_SYNC_SUPPORT
@@ -286,6 +288,7 @@ STATIC int balong_ade_overlay_commit(struct ade_compose_data_type    *ade_pri_da
         balongfb_logi("ade_core_power_on is false !\n");
         return -EPERM;
     }
+
 
     if (ADE_TRUE == comp_info.is_finished) {
         spin_lock_irqsave(&balongfd->refresh_lock, flags);
@@ -1003,6 +1006,7 @@ late_initcall(balong_compose_debug_init);
 
 #endif
 
+
 /*
  * We provide func: DRV_ADEMemAlloc(u32 memSize, pADEMemCB AllocNotifyCB)
  * For Share Memory to Codec
@@ -1158,6 +1162,7 @@ int DRV_ADEMemAlloc(u32 memSize, pADEMemCB AllocNotifyCB)
     return 0;
 }
 
+
 /****************************************************************************
 function:call by Codec to free memory
 parameters:
@@ -1281,4 +1286,5 @@ void balong_mem_share_result_proc(struct balong_fb_data_type *balongfd)
     }
 }
 #endif /* ADE_MEM_SHARE_EN */
+
 

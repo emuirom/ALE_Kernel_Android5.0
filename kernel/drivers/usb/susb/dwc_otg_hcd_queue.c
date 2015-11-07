@@ -703,6 +703,7 @@ int dwc_otg_hcd_qtd_add(dwc_otg_qtd_t * qtd,
 {
 	int retval = 0;
 
+
 	/*
 	 * Get the QH which holds the QTD-list to insert to. Create QH if it
 	 * doesn't exist.

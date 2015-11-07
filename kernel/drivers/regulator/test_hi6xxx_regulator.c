@@ -3,6 +3,7 @@
  *
  * Copyright (c) 2011 Hisilicon Co. Ltd
  *
+ * Dongbin Yu <yudongbin@huawei.com> : 2014-2-7
  *
  * In V8R1 the mtcmos is same with V9R1's driver,so it is multiplex.
  * That the reason why name of the c document is "hi6xxx".
@@ -39,6 +40,7 @@
 #include <linux/of_platform.h>
 #include <linux/io.h>
 #include <linux/of.h>
+
 
 struct hi6xxx_regulator_st {
 	int status;                             /*this property in child  node*/
@@ -307,6 +309,7 @@ static struct of_device_id of_test_hi6xxx_regulator_match_tbl[] = {
 	{ /* end */ }
 };
 
+
 static struct platform_driver test_hi6xxx_regulator_driver = {
 	.driver = {
 		.name	= "test_hisi_hi6xxx_regulator",
@@ -315,6 +318,7 @@ static struct platform_driver test_hi6xxx_regulator_driver = {
 	},
 	.probe	= test_hi6xxx_regulator_probe,
 };
+
 
 static int __init test_hi6xxx_regulator_init(void)
 {
@@ -326,6 +330,7 @@ static void __exit test_hi6xxx_regulator_exit(void)
 {
 	platform_driver_unregister(&test_hi6xxx_regulator_driver);
 }
+
 
 late_initcall(test_hi6xxx_regulator_init);
 module_exit(test_hi6xxx_regulator_exit);

@@ -134,9 +134,7 @@ extern int is_hi6210(void);
 
 static struct semaphore jpu_busy_lock;
 
-/* Added by y00251056 for jpu reserved memmory start */
 #define HISI_JPU_RESERVED_MEMMORY           (PAGE_ALIGN(17*1024*1024))    //(1)bitstream-buffer + instance-buffer (2)4k align
-/* Added by y00251056 for jpu reserved memmory end */
 
 typedef struct
 {
@@ -161,7 +159,6 @@ typedef struct
 } jpu_clk;
 
 static jpu_clk s_jpu_clk;
-/*added bu h00255928 end*/
 
 
 STATIC int jpu_alloc_dma_buffer(jpudrv_buffer_t *jb)
@@ -783,14 +780,12 @@ STATIC int jpu_release(struct inode *inode, struct file *filp)
     int ret = 0;
 
 
-    /* added by h00255928 start */
     ret = down_interruptible(&jpu_busy_lock);
 	if (0 != ret)
 	{
         jpu_loge("down_interruptible() failed.");
 		return -EINTR;
 	}
-    /* added by h00255928 end */
 
     jpu_logi("jpu_release s_jpu_open_count=%d\n", s_jpu_open_count);
 

@@ -209,6 +209,7 @@ static char tianma_power_on_param26[] =
     0x29,
 };
 
+
 /*----------------Power ON Sequence(sleep mode to Normal mode)---------------------*/
 static char bl_level_0[] =
 {

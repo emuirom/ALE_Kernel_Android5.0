@@ -31,6 +31,8 @@ enum pm_qos_flags_status {
 	PM_QOS_FLAGS_ALL,
 };
 
+
+
 enum  {
     IPC_QOS = 1,   /*IPC信号量有32票，占用32个投票值, 1-32*/
     I2C_QOS  = 40, /*I2C 0-5, 40-45*/
@@ -38,6 +40,7 @@ enum  {
     USB_QOS = 60,
     IDLE_QOS,
 };
+
 
 #define PM_QOS_DEFAULT_VALUE -1
 #define PM_QOS_PWRCTRL_DFS_DEFAULT_VALUE    (0)
@@ -50,6 +53,7 @@ enum  {
 #define PM_QOS_DEV_LAT_DEFAULT_VALUE		0
 #define QOS_BUSLOW_MINPROFILE_DEFAULT_VALUE  (0)
 #define QOS_BUS_MINPROFILE_DEFAULT_VALUE  (0)
+
 
 #define PM_QOS_FLAG_NO_POWER_OFF	(1 << 0)
 #define PM_QOS_FLAG_REMOTE_WAKEUP	(1 << 1)

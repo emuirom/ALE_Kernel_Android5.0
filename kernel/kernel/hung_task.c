@@ -284,6 +284,7 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
 	ht_pid = t->pid;
 	ht_ppid = t->tgid;
 
+
 	in_list = checklist(ht_pid, ht_ppid, list_category);
 
 	if (0 == in_list) {
@@ -551,6 +552,7 @@ static ssize_t monitorlist_show(struct kobject *kobj,
 	return buf - start;
 }
 
+
 /* storage proccess names in [pname] to
  * [pname_table], and return the numbers of process
  */
@@ -564,6 +566,7 @@ static int rebuild_name_table(char *pname, int pname_len)
 	int detected = 0;
 
 	whitelist = NOT_DEFINE;
+
 
 	/* reset the table to empty */
 
@@ -705,6 +708,7 @@ static ssize_t monitorlist_store(struct kobject *kobj,
 	p = memchr(buf, '\n', n);
 	len = p ? p - buf : n;
 
+
 	if ((len < 2) || (len > (sizeof(p_name) - 1))) {
 		pr_err("hung_task: input string is too long or too short\n");
 		return -EINVAL;
@@ -799,5 +803,6 @@ static int __init hung_task_init(void)
 
 	return 0;
 }
+
 
 module_init(hung_task_init);

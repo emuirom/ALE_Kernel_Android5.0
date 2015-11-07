@@ -1,12 +1,4 @@
-/*
- * FileName:
- * Description:
- * Version:
- * Function List:
- *                 1.
- * History:
- *     <author>   <time>    <version >   <desc>
- */
+
 #include <linux/slab.h>
 #include <linux/fs.h>
 #include <linux/platform_device.h>
@@ -18,6 +10,7 @@
 #include <asm/cacheflush.h>
 #include <linux/kthread.h>
 #include <linux/freezer.h>
+
 
 #include <linux/kernel.h>
 
@@ -41,6 +34,7 @@ void TEEK_Encode(
     uint32_t cmd_id,
     TC_NS_ClientLogin cli_login,
     TEEC_Operation* operation);
+
 
 /*
  * Function:      TEEK_IsAgentAlive
@@ -70,6 +64,7 @@ TEEC_Result TEEK_InitializeContext (
 {
     int32_t ret = 0;
     TEEC_Debug(KERN_ERR "TEEK_InitializeContext Started:\n");
+
 
     /* First, check parameters is valid or not */
     if (context == NULL)
@@ -877,6 +872,7 @@ error:
     return;
 
 }
+
 
 EXPORT_SYMBOL(TEEK_IsAgentAlive);
 EXPORT_SYMBOL(TEEK_InitializeContext);

@@ -418,7 +418,7 @@
 #define CA0106_MPU401_ENTER_UART	0x3f
 #define CA0106_MPU401_ACK		0xfe
 
-#define SAMPLE_RATE_TRACKER_STATUS 0x70         /* Readonly. Default 00108000 00108000 00500000 00500000 */
+#define SAMPLE_RATE_TRACKER_STATUS 0x70
 						/* Estimated sample rate [19:0] Relative to 48kHz. 0x8000 =  1.0
 						 * Rate Locked [20]
 						 * SPDIF Locked [21] For SPDIF channel only.
@@ -469,7 +469,7 @@
 						 * SPDIF output enable [27:24]
 						 */ 
 #define UNKNOWN73               0x73            /* Unknown. Readonly. Default 0x0 */
-#define CHIP_VERSION            0x74            /* P17 Chip version. Channel_id 0 only. Default 00000071 */
+#define CHIP_VERSION            0x74
 #define EXTENDED_INT_MASK       0x75            /* Used by both playback and capture interrupt handler */
 						/* Sets which Interrupts are enabled. */
 						/* 0x00000001 = Half period. Playback.

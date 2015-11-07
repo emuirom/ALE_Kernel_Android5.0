@@ -321,6 +321,7 @@ static struct iomap_desc reg_iomap_desc[] __initdata = {
 	REG_IOMAP(IOC_ON, MT_DEVICE),
 };
 
+
 #define SHIFT_1K 10
 extern void create_mapping(struct map_desc *md);
 
@@ -439,6 +440,7 @@ static void __init map_reg_io(void)
 #endif
 	return;
 }
+
 
 static void __init map_io(void)
 {

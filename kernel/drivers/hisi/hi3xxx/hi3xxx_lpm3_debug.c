@@ -33,6 +33,7 @@ char *type[MAX_TYPE] = {"power ", "clk ", "core ", "cluster ", "sleep ",
 		"sr ", "mode ", "uplimit ", "dnlimit ","freq ",
 		"T ", "volt ", "test "};
 
+
 struct hisi_lpm3_mbox_work {
 	struct hisi_mbox_task *tx_task;
 	struct work_struct work;

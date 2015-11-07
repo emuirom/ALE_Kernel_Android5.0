@@ -430,6 +430,7 @@ out_rcu_unlock:
 	goto out;
 }
 
+
 /*
  *	The peer socket should always be NULL (or else). When we call this
  *	function we are destroying the object and from then on nobody
@@ -736,6 +737,7 @@ do_err:
 	return err;
 }
 EXPORT_SYMBOL(inet_accept);
+
 
 /*
  *	This does both peername and sockname.

@@ -111,7 +111,6 @@ static int driver_probe(struct platform_device *pdev)
         printk("get reg base addr failed\n");
     }
 
-    /*start j00140427 add clock and regulator*/
     gvdec_regulator.supply = "ldo_vdec";
     ret = regulator_bulk_get(dev, 1, &gvdec_regulator);
     if (ret) {
@@ -128,7 +127,6 @@ static int driver_probe(struct platform_device *pdev)
         memset(&gvdec_regulator,0,sizeof(gvdec_regulator));
         return -1;
     }*/
-    /*end j00140427 add clock and regulator*/
 
     psSysDev->native_device = (void *)&pdev->dev;
 
@@ -178,6 +176,7 @@ static irqreturn_t IsrCb(int irq, void *dev_id)
     return IRQ_NONE;
 }
 
+
 /*!
 ******************************************************************************
 
@@ -191,7 +190,6 @@ static IMG_VOID free_device(SYSDEVU_sInfo *psInfo)
         platform_driver_unregister(&local_driver);
         gbDevDetected = IMG_FALSE;
     }
-    /*start j00140427 add clock and regulator*/
     /*if (NULL != gvdec_clk) {
         clk_put( gvdec_clk);
         gvdec_clk = NULL;
@@ -199,7 +197,6 @@ static IMG_VOID free_device(SYSDEVU_sInfo *psInfo)
 
     regulator_put(gvdec_regulator.consumer);
     memset(&gvdec_regulator,0,sizeof(gvdec_regulator));
-    /*end j00140427 add clock and regulator*/
 
     if(psSysDev != psInfo)
     {
@@ -224,6 +221,7 @@ static IMG_VOID free_device(SYSDEVU_sInfo *psInfo)
     return;
 }
 
+
 /*!
 ******************************************************************************
 
@@ -236,7 +234,6 @@ static IMG_VOID handle_resume(SYSDEVU_sInfo *psInfo, IMG_BOOL forAPM)
 
     // printk removed for performace reasons.
     printk("VXD %s,%d\n",__FUNCTION__,__LINE__);
-    /*start j00140427 add clock and regulator*/
 
     ret = regulator_bulk_enable(1, &(gvdec_regulator));
     if (ret)
@@ -251,8 +248,8 @@ static IMG_VOID handle_resume(SYSDEVU_sInfo *psInfo, IMG_BOOL forAPM)
             ret = -EINVAL;
         }
     }*/
-    /*end j00140427 add clock and regulator*/
 }
+
 
 /*!
 ******************************************************************************
@@ -264,7 +261,6 @@ static IMG_VOID handle_suspend(SYSDEVU_sInfo *psInfo, IMG_BOOL forAPM)
 {
     // printk removed for performace reasons.
     printk("VXD %s,%d\n",__FUNCTION__,__LINE__);
-    /*start j00140427 add clock and regulator*/
 
     /*if (gvdec_clk)
     {
@@ -273,7 +269,6 @@ static IMG_VOID handle_suspend(SYSDEVU_sInfo *psInfo, IMG_BOOL forAPM)
 
     regulator_bulk_disable(1, &(gvdec_regulator));
 
-    /*end j00140427 add clock and regulator*/
 }
 
 static struct SYSDEV_ops device_ops = {

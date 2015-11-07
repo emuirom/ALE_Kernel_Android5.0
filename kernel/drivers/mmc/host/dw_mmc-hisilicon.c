@@ -31,6 +31,7 @@
 #include <linux/huawei/hw_connectivity.h>
 #endif
 
+
 #if defined (CONFIG_HUAWEI_DSM)
 #include <huawei_platform/dsm/dsm_pub.h>
 
@@ -168,6 +169,7 @@ static void dw_mci_hs_set_timing(struct dw_mci *host, int id, int timing, int sa
 		}
 	}
 
+
 	if ((id == 1) && (timing == MMC_TIMING_UHS_SDR104)) {
 		if ((sam_phase_val == 0) || (sam_phase_val >= 10))
 			use_sam_dly = 1;
@@ -288,6 +290,7 @@ void mshci_set_clock(struct dw_mci *host, unsigned int clock)
 {
 	int div;
 	u32 loop_count, reg;
+
 
 	/* before changing clock. clock needs to be off */
 	mshci_clock_onoff(host, CLK_DISABLE);
@@ -936,6 +939,7 @@ static irqreturn_t dw_mci_hs_card_detect(int irq, void *data)
 	return IRQ_HANDLED;
 };
 
+
 static int dw_mci_hs_get_cd(struct dw_mci *host, u32 slot_id)
 {
 	unsigned int status;
@@ -949,6 +953,7 @@ static int dw_mci_hs_get_cd(struct dw_mci *host, u32 slot_id)
 	dev_info(host->dev," sd status = %d\n", status);
 	return status;
 }
+
 
 static int dw_mci_hs_cd_detect_init(struct dw_mci *host)
 {
@@ -995,6 +1000,7 @@ static int hs_dwmmc_card_busy(struct dw_mci *host)
 	return 0;
 }
 #endif
+
 
 /* Common capabilities of hi3630 SoC */
 static unsigned long hs_dwmmc_caps[3] = {

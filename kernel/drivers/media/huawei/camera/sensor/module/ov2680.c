@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00145353
+ * Email:	  alan.hefeng@huawei.com
  * Date:	  2013-12-27
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,6 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 
 #include <linux/module.h>
 #include <linux/printk.h>
@@ -253,6 +256,7 @@ ov2680_match_id(
 	sensor_id = (cdata_h.cfg.reg.value) << 8 | (cdata_l.cfg.reg.value);
 
 	cam_notice( "%s, line %d, sensor id: 0x%x", __func__, __LINE__, sensor_id);
+
 
     if (0x2680 == sensor_id) {
         cam_info("%s succeed to match id.", __func__);

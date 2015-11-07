@@ -38,8 +38,6 @@
 
 #define N_USB_COM   29  /*virtual COM from USB,added by hisi-balong*/
 
-/* Beg: Hi1101 modified by l00244150 2014/03/17 */
 #define N_HW_BFG    35 /* for huawei's BT, FM, GNSS, WLAN chip */
-/* End: Hi1101 modified by l00244150 2014/03/17 */
 
 #endif /* _UAPI_LINUX_TTY_H */

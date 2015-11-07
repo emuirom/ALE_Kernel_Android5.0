@@ -1,9 +1,4 @@
-/*
- * atfdriver.h
- *
- *  Created on: 2014-8-25
- *      Author: l00265041
- */
+
 
 #ifndef ATFDRIVER_H_
 #define ATFDRIVER_H_

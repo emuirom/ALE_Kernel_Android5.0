@@ -2,6 +2,7 @@
  * 
  * File name: hw_power_monitor.c
  * Description: This file use to record power state for upper layer
+ * Author: ivan.chengfeifei@huawei.com
  * Version: 0.1
  * Date:  2014/11/27
  */
@@ -13,6 +14,7 @@
 #include <linux/debugfs.h>
 #include <linux/hw_power_monitor.h>
 #include "power.h"
+
 
 #define IRQ_TOTAL  200
 
@@ -30,6 +32,8 @@ int number;
 .devname = name,\
 .number = num,\
 }
+
+
 
 struct dcurrent_s dcurrent[] = {
   	CVS("a53_0_COMMRX0",0),	/* 42 */
@@ -442,6 +446,7 @@ static ssize_t ap_sleep_store(struct kobject *kobj,
 
 power_attr(ap_sleep);
 
+
 static ssize_t modem_sleep_show(struct kobject *kobj,
 				struct kobj_attribute *attr, char *buf)
 {
@@ -469,6 +474,7 @@ static ssize_t modem_sleep_store(struct kobject *kobj,
 }
 
 power_attr(modem_sleep);
+
 
 static ssize_t iom3_sleep_show(struct kobject *kobj,
                                 struct kobj_attribute *attr, char *buf)
@@ -662,6 +668,7 @@ static ssize_t wakeup_irq_store(struct kobject *kobj,
 
 power_attr(wakeup_irq);
 
+
 static ssize_t icc_vote_show(struct kobject *kobj,
                                 struct kobj_attribute *attr, char *buf)
 {
@@ -716,6 +723,7 @@ static ssize_t sensorhub_event_store(struct kobject *kobj,
 
 power_attr(sensorhub_event);
 
+
 static ssize_t soc_vote_show(struct kobject *kobj,
                                 struct kobj_attribute *attr, char *buf)
 {
@@ -742,6 +750,7 @@ static ssize_t soc_vote_store(struct kobject *kobj,
 }
 
 power_attr(soc_vote);
+
 
 static struct attribute * monitor_attrs[] = {
 	&ap_sleep_attr.attr,
@@ -793,4 +802,7 @@ static int __init power_monitor_init(void)
 }
 
 core_initcall(power_monitor_init);
+
+
+
 

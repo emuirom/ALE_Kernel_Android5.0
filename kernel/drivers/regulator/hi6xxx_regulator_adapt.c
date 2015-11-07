@@ -3,6 +3,7 @@
  *
  * Copyright (c) 2011 Hisilicon.
  *
+ * Dongbin Yu <yudongbin@huawei.com>
  * 
  * this regulator's probe function will be called lots of times,,
  * because of there are lots of regulator nodes in dtb. 
@@ -53,6 +54,7 @@ void hi6xxx_regulator_pmic_adapt_init(void)
     spin_lock_init(&regulator_pmic_spinlock);
 }
 EXPORT_SYMBOL_GPL(hi6xxx_regulator_pmic_adapt_init);
+
 
 int hi6xxx_pmic_get_status(struct hi6xxx_regulator_ctrl_regs *ctrl_regs,
                                              unsigned int mask,int shift)

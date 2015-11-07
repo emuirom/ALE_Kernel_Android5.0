@@ -54,6 +54,9 @@
 #if defined (CONFIG_HUAWEI_DSM)
 #include <huawei_platform/dsm/dsm_pub.h>
 #endif
+#include <huawei_platform/log/log_exception.h>
+#include <linux/timer.h>
+#include <linux/rtc.h>
 
 #ifdef _DRV_LLT_
 #define STATIC
@@ -201,6 +204,7 @@ struct hi6521_device_info {
     unsigned int    voltagemV;
     unsigned int    bat_compohm;
     unsigned int    comp_vclampmV;
+
 
     /*buck_reg5*/
     unsigned int    buck_dpm_mode;
@@ -394,6 +398,7 @@ STATIC void hi6521_get_boardid_japan_charge_parameter(struct hi6521_device_info 
      return;
 }
 
+
 STATIC int hi6521_get_boardid_charge_parameter(struct hi6521_device_info *di)
 {
     bool ret = 0;
@@ -434,6 +439,7 @@ STATIC int hi6521_get_boardid_charge_parameter(struct hi6521_device_info *di)
     }
 
 }
+
 
 STATIC int hi6521_get_max_charge_voltage(struct hi6521_device_info *di)
 {
@@ -1167,6 +1173,7 @@ STATIC void hi6521_config_prechg_current_vot_and_batfet_ctrl_reg(struct hi6521_d
     return;
 }
 
+
 /****************************************************************************
   Function:     hi6521_config_prechg_timer_and_rechg_vol_timer_reg
   Description:  config prechg timer and recharge voltage/timer.
@@ -1456,6 +1463,7 @@ STATIC void hi6521_config_opt_param(struct hi6521_device_info *di)
 	}
 
 }
+
 
 /****************************************************************************
   Function:     scharger_power_status
@@ -1805,6 +1813,7 @@ int scharger_power_get_current_limit_index(unsigned int vget_regs,unsigned int m
 	return index;
 }
 
+
 /****************************************************************************
   Function:     scharger_flash_led_timeout_enable
   Description:  enable flash led timeout.
@@ -1872,6 +1881,7 @@ int scharger_flash_torch_timeout_config(unsigned int timeoutSec)
 
     return hi6521_config_flash_torch_timeout(scharger_di);
 }
+
 
 /*deal with poor charger when capacity is more than 90% ,if hardware does not
  use REGN for usb_int,pls delete the follow fuction*/
@@ -2123,6 +2133,7 @@ STATIC void hi6521_monitor_battery_ntc_japan_charging(struct hi6521_device_info 
 
     di->battery_voltage = hisi_battery_voltage();
     battery_status = hi6521_check_battery_temperature_japan_threshold(di);
+
 
     switch (battery_status) {
     case BATTERY_HEALTH_TEMPERATURE_OVERLOW:
@@ -2609,6 +2620,7 @@ STATIC void hi6521_start_ac_charger(struct hi6521_device_info *di)
 	hi6521_config_otg_enable(di);
     hi6521_config_charger_enable_val(di,chg_en);
 
+
     schedule_delayed_work(&di->hi6521_charger_work, msecs_to_jiffies(0));
 #if DPM_CHECK_FOR_V204
     schedule_delayed_work(&di->hi6521_dpm_check_work, msecs_to_jiffies(0));
@@ -2634,7 +2646,53 @@ STATIC void hi6521_start_ac_charger(struct hi6521_device_info *di)
 
     return;
 }
+/****************************************************************************
+  Function:     get_time_tick
+  Description:  get the current time.
+  Input:        timestamp_buf
+  Output:       NA
+  Return:       NA.
+***************************************************************************/
+static void get_time_tick(char* timestamp_buf,unsigned int len)
+{
+   struct timeval tv;
+   struct rtc_time tm;
 
+   if(NULL == timestamp_buf) {
+       return;
+   }
+   memset(&tv, 0, sizeof(struct timeval));
+   memset(&tm, 0, sizeof(struct rtc_time));
+   do_gettimeofday(&tv);
+   tv.tv_sec -= sys_tz.tz_minuteswest * 60;
+   rtc_time_to_tm(tv.tv_sec, &tm);
+   snprintf(timestamp_buf,len, "%04d%02d%02d%02d%02d%02d",
+            tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+}
+/****************************************************************************
+  Function:     record_nff_for_otg_setup
+  Description:  record the charge type which is otg  in nff log
+                just record one times otg setup to nff log for this boot
+  Input:        NA
+  Output:       NA
+  Return:       NA.
+***************************************************************************/
+static void record_nff_for_otg_setup(void)
+{
+    int ret = 0;
+    static int nff_record_time = 0;
+    char cmd[40]={0};
+    char time_buf[16]={0};
+    if(nff_record_time == 0)
+    {
+     get_time_tick(time_buf,16);
+     snprintf(cmd, 40, "%s %s\n",time_buf,"chg type:otg-mode ");
+     ret=log_to_exception("messagestorage",cmd);
+     nff_record_time=1;
+    }
+
+
+  }
 STATIC void hi6521_start_usb_otg(struct hi6521_device_info *di)
 {
     hwlog_info("%s,---->USB_EVENT_OTG_ID<----\n", __func__);
@@ -2649,6 +2707,7 @@ STATIC void hi6521_start_usb_otg(struct hi6521_device_info *di)
     chg_en = CHG_POWER_DIS;
 	hi6521_config_charger_enable_val(di,chg_en);
     hi6521_config_otg_enable(di);
+    record_nff_for_otg_setup();
 
     schedule_delayed_work(&di->hi6521_usb_otg_work, msecs_to_jiffies(0));
     return;
@@ -2723,6 +2782,8 @@ STATIC void hi6521_check_bq27510_charge_full(struct hi6521_device_info *di)
     hi6521_config_fast_safe_timer_and_term_ctrl_reg(di);
     return;
 }
+
+
 
 STATIC void hi6521_charger_done_release_wakelock(struct hi6521_device_info *di)
 {
@@ -2995,6 +3056,7 @@ module_param(dpm_check_delay_time_ms, int, 0644);
 static int dpm_switch_with_charge_stop = 1;
 module_param(dpm_switch_with_charge_stop, int, 0644);
 
+
 STATIC void hi6521_dpm_check_work(struct work_struct *work)
 {
     int current_ma;
@@ -3175,6 +3237,7 @@ STATIC void hi6521_usb_charger_work(struct work_struct *work)
     }
 }
 
+
 STATIC irqreturn_t hi6521_irq_handle(int irq, void *data)
 {
 	struct hi6521_device_info *di = (struct hi6521_device_info *)data;
@@ -3198,6 +3261,7 @@ STATIC void hi6521_irq_work_handle(struct work_struct *work)
 		int dsm_charger_error_found = -1;
 #endif
 
+
 	/*if (WARN(di != scharger_di,
 		 "hi6521_irq_work_handle di is error di =0x%x,scharger_di=0x%x\n",di, scharger_di))
 	{
@@ -3214,6 +3278,7 @@ STATIC void hi6521_irq_work_handle(struct work_struct *work)
     if (!dsm_client_ocuppy(charger_dclient))
         dsm_charger_error_found++;
 #endif
+
 
 	    /*handle irq*/
        /*l00279044 scharger mntn add start*/
@@ -3829,6 +3894,7 @@ STATIC ssize_t hi6521_show_precharge_current(struct device *dev,
     return sprintf(buf, "%d\n", val);
 }
 
+
 STATIC ssize_t hi6521_set_precharge_voltage(struct device *dev,
                   struct device_attribute *attr,
                   const char *buf, size_t count)
@@ -3879,6 +3945,7 @@ STATIC ssize_t hi6521_show_precharge_voltage(struct device *dev,
 	}
     return sprintf(buf, "%d\n", val);
 }
+
 
 STATIC ssize_t hi6521_set_termination_current(struct device *dev,
                   struct device_attribute *attr,
@@ -4154,6 +4221,7 @@ STATIC ssize_t hi6521_show_wakelock_enable(struct device *dev,
     val = di->wakelock_enabled;
     return sprintf(buf, "%u\n", val);
 }
+
 
 STATIC long g_reg_addr = 0;
 STATIC ssize_t hi6521_set_reg_sel(struct device *dev,
@@ -4681,6 +4749,7 @@ STATIC DEVICE_ATTR(charge_temp_protect, (S_IWUSR | S_IRUGO),
                 hi6521_store_charge_temp_protect);
 #endif
 
+
 STATIC struct attribute *hi6521_attributes[] = {
     &dev_attr_dppm_voltage.attr,
     &dev_attr_iin_runningtest.attr,
@@ -4734,6 +4803,7 @@ int scharger_unregister_notifier(struct notifier_block *nb)
 
 EXPORT_SYMBOL_GPL(scharger_unregister_notifier);
 
+
 STATIC void scharger_notify_prepare(void)
 {
     blocking_notifier_call_chain(&scharger_init_notifier_list,0,NULL);
@@ -4785,6 +4855,7 @@ STATIC int  hi6521_charger_probe(struct i2c_client *client,
     di->client = client;
 
     i2c_set_clientdata(client, di);
+
 
     ret = hi6521_read_byte(di, &read_reg, SOC_SCHARGER_CHIP_VERSION_ADDR(0));
 
@@ -4862,6 +4933,7 @@ STATIC int  hi6521_charger_probe(struct i2c_client *client,
 		gpio_set_value(di->gpio_ce,0);
 	}
 
+
     di->cin_dpmmV              = VINDPM_4520;
     di->cin_limit              = IINLIM_500;
     //pre_cin_limit              = IINLIM_500;
@@ -4883,6 +4955,7 @@ STATIC int  hi6521_charger_probe(struct i2c_client *client,
 
 	di->chg_thsd_treg_set      = CHG_THSD_TREG_SET_MAX;
 	di->chg_thsd_tstp_set      = CHG_THSD_TSTP_SET_140C;
+
 
 	di->watchdog_timer         = CHG_WDT_TIMER_40S;
 	di->sys_minmV              = SYS_MIN_3650;

@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00145353
+ * Email:	  alan.hefeng@huawei.com
  * Date:	  2013-12-27
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,6 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 
 #include <linux/module.h>
 #include <linux/printk.h>
@@ -61,6 +64,8 @@ struct sensor_power_setting hw_ov13850_power_setting[] = {
         .delay = 1,
     },
 
+
+
 	{
 		.seq_type = SENSOR_IOVDD,
 		.data = (void*)"common-iovdd",
@@ -68,6 +73,7 @@ struct sensor_power_setting hw_ov13850_power_setting[] = {
 		.sensor_index = SENSOR_INDEX_INVALID,
 		.delay = 1,
 	},
+
 
 	{
 		.seq_type = SENSOR_VCM_AVDD,
@@ -161,6 +167,7 @@ ov13850_get_name(
     sensor_t* sensor = I2S(si);
     return sensor->board_info->name;
 }
+
 
 int
 ov13850_power_up(
@@ -262,6 +269,7 @@ static ssize_t ov13850_powerctrl_store(struct device *dev,
 	return count;
 }
 
+
 static struct device_attribute ov13850_powerctrl =
     __ATTR(power_ctrl, 0664, ov13850_powerctrl_show, ov13850_powerctrl_store);
 
@@ -288,6 +296,7 @@ s_ov13850_vtbl =
 	.config = ov13850_config,
 	.power_up = ov13850_power_up,
 	.power_down = ov13850_power_down,
+
 
 	.match_id = ov13850_match_id,
 

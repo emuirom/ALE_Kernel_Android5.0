@@ -313,6 +313,7 @@ static int calc_capacity_from_voltage(void)
     return data;
 }
 
+
 /*only charge-work can not reach full(95%).Change capacity to full after 40min.*/
 static int bq_force_full_timer(int curr_capacity, struct bq_bci_device_info *di)
 {

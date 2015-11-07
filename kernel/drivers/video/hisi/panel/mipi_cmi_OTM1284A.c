@@ -723,6 +723,17 @@ static char cmi_power_on_param_C6B4_C6[] =
     0xc6,
     0x10,
 };
+static char cmi_power_on_param_C487_87[] =
+{
+    0x00,
+    0x87,
+};
+
+static char cmi_power_on_param_C487_C4[] =
+{
+    0xC4,
+    0x18,
+};
 // set analog Gamma
 static char cmi_power_on_param111[] =
 {
@@ -1608,6 +1619,14 @@ static struct dsi_cmd_desc cmi_display_on_cmds[] =
     {
         DTYPE_GEN_LWRITE, 0, 100, WAIT_TYPE_US,
         sizeof(cmi_power_on_param_C6B4_C6), cmi_power_on_param_C6B4_C6
+    },
+    {
+        DTYPE_GEN_LWRITE, 0, 100, WAIT_TYPE_US,
+        sizeof(cmi_power_on_param_C487_87), cmi_power_on_param_C487_87
+    },
+    {
+        DTYPE_GEN_LWRITE, 0, 100, WAIT_TYPE_US,
+        sizeof(cmi_power_on_param_C487_C4), cmi_power_on_param_C487_C4
     },
     {
         DTYPE_GEN_LWRITE, 0, 100, WAIT_TYPE_US,

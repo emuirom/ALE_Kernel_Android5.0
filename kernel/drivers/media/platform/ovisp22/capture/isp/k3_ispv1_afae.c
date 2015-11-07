@@ -146,7 +146,6 @@ static int ispv1_getreg_focus_result(focused_result_s *result, int multi_win);
 static int ispv1_set_focus_mode_done(camera_focus focus_mode);
 static int ispv1_set_focus_area_done(focus_area_s *area, u32 zoom);
 
-/* added for more precision by y00215412 2012-11-17 */
 u32 ispv1_focus_get_win_lum(lum_win_info_s *lum_info);
 
 static void ispv1_assistant_af(bool action);
@@ -172,14 +171,10 @@ bool ispv1_check_caf_need_restart(focus_frame_stat_s *start_data, focus_frame_st
 void ispv1_k3focus_run(void);
 u32 ispv1_get_single_win_raw_lum(u8 win_idx, u32 stat_unit_area);
 
-// added by w00223743 for enlargint focus window in smooth area
 bool enlarge_focus_window(camera_rect_s *rect, int width, int height, int zoom);
-// added by w00223743 for large focus window
 bool analysis_large_contrast_value(pos_info *array, af_run_param *af_info, pos_info *top);
-// added by w00223743 for down hill condition
 bool detect_local_maximum(af_run_param *af_info, int contrast);
 
-/* added by y00215412 2013-12-30 for zoom over exposure */
 #define afae_adjust_zoom_ratio(ratio, zoom_base, zoom_max, afae_max) \
 	(((ratio) - (zoom_base)) * ((afae_max) - (zoom_base)) \
 	/ ((zoom_max) - (zoom_base)) \
@@ -234,7 +229,6 @@ inline void set_focus_state(focus_state_e state)
 	afae_ctrl->focus_state = state;
 }
 
-/* added for target tracking by y00215412 */
 inline af_run_stage get_focus_stage(void)
 {
 	return afae_ctrl->af_stage;
@@ -397,7 +391,6 @@ static void ispv1_cal_vcm_range(vcm_info_s *vcm)
 		vcm->get_vcm_otp(&otp_start, &otp_end);
 		print_info("get 10bit otp start 0x%x, end 0x%x***************", otp_start, otp_end);
 
-		/* added by y00215412 20120920, new change 2012-11-15 */
 		if (otp_start > 0xd0)
 			otp_start = 0xd0;
 
@@ -444,15 +437,7 @@ static void ispv1_cal_vcm_range(vcm_info_s *vcm)
 		vcm->infiniteDistance, vcm->normalDistanceEnd, vcm->videoDistanceEnd);
 }
 
-/*
- **************************************************************************
- * FunctionName: ispv1_setreg_vcm_code_done;
- * Description : set vcm position to vcm_code;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 static int ispv1_setreg_vcm_code_done(vcm_info_s *vcm, u32 vcm_code)
 {
 	int ret = 0;
@@ -483,17 +468,6 @@ static int ispv1_setreg_vcm_code_done(vcm_info_s *vcm, u32 vcm_code)
 #endif
 	return ret;
 }
-
-/*
- **************************************************************************
- * FunctionName: ispv1_setreg_vcm_code;
- * Description : if the dest code smaller than safe_position and
- *		the current code is larger than safe_position, divide the stride to avoid clash
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : false: direct mode; true: divide mode
- **************************************************************************
- */
 static bool ispv1_setreg_vcm_code(u32 dest_code)
 {
 	int ret = 0;
@@ -794,7 +768,6 @@ static int ispv1_getreg_focus_result(focused_result_s *result, int multi_win)
         return -1;
     }
 
-	/* added by y00215412 20120906 */
 	result->focused_win_num = 1;
 	result->focused_win[0] = 0;
 
@@ -848,7 +821,6 @@ int ispv1_focus_init(void)
 	afae_ctrl->binning = 0;
 	afae_ctrl->focus_failed = 0;
 
-	/*added for Area CAF function by y00215412 2012-11-14. */
 	memset(&afae_ctrl->cur_rect, 0, sizeof(camera_rect_s));
 
 	/* init af start work queue. */
@@ -867,7 +839,6 @@ int ispv1_focus_init(void)
 	ispv1_setreg_vcm_code(vcm->infiniteDistance);
 
 	sema_init(&(afae_ctrl->af_run_sem), 1);
-	/* added for focus AE by y00215412 2013-06-27 */
 	save_target_high();
 
 	sema_init(&sem_af_schedule, 0);
@@ -938,15 +909,6 @@ static void ispv1_exit_focus_workqueue(camera_focus focus_mode)
 		ispv1_set_aecagc_mode(AUTO_AECAGC);
 	}
 }
-/*
- **************************************************************************
- * FunctionName: ispv1_auto_focus;
- * Description : set focus start or stop; 1-start; 0-cancel or stop
- * Input       : flag;
- * Output      : NA;
- * ReturnValue : 0:ture ; -1:false;
- **************************************************************************
- */
 int ispv1_auto_focus(int flag)
 {
 	int ret = 0;
@@ -978,7 +940,6 @@ int ispv1_auto_focus(int flag)
 				goto free_out;
 			}
 		} else if (get_focus_mode() == CAMERA_FOCUS_AUTO_VIDEO) {
-			/* added for touch af in video mode by j00212990 2013-01-24 */
 			if (get_focus_state() == FOCUS_STATE_STOPPED) {
 				set_focus_state(FOCUS_STATE_AF_PREPARING);
 				set_focus_result(STATUS_FOCUSING);
@@ -994,7 +955,6 @@ int ispv1_auto_focus(int flag)
 			set_focus_state(FOCUS_STATE_AF_PREPARING);
 			set_focus_result(STATUS_FOCUSING);
 
-			/* added for after excute auto focus, Area CAF should work by y00215412 */
 			afae_ctrl->area_changed = false;
 		}
 		queue_work(af_start_work_queue, &af_start_work);
@@ -1104,14 +1064,13 @@ int  ispv1_af_set_fast_shoot(camera_bool_e fast_shoot)
 static void ispv1_af_start_work_func(struct work_struct *work)
 {
 	camera_sensor *sensor =  this_ispdata->sensor;
-	camera_focus cur_focus_mode = get_focus_mode(); /* added for remove static check warning by j00212990 2013-02-05 */
+	camera_focus cur_focus_mode = get_focus_mode();
 
 	/* if focus state has changed, should return immediately. */
 	if ((get_focus_state() != FOCUS_STATE_CAF_PREPARING) &&
 		(get_focus_state() != FOCUS_STATE_AF_PREPARING))
 		return;
 
-	/* added for remove static check warning by j00212990 2013-02-05 */
 	if (CAMERA_TRUE == ispv1_af_get_fast_shoot())
 	{
 		ispv1_set_focus_mode_done(CAMERA_FOCUS_FAST_SHOOT);
@@ -1123,20 +1082,19 @@ static void ispv1_af_start_work_func(struct work_struct *work)
 		set_focus_mode(cur_focus_mode);
 	}
 
-	ispv1_set_focus_area_done(&afae_ctrl->af_area, afae_ctrl->zoom);
 
+	ispv1_set_focus_area_done(&afae_ctrl->af_area, afae_ctrl->zoom);
 	this_ispdata->af_need_flash = ispv1_af_flash_needed(sensor, this_ispdata->flash_mode, afae_ctrl->lum_info);
+
 
 	if ((cur_focus_mode == CAMERA_FOCUS_CONTINUOUS_PICTURE)
 		|| (cur_focus_mode== CAMERA_FOCUS_CONTINUOUS_VIDEO)){
 		set_focus_state(FOCUS_STATE_CAF_DETECTING);
 
-		/* added for after excute auto focus, Area CAF should work by y00215412 start */
 		if (afae_ctrl->area_changed == true)
 			set_caf_forcestart(CAF_FORCESTART_FORCEWAIT);
 		else
 			ispv1_focus_status_reset();
-		/* added for after excute auto focus, Area CAF should work by y00215412 end */
 
 		if (afae_ctrl->k3focus_running == false)
 			ispv1_k3focus_run();
@@ -1153,7 +1111,6 @@ static void ispv1_af_start_work_func(struct work_struct *work)
 		ispv1_free_af_run_sem();
 	} else {
 		set_focus_state(FOCUS_STATE_AF_RUNNING);
-		/* added by y00215412 using for target tracking 2012-01-09 */
 		set_focus_stage(AF_RUN_STAGE_PREPARE);
 
 		if (afae_ctrl->k3focus_running == false) {
@@ -1165,7 +1122,6 @@ static void ispv1_af_start_work_func(struct work_struct *work)
 	}
 }
 
-/* modified for focus AE by s00061250 2013-09-22 begin */
 static int ispv1_get_yuvrect_of_full(pic_attr_t *pic_attr, camera_rect_s *rect, u32 zoom)
 {
 	int ratio = isp_zoom_to_ratio(zoom, 0);
@@ -1200,7 +1156,6 @@ static int ispv1_get_yuvrect_of_full(pic_attr_t *pic_attr, camera_rect_s *rect, 
 	return 0;
 }
 
-/* added by y00215412 2012-09-21 for zoom focus. */
 static int ispv1_get_yuvrect_of_app(pic_attr_t *pic_attr, camera_rect_s *rect, u32 zoom)
 {
 	int ratio = isp_zoom_to_ratio(zoom, 0);
@@ -1251,13 +1206,8 @@ static int ispv1_get_yuvrect_of_app(pic_attr_t *pic_attr, camera_rect_s *rect, u
 
 	return 0;
 }
-/* modified for focus AE by y00215412 2013-06-27 end */
 
-/*
- * Check rect is center or not.
- * return value: true--center; false--no center.
- * added by y00215412 for target tracking
- */
+
 static bool ispv1_check_rect_center(camera_rect_s *rect, u32 preview_width, u32 preview_height)
 {
 	bool ret = false;
@@ -1277,11 +1227,7 @@ static bool ispv1_check_rect_center(camera_rect_s *rect, u32 preview_width, u32 
 	return ret;
 }
 
-/*
- * Check two rects if there are differ in position or size.
- * return value: true--have a lot differ; false--no differ or differ a little.
- * last modified by y00215412 for target tracking
- */
+
 static bool ispv1_check_rect_differ(camera_rect_s *rect1, camera_rect_s *rect2,
 				   u32 preview_width, u32 preview_height)
 {
@@ -1361,16 +1307,6 @@ static int ispv1_focus_get_default_yuvrect(camera_rect_s *rectin, u32 preview_wi
 
 	return 0;
 }
-/*
- **************************************************************************
- * FunctionName: ispv1_focus_adjust_yuvrect;
- * Description : call by ispv1_set_focus_area_done;
- * Input       : camera_rect_s *yuv, calculate constrast area
- * Output      : NA;
- * ReturnValue : NA;
- * Other       : aadded by y00215412 for adjust focus yuv rect, last revised for zoom focus by y00215412 2012-11-19
- **************************************************************************
- */
 static int ispv1_focus_adjust_yuvrect(camera_rect_s *yuv, u32 preview_width, u32 preview_height, u32 zoom)
 {
 	u32 ratio = isp_zoom_to_ratio(zoom, 0);
@@ -1473,7 +1409,6 @@ static int ispv1_focus_adjust_yuvrect(camera_rect_s *yuv, u32 preview_width, u32
 
 static int ispv1_focus_adjust_rawwin(focus_win_info_s *win_info, u32 raw_width, u32 raw_height)
 {
-	/* adjust left and top edge for CS sony sensor, 2012-05-14 y00215412 start */
 	if (win_info->left < 24) {
 		win_info->left = 24;
 		if (win_info->width > 72) {
@@ -1502,7 +1437,6 @@ static int ispv1_focus_adjust_rawwin(focus_win_info_s *win_info, u32 raw_width, 
 	if ((win_info->left + win_info->top) % 2 == 0) {
 		win_info->left += 1;
 	}
-	/* 2012-05-14 y00215412 end */
 
 	/* width and height should be mutiple of 6 */
 	win_info->width -= (win_info->width % 6);
@@ -1532,7 +1466,7 @@ static inline u32 ispv1_get_distance_to_lumwin(coordinate_s *curr, coordinate_s 
 	return (x_coff + y_coff);
 }
 
-/* added for more precision to check scene change by y00215412 2012-11-17 start */
+
 void ispv1_focus_get_lumwin_info(focus_win_info_s *win_info, u32 raw_width, u32 raw_height, lum_win_info_s *lum_info)
 {
 	coordinate_s center;
@@ -1595,7 +1529,6 @@ void ispv1_focus_get_lumwin_info(focus_win_info_s *win_info, u32 raw_width, u32 
 	lum_info->width = (raw_width / 8);
 	lum_info->height = (raw_height / 6);
 }
-/* added for focus AE by y00215412 2013-06-27 begin */
 int ispv1_get_metering_winidx(camera_rect_s *win, u32 raw_width, u32 raw_height)
 {
 	coordinate_s center;
@@ -1634,7 +1567,6 @@ bool ispv1_check_metering_area_enhance(pic_attr_t *pic_attr, camera_rect_s *win)
 	else
 		return false;
 }
-/* added for focus AE by y00215412 2013-06-27 end */
 
 static lum_table_s lum_table[] = {
 	{256, 20480},{255, 20465},{254, 20451},{253, 20436},{252, 20421},{251, 20407},{250, 20392},{249, 20377},
@@ -1786,7 +1718,6 @@ u32 ispv1_get_single_win_raw_lum(u8 win_idx, u32 stat_unit_area)
 	return lum;
 }
 
-/* added for more precision to check scene change by y00215412 2012-11-17 end */
 
 int ispv1_set_vcm_parameters(camera_focus focus_mode)
 {
@@ -1817,7 +1748,7 @@ int ispv1_set_vcm_parameters(camera_focus focus_mode)
 		break;
 
 	case CAMERA_FOCUS_CONTINUOUS_VIDEO:
-	case CAMERA_FOCUS_AUTO_VIDEO: /* added for touch af in video mode by j00212990 2013-01-24 */
+	case CAMERA_FOCUS_AUTO_VIDEO:
 		vcm->offsetInit = vcm->infiniteDistance;
 		vcm->fullRange = vcm->videoDistanceEnd;
 		vcm->moveRange = RANGE_NORMAL;
@@ -1859,15 +1790,7 @@ int ispv1_set_vcm_parameters(camera_focus focus_mode)
 	return ret;
 }
 
-/*
- **************************************************************************
- * FunctionName: ispv1_set_focus_mode;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- * Other       : NA;
- **************************************************************************
- */
+
 int ispv1_set_focus_mode(camera_focus focus_mode)
 {
 	print_info("Enter %s, focus_mode:%d", __func__, focus_mode);
@@ -1922,7 +1845,6 @@ static int ispv1_set_focus_mode_done(camera_focus focus_mode)
 	return ret;
 }
 
-/* added by y00215412 2012-09-21 for zoom focus. */
 int ispv1_set_focus_zoom(u32 zoom)
 {
 	ispv1_set_focus_area(&afae_ctrl->af_area, zoom);
@@ -1930,7 +1852,6 @@ int ispv1_set_focus_zoom(u32 zoom)
 	return 0;
 }
 
-/* added by w00225845 2013-02-19 for zoom sharpness. */
 int ispv1_set_sharpness_zoom(u32 zoom)
 {
 	u32 max_sharpness;
@@ -1954,7 +1875,6 @@ int ispv1_set_sharpness_zoom(u32 zoom)
 	return 0;
 }
 
-/*added for Area CAF function by y00215412 2012-11-14. */
 static bool ispv1_check_focus_area_changed(camera_rect_s *rect1, camera_rect_s *rect2)
 {
 	if ((rect1->left != rect2->left) || (rect1->top != rect2->top) ||
@@ -1997,7 +1917,6 @@ int ispv1_set_focus_area(focus_area_s *area, u32 zoom)
 			previous_rect = &afae_ctrl->af_area.rect[area->focus_rect_num - 1];
 #endif
 
-		/* revised by y00215412 2012-09-21 for zoom focus. */
 		if (zoom == afae_ctrl->zoom) {
 			//ret = ispv1_check_rect_differ(current_rect, previous_rect, preview_width, preview_height);
 			ret = ispv1_check_focus_area_changed(current_rect, previous_rect);
@@ -2008,7 +1927,6 @@ int ispv1_set_focus_area(focus_area_s *area, u32 zoom)
 			}
 		}
 
-		/* added by y00215412 for target tracking 2012-01-09 begin */
 		ret = ispv1_check_rect_center(current_rect, preview_width, preview_height);
 		if (ret == true) {
 			/* new focus area is center focus. */
@@ -2028,7 +1946,6 @@ int ispv1_set_focus_area(focus_area_s *area, u32 zoom)
 				return 0;
 			}
 		}
-		/* added by y00215412 for target tracking 2012-01-09 end */
 
 		ispv1_set_focus_area_done(area, zoom);
 	}
@@ -2038,16 +1955,7 @@ int ispv1_set_focus_area(focus_area_s *area, u32 zoom)
 	return 0;
 }
 
-/*
- **************************************************************************
- * FunctionName: ispv1_set_focus_area_done;
- * Description : set focus area
- * Input       : area: area information.
- * Output      : NA;
- * ReturnValue : 0 success, -1 failed
- * Other       : last modified by y00215412 for target tracking;
- **************************************************************************
- */
+
 static int ispv1_set_focus_area_done(focus_area_s *area, u32 zoom)
 {
 	k3_isp_data *ispdata = this_ispdata;
@@ -2118,12 +2026,11 @@ static int ispv1_set_focus_area_done(focus_area_s *area, u32 zoom)
 
 	memcpy(&yuv_in_full, &yuv_rect, sizeof(camera_rect_s));
 	print_debug("focus AE focus step1:[%d,%d:%d x %d], zoom %d", yuv_in_full.left, yuv_in_full.top, yuv_in_full.width, yuv_in_full.height, zoom);
-	/* added by y00215412 2012-09-21 for zoom focus, ori_rect will map to get a new rect. */
 	ispv1_get_yuvrect_of_full(&ispdata->pic_attr[STATE_PREVIEW], &yuv_in_full, zoom);
 	print_debug("focus AE focus step2:[%d,%d:%d x %d], zoom %d", yuv_in_full.left, yuv_in_full.top, yuv_in_full.width, yuv_in_full.height, zoom);
 
 	/* adjust yuv rect. */
-	ispv1_focus_adjust_yuvrect(&yuv_in_full, preview_width, preview_height, zoom); /* added by j00212990 2012-11-14 */
+	ispv1_focus_adjust_yuvrect(&yuv_in_full, preview_width, preview_height, zoom);
 	print_debug("focus AE focus step3:[%d,%d:%d x %d], zoom %d", yuv_in_full.left, yuv_in_full.top, yuv_in_full.width, yuv_in_full.height, zoom);
 
 	/* convert back to modified app rect for contrast calculate */
@@ -2163,10 +2070,8 @@ setreg_out:
 	/* Set ISP defined rects to ISP register */
 	ispv1_setreg_focus_win(&win_info);
 
-	/* added for more precision to check scene change by y00215412 2012-11-17 */
 	ispv1_focus_get_lumwin_info(&win_info, raw_width, raw_height, &afae_ctrl->lum_info);
 
-	/*added for Area CAF function by y00215412 2012-11-14. */
 	afae_ctrl->area_changed = ispv1_check_focus_area_changed(&afae_ctrl->cur_rect, &yuv_rect);
 	print_info("######afae_ctrl->area_changed %d, lum_info[%d,%d,%d,%d]######",\
 		afae_ctrl->area_changed,\
@@ -2214,6 +2119,7 @@ int ispv1_get_focus_result(focus_result_s *result)
     }
 	area = &afae_ctrl->af_area;
 	map_table = afae_ctrl->map_table;
+
 
 	memset(result, 0, sizeof(focus_result_s));
 	afae_ctrl->focus_failed = 0;
@@ -2441,7 +2347,6 @@ int ispv1_setreg_metering_area(camera_rect_s *raw, u32 raw_width, u32 raw_height
 	return 0;
 }
 
-/* modified for focus AE by y00215412 2013-06-27: AE stat windows. */
 void ispv1_setreg_ae_statwin(u32 left, u32 top, u32 right, u32 bottom)
 {
 	SETREG16(REG_ISP_AECAGC_STATWIN_LEFT, left);
@@ -2450,7 +2355,6 @@ void ispv1_setreg_ae_statwin(u32 left, u32 top, u32 right, u32 bottom)
 	SETREG16(REG_ISP_AECAGC_STATWIN_BOTTOM, bottom);
 }
 
-/* modified for focus AE by y00215412 2013-06-27 begin */
 int ispv1_set_ae_statwin(pic_attr_t *pic_attr, coordinate_s *center, METERING_STATWIN_MODE statwin_mode, u32 zoom)
 {
 	camera_rect_s yuv;
@@ -2461,7 +2365,6 @@ int ispv1_set_ae_statwin(pic_attr_t *pic_attr, coordinate_s *center, METERING_ST
 	u32 statwin_percent;
 	coordinate_s phy_center;
 
-	/* added by y00215412 2013-12-30 for over exposure in zoom, set limitation to 2x */
 	if (statwin_mode == METERING_STATWIN_NORMAL) {
 		ratio = afae_adjust_zoom_ratio(ratio, ISP_ZOOM_BASE_RATIO, ISP_ZOOM_MAX_RATIO, 0x200);
 	}
@@ -2525,7 +2428,6 @@ int ispv1_set_ae_statwin(pic_attr_t *pic_attr, coordinate_s *center, METERING_ST
 	ispv1_setreg_ae_statwin(left, top, right, bottom);
 	return 0;
 }
-/* modified for focus AE by s00061250 2013-09-22 end */
 
 int ispv1_set_gsensor_stat(axis_triple *xyz)
 {
@@ -2651,15 +2553,7 @@ int ispv1_set_metering_area(metering_area_s *area, u32 zoom)
 	return 0;
 }
 
-/*
- **************************************************************************
- * FunctionName: ispv1_set_focus_range;
- * Description : When changed scene,modify focus range.;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 int ispv1_set_focus_range(camera_focus focus_mode)
 {
 	int ret = 0;
@@ -2698,17 +2592,6 @@ int ispv1_get_focus_distance(void)
 	/* just reserve interface */
 	return 0;
 }
-
-/*
- **************************************************************************
- * FunctionName: ispv1_focus_need_flash;
- * Description : call by ispv1_af_start_work_func;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- * Other       : added for new assistant af mechanism by j00212990 2012-06-08;
- **************************************************************************
- */
 static bool ispv1_focus_need_flash(u32 cur_lum, u32 cur_gain, bool summary, bool support_summary)
 {
 	bool ret = false;
@@ -2732,15 +2615,7 @@ static bool ispv1_focus_need_flash(u32 cur_lum, u32 cur_gain, bool summary, bool
 	return ret;
 }
 
-/*
- **************************************************************************
- * FunctionName: ispv1_assistant_af;
- * Description : call by ispv1_auto_focus and ispv1_need_luminance_stable;
- * Input       : bool action, when action is true then turn on flash light, otherwise turn off flash light;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 static void ispv1_assistant_af(bool action)
 {
 	camera_flashlight *flashlight = get_camera_flash();
@@ -2760,15 +2635,7 @@ static void ispv1_assistant_af(bool action)
                 this_ispdata->flash_flow = FLASH_ASSIST_AF_DONE;
 	}
 }
-/*
- **************************************************************************
- * FunctionName: ispv1_af_flash_needed;
- * Description : NA;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 static bool ispv1_af_flash_needed(camera_sensor *sensor, camera_flash flash_mode, lum_win_info_s lum_info)
 {
 	u32 index = sensor->preview_frmsize_index;
@@ -2789,15 +2656,7 @@ static bool ispv1_af_flash_needed(camera_sensor *sensor, camera_flash flash_mode
 	return ret;
 }
 
-/*
- **************************************************************************
- * FunctionName: ispv1_af_flash_check_open;
- * Description : NA;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 static void ispv1_af_flash_check_open(void)
 {
 	camera_sensor *sensor =  this_ispdata->sensor;
@@ -2824,15 +2683,7 @@ static void ispv1_af_flash_check_open(void)
 	}
 }
 
-/*
- **************************************************************************
- * FunctionName: ispv1_af_flash_check_close;
- * Description : NA;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 static void ispv1_af_flash_check_close(void)
 {
 	camera_sensor *sensor =  this_ispdata->sensor;
@@ -2970,15 +2821,7 @@ static void ispv1_focus_status_reset(void)
 	memset(&afae_ctrl->compare_data, 0, sizeof(focus_frame_stat_s));
 }
 
-/*
- **************************************************************************
- * FunctionName: ispv1_calc_frame_stat_diff;
- * Description : call by ispv1_check_caf_need_trigger;
- * Input       : pre_data, cur_data;
- * Output      : NA;
- * ReturnValue : ret_val: trigger reason;
- **************************************************************************
- */
+
 u16 ispv1_calc_frame_stat_diff(focus_frame_stat_s *pre_data, focus_frame_stat_s *cur_data)
 {
 	u16 ret_val = 0;
@@ -3030,7 +2873,6 @@ caf_detect_result ispv1_check_caf_need_trigger(focus_frame_stat_s *compare_data,
 	effect_params *effect = get_effect_ptr();
 	caf_trigger_s *this_caf_trigger = &effect->af_param.focus_algo.caf_trigger;
 
-	/* changed by y00215412 for target tracking 2012-01-09 */
 	if (force_start == 0) {
 		/* if diff too much, should force focus start. */
 		diff_val = ispv1_calc_frame_stat_diff(compare_data, mean_data);
@@ -3064,10 +2906,7 @@ caf_detect_result ispv1_check_caf_need_trigger(focus_frame_stat_s *compare_data,
 		if (mean_data->lum >= this_caf_trigger->min_trigger_lum) {
 			if ((afae_ctrl->focus_stat_frames > this_caf_trigger->stat_skip_frame)
                   && ((force_start & 0xff00) == 0)) {
-				/*
-				  * use to recognize temperarily sudden changes of scene
-				  * if diff too much, should force focus start.
-				  */
+
 				diff_val = ispv1_calc_frame_stat_diff(compare_data, &cur_data);
 				if (diff_val != 0)
 					trigger = true;
@@ -3161,7 +3000,7 @@ u32 ispv1_get_focus_rect(camera_rect_s *rect)
 	if (rect->width == 0 || rect->height == 0)
 		ispv1_get_default_focusrect(rect);
 
-	ispv1_focus_adjust_yuvrect(rect, preview_width, preview_height, afae_ctrl->zoom); /* added by j00212990 2012-11-14 */
+	ispv1_focus_adjust_yuvrect(rect, preview_width, preview_height, afae_ctrl->zoom);
 	return 0;
 }
 
@@ -3186,7 +3025,6 @@ bool ispv1_copy_preview_data(u8 *dest, camera_rect_s *rect)
 		goto error_out1;
 	}
 
-	/*mod by w00199382 for smmu*/
 	if ((0 == currframe->phyaddr) || (NULL == currframe->viraddr)) {
 		print_error("params error, frame->phyaddr 0x%p, frame->viraddr:0x%p",
 			currframe->phyaddr, currframe->viraddr);
@@ -3368,7 +3206,6 @@ static u32 ispv1_focus_calc_edge(u8 *pdata, camera_rect_s *rect, int contrast_sh
 	thr >>= contrast_shift;
 	step = (coarse_flag == true) ? 3 : 1;
 
-	// added by w00223743 for efficiency
 	width_shift = width << 1;
 	step_width = step * width;
 	sdata = pdata;
@@ -3459,7 +3296,6 @@ int ispv1_focus_need_schedule(void)
 		schedule_case = FOCUS_SCHEDULE_CASE_AF_MOVE;
 	} else if (get_focus_mode() == CAMERA_FOCUS_AUTO_VIDEO &&
 	    get_focus_state() == FOCUS_STATE_AF_RUNNING) {
-		/* added for touch af in video mode by j00212990 2013-01-24 */
 		schedule_case = FOCUS_SCHEDULE_CASE_VAF_MOVE;
 	}
 
@@ -3684,7 +3520,6 @@ bool analysis_contrast_value(u32 *array, af_run_param *af_info)
 		}
 	}
 
-	/* added by y00215412 for sky focus wrong 2012-12-11 start. */
 	if ((abs(contrast_top - array[0]) < this_judge_result->error_mindiff) &&
 		(array_size > this_judge_result->error_minsteps) &&
 		contrast_top < this_judge_result->low_contrast) {
@@ -3695,7 +3530,6 @@ bool analysis_contrast_value(u32 *array, af_run_param *af_info)
 	if (focus_lum <= this_judge_result->error_lum) {
 		af_info->af_analysis |= 0x04;
 	}
-	/* added by y00215412 for sky focus wrong 2012-12-11 end. */
 
 	contrast_threshold = contrast_top * this_judge_result->stat_th_percent / 100;
 	/* analysis slope of curve */
@@ -3831,12 +3665,10 @@ void ispv1_k3focus_run(void)
 	focus_frame_stat_s start_data;
 	bool restart = false;
 
-	// modified by w00223743 for enlarge focus window
 	camera_rect_s rect_used = afae_ctrl->cur_rect;
 	camera_rect_s rect_large = rect_used;
 	camera_rect_s *rect = &rect_used;
 
-	// added by w00223743 for enlarging focus window in smooth area
 	pos_info large_contrast_array[50];
 	u32 large_curr = 0;
 	pos_info large_top;
@@ -3859,6 +3691,7 @@ void ispv1_k3focus_run(void)
 	int tryrewind_code = 0;
 
 	af_run_stage next_stage = AF_RUN_STAGE_PREPARE;
+
 
 	/* used for ispv1_focus_calc_edge(), set coarse flag or not */
 	bool edge_calc_coarse = true;
@@ -3912,7 +3745,6 @@ void ispv1_k3focus_run(void)
 	this_ispdata->flash_flow = FLASH_DONE;
 	ispv1_af_flash_check_open();
 
-	// added by w00223743 for large focus window
 	enlarge_focus_window(&rect_large, preview_width, preview_height, afae_ctrl->zoom);
 
 	while ((schedule_case = ispv1_focus_need_schedule()) != -1) {
@@ -3931,7 +3763,6 @@ void ispv1_k3focus_run(void)
 		case FOCUS_SCHEDULE_CASE_CAF_VIDEO_DETECT:
 			result = get_focus_result();
 			if ((result == STATUS_FOCUSED) || (result == STATUS_OUT_FOCUS)) {
-				/* changed by y00215412 for target tracking 2012-01-09, if CAF_FORCESTART_FORCE, skip collect data. */
 				if ((get_caf_forcestart() & CAF_FORCESTART_FORCE) == 0) {
 					ispv1_focus_get_curr_data(&curr_data);
 					ret = ispv1_focus_status_collect(&curr_data, &mean_data);
@@ -3946,10 +3777,8 @@ void ispv1_k3focus_run(void)
 					set_focus_state(FOCUS_STATE_CAF_RUNNING);
 					ispv1_focus_status_reset();
 					frame_count = 0;
-					/* added by y00215412 for target tracking 2012-01-09 */
 					if (schedule_case == FOCUS_SCHEDULE_CASE_CAF_PICTURE_DETECT) {
 						set_focus_stage(AF_RUN_STAGE_PREPARE);
-						// added by w00223743 for clearing and resetting variables
 						enlarge_flag = false;
 						rect_used = afae_ctrl->cur_rect;
 						rect_large = rect_used;
@@ -3977,7 +3806,7 @@ void ispv1_k3focus_run(void)
 
 		case FOCUS_SCHEDULE_CASE_CAF_PICTURE_MOVE:
 		case FOCUS_SCHEDULE_CASE_AF_MOVE:
-		case FOCUS_SCHEDULE_CASE_VAF_MOVE: /* added for touch af in video mode by j00212990 2013-01-24 */
+		case FOCUS_SCHEDULE_CASE_VAF_MOVE:
 			if ((get_focus_stage() == AF_RUN_STAGE_TRY) ||(get_focus_stage() == AF_RUN_STAGE_COARSE) ||(get_focus_stage() == AF_RUN_STAGE_FINE)) {
 				if (skip_frame == true) {
 					if (trip->step_cnt == 0)
@@ -3993,7 +3822,6 @@ void ispv1_k3focus_run(void)
 			}
 			curr.contrast = ispv1_focus_calc_edge(pstat_data, rect, 0, edge_calc_coarse);
 
-			// added by w00223743 for using the large focus window
 			if (afae_ctrl->zoom == 0 && (get_focus_stage() == AF_RUN_STAGE_PREPARE) &&
 				curr.contrast < CONTRAST_TH_FOR_SMALL_WIN) {
 				enlarge_flag = true;
@@ -4035,7 +3863,6 @@ void ispv1_k3focus_run(void)
 					/* touch AF need pre-move */
 					if ((get_focus_mode() != CAMERA_FOCUS_CONTINUOUS_PICTURE)
 						&& (get_focus_mode() != CAMERA_FOCUS_AUTO_VIDEO)) {
-						/* modified for touch af in video mode by j00212990 2013-01-24 */
 						pos_offset = 0;
 					} else {
 						pos_offset = curr.code - vcm->offsetInit;
@@ -4136,7 +3963,6 @@ do_prepare_post:
 					/* save contrast value to array */
 					contrast_array[trip->step_cnt] = curr.contrast;
 
-					// added by w00223743 for large focus window
 					if (enlarge_flag) {
 						large_contrast_array[trip->step_cnt].contrast = large_curr;
 						large_contrast_array[trip->step_cnt].code = curr.code;
@@ -4213,16 +4039,13 @@ af_end_out:
 				case AF_RUN_STAGE_END:
 					result = ispv1_af_judge_result(&af_info);
 					set_focus_result(result);
-					// added by w00223743 for clear the variables
 					rect_used = afae_ctrl->cur_rect;
 					enlarge_flag = false;
 
-					/* added by y00215412 for sky focus wrong 2012-12-11 start. */
 					if (af_info.af_analysis & 0x04) {
 						curr.code = vcm->offsetInit;
 						ispv1_setreg_vcm_code(curr.code);
 					}
-					/* added by y00215412 for sky focus wrong 2012-12-11 end. */
 
 					#ifdef AF_TIME_PRINT
 						do_gettimeofday(&tv_end);
@@ -4239,7 +4062,6 @@ af_end_out:
 						goto run_out;
 					}
 					break;
-				/* added by y00215412 for target tracking 2012-01-09 */
 				case AF_RUN_STAGE_BREAK:
 					set_focus_result(STATUS_OUT_FOCUS);
 					print_info("picture AF_RUN_STAGE_BREAK");
@@ -4297,7 +4119,6 @@ af_end_out:
 				 * calculate init focus postion, and go to init position
 				 * maybe offsetInit, maybe a little shift from current position
 				 */
-				 /* added for touch af in video mode by j00212990 2013-01-24 */
 				next_code = curr.code;
 				next_code = af_adjust_curr_vcmcode(vcm, next_code);
 				if (next_code != curr.code) {
@@ -4404,7 +4225,6 @@ af_end_out:
 					#endif
 				}
 				break;
-			/* added by y00215412 for target tracking 2012-01-09 */
 			case AF_RUN_STAGE_BREAK:
 				set_focus_result(STATUS_FOCUSED);
 				print_info("video AF_RUN_STAGE_BREAK");
@@ -4508,11 +4328,9 @@ static FOCUS_STATUS ispv1_af_judge_result(af_run_param *af_info)
 		if (af_info->af_analysis & 0x02) {
 			print_warn("exist several top contrast value");
 		}
-		/* added by y00215412 for sky focus wrong 2012-12-11 start. */
 		if (af_info->af_analysis & 0x04) {
 			print_warn("contrast diff is too low or env too dark.");
 		}
-		/* added by y00215412 for sky focus wrong 2012-12-11 end. */
 	} else {
 		result = STATUS_FOCUSED;
 		print_debug("focus stop:val_vcm_top:0x%.3x, val_contrast:0x%.3x",\
@@ -4645,17 +4463,6 @@ static void ispv1_af_range_cal(af_run_param *af_info, pos_info *curr, af_run_sta
 
 	print_debug("next stage %d, start_pos:0x%.3x, end_pos:0x%.3x",next_stage, trip->start_pos, trip->end_pos);
 }
-
-/*
- **************************************************************************
- * FunctionName: ispv1_vcaf_range_cal;
- * Description : initialize the parameters of running each range;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- * Other       : last modified by y00215412 for target tracking 2012-01-09;
- **************************************************************************
- */
 static void ispv1_vcaf_range_cal(af_run_param *af_info, pos_info *curr, af_run_stage next_stage, FOCUS_STATUS result)
 {
 	vcm_info_s *vcm = get_vcm_ptr();
@@ -4734,7 +4541,6 @@ static af_run_stage ispv1_af_recognise_curve(af_run_param *af_info, pos_info *cu
 		 * (4) next_stage set as AF_RUN_STAGE_COARSE stage.
 		 */
 
-		/* added by y00215412 2012-09-15 for low contrast. */
 		if ((top->contrast < histtop->contrast) ||
 			(top->contrast == histtop->contrast && top->code > histtop->code)) {
 			top->contrast = histtop->contrast;
@@ -4751,7 +4557,6 @@ static af_run_stage ispv1_af_recognise_curve(af_run_param *af_info, pos_info *cu
 		/* retry because diff is too small */
 		next_stage = AF_RUN_STAGE_TRY;
 
-		/* added by y00215412 2012-09-15 for low contrast. */
 		if (curr->contrast >= top->contrast && curr->contrast >= histtop->contrast) {
 			histtop->contrast = curr->contrast;
 			histtop->code = curr->code;
@@ -4785,7 +4590,6 @@ static af_run_stage ispv1_af_recognise_curve(af_run_param *af_info, pos_info *cu
 	return next_stage;
 }
 
-/* last modified by y00215412 for target tracking 2012-01-09 */
 static af_run_stage ispv1_vcaf_recognise_curve(af_run_param *af_info, pos_info *curr, vcm_info_s *vcm, u32 *reserved)
 {
 	af_trip_info *trip = &(af_info->trip);
@@ -4806,7 +4610,6 @@ static af_run_stage ispv1_vcaf_recognise_curve(af_run_param *af_info, pos_info *
 		 * (4) next_stage set as TRYREWIND stage.
 		 */
 
-		/* added by y00215412 2012-09-15 for low contrast. */
 		if ((top->contrast < histtop->contrast) ||
 			(top->contrast == histtop->contrast && top->code > histtop->code)) {
 			top->contrast = histtop->contrast;
@@ -4815,7 +4618,7 @@ static af_run_stage ispv1_vcaf_recognise_curve(af_run_param *af_info, pos_info *
 
 		print_debug("try top code 0x%x found!!!!!!!", top->code);
 
-		af_reverse_curr_trip(vcm, trip, curr->code); /* y00215412 change from top->code to curr->code */
+		af_reverse_curr_trip(vcm, trip, curr->code);
 		print_info("trip [0x%x -> 0x%x, dir %d]!!!!!!!", trip->start_pos, trip->end_pos, trip->direction);
 
 		code_found = af_get_next_vcmcode(trip, top->code, trip->direction, AF_CODE_STEP_VIDEO, reserved);
@@ -4835,7 +4638,6 @@ static af_run_stage ispv1_vcaf_recognise_curve(af_run_param *af_info, pos_info *
 		/* retry because diff is too small */
 		next_stage = VCAF_RUN_STAGE_TRY;
 
-		/* added by y00215412 2012-09-15 for low contrast, should judge if it is lower code. */
 		if (curr->contrast >= top->contrast) {
 			/* if current code is same as histtop, lower code has high priority */
 			if ((curr->contrast > histtop->contrast) ||
@@ -4890,7 +4692,6 @@ static af_run_stage ispv1_af_search_top(af_run_param *af_info, pos_info *curr, v
 	bool code_found = false;
 	af_run_stage next_stage;
 
-	// added by w00223743 for the top contrast is not very high and down hill for some steps
 	static int down_hill = 0;
 
 	static u32 last_contrast = MIN_CONTRAST_INIT;
@@ -4909,7 +4710,6 @@ static af_run_stage ispv1_af_search_top(af_run_param *af_info, pos_info *curr, v
 	     && (curr->contrast < last_contrast)
 	     && (!detect_local_maximum(af_info, first_contrast) || down_hill > 1))
 	   || (curr->contrast <= top->contrast && check_vcmcode_is_edge(trip, curr->code) == true)) {
-		/* added by y00215412 2012-09-15 for low contrast. */
 		/* valid range run over or top condition is found, than change to next stage */
 		if ((top->contrast < histtop->contrast) ||
 			(top->contrast == histtop->contrast && top->code > histtop->code)) {
@@ -4918,7 +4718,6 @@ static af_run_stage ispv1_af_search_top(af_run_param *af_info, pos_info *curr, v
 		}
 
 		print_debug("top code 0x%x found!!!!!!!", top->code);
-		// added by w00223743 for clearing down_hill when finish the search process
 		down_hill = 0;
 
 		if (coarse == true) {
@@ -4942,10 +4741,8 @@ static af_run_stage ispv1_af_search_top(af_run_param *af_info, pos_info *curr, v
 		trip->step_cnt++;
 		next_stage = AF_RUN_STAGE_END;
 		top->code = curr->code;
-		// added by w00223743 for clearing down_hill when finish the search process
 		down_hill = 0;
 	} else if (curr->contrast <= top->contrast) {
-		// added by w00223743 for down hill when the contrast begin to decline
 		if (curr->contrast <= get_af_judge_threshold_low(top->contrast)) {
 			down_hill++;
 		}
@@ -4957,7 +4754,6 @@ static af_run_stage ispv1_af_search_top(af_run_param *af_info, pos_info *curr, v
 			code_found = af_get_next_vcmcode(trip, curr->code, trip->direction, AF_CODE_STEP_FINE, &next_code);
 
 		if (code_found == true) {
-			/* added by y00215412 2012-09-15 for low contrast. */
 			if (curr->contrast >= top->contrast && curr->contrast >= histtop->contrast) {
 				histtop->contrast = curr->contrast;
 				histtop->code = curr->code;
@@ -5009,7 +4805,6 @@ static af_run_stage ispv1_af_search_top(af_run_param *af_info, pos_info *curr, v
 	return next_stage;
 }
 
-/* last modified by y00215412 for target tracking 2012-01-09 */
 static af_run_stage ispv1_vcaf_search_top(af_run_param *af_info, pos_info *curr, vcm_info_s *vcm)
 {
 	af_trip_info *trip = &(af_info->trip);
@@ -5024,7 +4819,6 @@ static af_run_stage ispv1_vcaf_search_top(af_run_param *af_info, pos_info *curr,
 		(curr->contrast <= top->contrast  && check_vcmcode_is_edge(trip, curr->code) == true)) {
 		/* Top code found, goto REWIND, in this case, should not go back by 1step. */
 
-		/* added by y00215412 2012-09-15 for low contrast. */
 		if ((top->contrast < histtop->contrast) ||
 			(top->contrast == histtop->contrast && top->code > histtop->code)) {
 			top->contrast = histtop->contrast;
@@ -5057,7 +4851,6 @@ static af_run_stage ispv1_vcaf_search_top(af_run_param *af_info, pos_info *curr,
 		/* retry and goto next position, because diff is too small. */
 		code_found = af_get_next_vcmcode(trip, curr->code, trip->direction, AF_CODE_STEP_VIDEO, &next_code);
 		if (code_found == true) {
-			/* added by y00215412 2012-09-15 for low contrast. */
 			if (curr->contrast >= top->contrast && curr->contrast >= histtop->contrast) {
 				histtop->contrast = curr->contrast;
 				histtop->code = curr->code;
@@ -5139,17 +4932,6 @@ bool ispv1_check_caf_need_restart(focus_frame_stat_s *start_data, focus_frame_st
 		return false;
 	}
 }
-
-/*
- **************************************************************************
- * FunctionName: enlarge_focus_window
- * Description : resize the focus window in smooth area.
- * Input       : focus window, preview width and height;
- * Output      : NA;
- * ReturnValue : NA;
- * Other       : NA;
- **************************************************************************
- */
 bool enlarge_focus_window(camera_rect_s *rect, int width, int height, int zoom)
 {
 	int center_x, center_y;
@@ -5308,16 +5090,7 @@ bool analysis_large_contrast_value(pos_info *array, af_run_param *af_info, pos_i
 	return ret;
 }
 
-/*
- **************************************************************************
- * FunctionName: detect_local_maximum
- * Description : detect the local maximum when search the top point.
- * Input       : af parameter, contrast value array and first frame contrast;
- * Output      : NA;
- * ReturnValue : ret: false - no local maximum, true - there is local maximum.
- * Other       : NA.
- **************************************************************************
- */
+
 bool detect_local_maximum(af_run_param *af_info, int contrast)
 {
 	bool result = false;

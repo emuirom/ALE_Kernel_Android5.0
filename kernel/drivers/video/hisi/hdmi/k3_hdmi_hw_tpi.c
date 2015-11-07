@@ -312,6 +312,7 @@ int read_edid_block(u8 *edid, int ext)
     return 0;
 }
 
+
 /******************************************************************************
 * Function:       hw_core_read_edid
 * Description:    read edid data
@@ -674,6 +675,7 @@ void enable_embedded_sync(void)
 {
     //todo
 }
+
 
 void hw_enable_tmds(void)
 {
@@ -1145,6 +1147,7 @@ int hw_configure_acr(u32 pclk, hdmi_core_fs audio_fs)
     return 0;
 }
 
+
 /******************************************************************************
 * Function:       hw_enable
 * Description:    config hdmi by hdmi config or default
@@ -1266,6 +1269,8 @@ void hw_enable(hdmi_config *cfg)
 
    /* set video config*/
     hw_set_video_mode(&(hdmi.tpi_v_cfg));
+
+
 
     if (HDMI_HDMI == cfg->hdmi_dvi) {
         hdmi.audiochanged = true;
@@ -1552,6 +1557,7 @@ int hw_get_hdmi_state(void)
         }
     }
 
+
 #if USE_HDCP
     if (!hw_support_mhl()) {
         if (intr & HDCP_AUTH_STATUS_CHANGE_EVENT_MASK) {
@@ -1765,6 +1771,7 @@ void hw_core_power_on(void)
     static bool is_first_hpd = true;
     IN_FUNCTION;
 
+
 #if HDMI_CHIP_VER
 
     if (!hdmi.in_reset) {
@@ -1804,6 +1811,7 @@ void hw_core_power_on(void)
         run_all_bist_tests();
         mdelay(2);
 #endif
+
 
 #if 0
         if(!hw_support_mhl()) {
@@ -2004,6 +2012,7 @@ int hw_set_clk_rate(u32 clks, u32 rate)
     }
     return ret;
 }
+
 
 /******************************************************************************
 * Function:       enable_clk
@@ -2640,6 +2649,7 @@ int run_all_bist_tests(void)
 
 #endif
 
+
     /* soft reset */
     writel(0x00, HDMI_SRST);
     udelay(2000);
@@ -2677,6 +2687,7 @@ int run_all_bist_tests(void)
     logd("HDMI EPCM(0x3E8):0x%x\n", readl(HDMI_EPCM));
     /* delay 2 ms test1*/
     udelay(2000);
+
 
     logd("HDCP----AKSV1:0x74 val=0x%x\n", readl(HDMI_HDCP_AKSV1));
     logd("HDCP----AKSV2:0x78 val=0x%x\n", readl(HDMI_HDCP_AKSV2));

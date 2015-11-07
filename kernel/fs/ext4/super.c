@@ -78,6 +78,7 @@ struct dsm_dev dsm_fs = {
 struct dsm_client *fs_dclient = NULL;
 #endif
 
+
 static struct proc_dir_entry *ext4_proc_root;
 static struct kset *ext4_kset;
 static struct ext4_lazy_init *ext4_li_info;
@@ -121,6 +122,7 @@ MODULE_ALIAS("ext2");
 #else
 #define IS_EXT2_SB(sb) (0)
 #endif
+
 
 #if !defined(CONFIG_EXT3_FS) && !defined(CONFIG_EXT3_FS_MODULE) && defined(CONFIG_EXT4_USE_FOR_EXT23)
 static struct file_system_type ext3_fs_type = {
@@ -320,6 +322,7 @@ void ext4_itable_unused_set(struct super_block *sb,
 	if (EXT4_DESC_SIZE(sb) >= EXT4_MIN_DESC_SIZE_64BIT)
 		bg->bg_itable_unused_hi = cpu_to_le16(count >> 16);
 }
+
 
 static void __save_error_info(struct super_block *sb, const char *func,
 			    unsigned int line)
@@ -3297,6 +3300,7 @@ int ext4_calculate_overhead(struct super_block *sb)
 	return 0;
 }
 
+
 static ext4_fsblk_t ext4_calculate_resv_clusters(struct super_block *sb)
 {
 	ext4_fsblk_t resv_clusters;
@@ -3325,6 +3329,7 @@ static ext4_fsblk_t ext4_calculate_resv_clusters(struct super_block *sb)
 
 	return resv_clusters;
 }
+
 
 static int ext4_reserve_clusters(struct ext4_sb_info *sbi, ext4_fsblk_t count)
 {

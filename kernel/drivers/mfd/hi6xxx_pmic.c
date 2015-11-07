@@ -3,6 +3,7 @@
  *
  * Copyright (c) 2011 Hisilicon Co. Ltd
  *
+ * Dongbin Yu <yudongbin@huawei.com> : 2014-1-26
  *
  * In V8R1 the pmic is same with V9R1's driver,so it is multiplex.
  * That the reason why name of the c document is "hi6xxx".
@@ -101,6 +102,7 @@ static struct hi6xxx_pmic *hi6xxx_pmic_get_ctx(void)
 }
 EXPORT_SYMBOL(hi6xxx_pmic_get_ctx);
 
+
 unsigned char hi6xxx_pmic_reg_read (unsigned int reg_addr)
 {
     unsigned char regval;
@@ -108,6 +110,7 @@ unsigned char hi6xxx_pmic_reg_read (unsigned int reg_addr)
     return regval;
 }
 EXPORT_SYMBOL(hi6xxx_pmic_reg_read);
+
 
 void hi6xxx_pmic_reg_write (unsigned int reg_addr, unsigned char regval)
 {
@@ -170,6 +173,7 @@ int hi6xxx_pmic_send_data (unsigned int reg_addr, char *buffer, int len)
     return 0;
 }
 EXPORT_SYMBOL(hi6xxx_pmic_send_data);
+
 
 static struct of_device_id of_hi6xxx_pmic_child_match_tbl[] = {
 	{
@@ -259,6 +263,7 @@ static void of_fake_enable_clk(void)
 	return;
 }
 
+
 static irqreturn_t hi6xxx_pmic_irq_handler(int irq, void *data)
 {
 	struct hi6xxx_pmic *pmic = (struct hi6xxx_pmic *)data;
@@ -312,6 +317,7 @@ static irqreturn_t hi6xxx_pmic_irq_handler(int irq, void *data)
 	return ret;
 }
 
+
 static void hi6xxx_pmic_irq_mask(struct irq_data *d)
 {
 
@@ -346,6 +352,7 @@ static void hi6xxx_pmic_irq_unmask(struct irq_data *d)
     printk(KERN_INFO"%p ********* in %s***********\n",d,__func__);
 
 }
+
 
 static struct irq_chip hi6xxx_pmic_irqchip = {
 	.name		= "hisi-hi6xxx-pmic-irqchip",
@@ -416,6 +423,7 @@ static int   hi6xxx_pmic_probe(struct platform_device *pdev)
 
 	printk(KERN_INFO"===============[ydb new in %s : 1]=============\n",__func__);
 
+
     /*
      * init spin lock
      */
@@ -444,6 +452,7 @@ static int   hi6xxx_pmic_probe(struct platform_device *pdev)
 
     printk(KERN_INFO"virt[%p] VS phy[%#x]\n",g_pmussi_baseaddr,(unsigned int)pmic->res->start);
 	printk(KERN_INFO"===============[in %s : 2]=============\n",__func__);
+
 
     /*
      * confirm pmu is exist&effective

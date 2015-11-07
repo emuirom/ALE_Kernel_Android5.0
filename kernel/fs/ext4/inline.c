@@ -1921,6 +1921,7 @@ void ext4_inline_data_truncate(struct inode *inode, int *has_inline)
 		.name = EXT4_XATTR_SYSTEM_DATA,
 	};
 
+
 	needed_blocks = ext4_writepage_trans_blocks(inode);
 	handle = ext4_journal_start(inode, EXT4_HT_INODE, needed_blocks);
 	if (IS_ERR(handle))

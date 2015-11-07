@@ -12,6 +12,7 @@ menuconfig INPUT_TOUCHSCREEN_CYPTT_DT
 
 ##if 1
 
+
 config TOUCHSCREEN_CYPRESS_CYTTSP4
 	tristate "Cypress TrueTouch Gen4 Touchscreen Driver"
 	depends on INPUT_TOUCHSCREEN_CYPTT_DT

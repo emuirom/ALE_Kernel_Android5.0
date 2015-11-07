@@ -1,15 +1,4 @@
-/*
- **************************************************************************************
- *
- *       Filename:  vpp_drv.c
- *    Description:  source file
- *
- *        Version:  1.0
- *        Created:  2011-07-8 16:20:00
- *
- *       Revision:  initial draft;
- **************************************************************************************
- */
+
 #include <linux/mm.h>
 #include <linux/sched.h>
 #include <linux/interrupt.h>
@@ -100,6 +89,7 @@ static int vpp_setup_cdev(void)
         loge(KERN_ERR " Unable to allocate vpp device\n");
         return retval;
     }
+
 
     cdev_init(device, &vpp_file_ops);
     device->owner = THIS_MODULE;

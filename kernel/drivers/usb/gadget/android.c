@@ -619,6 +619,7 @@ static void hdb_android_function_enable(struct android_usb_function *f)
 
     data->enabled = true;
 
+
     /* Disable the gadget until adbd is ready */
     if (!data->opened)
         android_disable(dev);
@@ -827,6 +828,7 @@ err_usb_add_function:
     return ret;
 }
 
+
 #if 0
 static void acm_function_unbind_config(struct android_usb_function *f,
                        struct usb_configuration *c)
@@ -949,7 +951,9 @@ balong_acm_function_bind_config(struct android_usb_function *f,
 	struct balong_acm_function_config *config = f->config;
 D("+\n");
 
+
 	bsp_usb_init_enum_stat();
+
 
 	for (i = 0; i < MAX_BALONG_ACM_INSTANCES; i++) {
 		ret = usb_add_function(c, config->f_acm[i]);
@@ -976,7 +980,9 @@ static struct android_usb_function balong_acm_function = {
 	.ctrlrequest	= acm_function_ctrlrequest,
 };
 
+
 #endif
+
 
 static int
 mtp_function_init(struct android_usb_function *f,
@@ -1040,6 +1046,7 @@ static struct android_usb_function ptp_function = {
     .bind_config    = ptp_function_bind_config,
     .ctrlrequest    = mtp_function_ctrlrequest,
 };
+
 
 struct rndis_function_config {
     u8      ethaddr[ETH_ALEN];
@@ -1232,6 +1239,7 @@ static struct android_usb_function rndis_function = {
     .attributes    = rndis_function_attributes,
 };
 
+
 struct mass_storage_function_config {
     struct fsg_config fsg;
     struct fsg_common *common;
@@ -1386,6 +1394,7 @@ static struct android_usb_function mass_storage_function = {
     .attributes    = mass_storage_function_attributes,
 };
 
+
 static int accessory_function_init(struct android_usb_function *f,
                     struct usb_composite_dev *cdev)
 {
@@ -1512,6 +1521,7 @@ static struct android_usb_function *supported_functions[] = {
 
     NULL
 };
+
 
 static int android_init_functions(struct android_usb_function **functions,
                   struct usb_composite_dev *cdev)
@@ -1795,10 +1805,8 @@ static ssize_t enable_store(struct device *pdev, struct device_attribute *attr,
     } else if (!enabled && dev->enabled) {
         printk(KERN_DEBUG "%s %d android_disable \n", __FUNCTION__,__LINE__);
 
-	/* Modifiy by p00268001 for support mac system 20141021 begin */
 	/* close all stored file in each lun */
 	fsg_close_all_file(((struct mass_storage_function_config *)mass_storage_function.config)->common);
-	/* Modifiy by p00268001 for support mac system 20141021 end */
 
         android_disable(dev);
         list_for_each_entry(f, &dev->enabled_functions, enabled_list) {
@@ -1909,6 +1917,7 @@ field ## _store(struct device *dev, struct device_attribute *attr,    \
     return -1;                            \
 }                                    \
 static DEVICE_ATTR(field, S_IRUGO | S_IWUSR, field ## _show, field ## _store);
+
 
 DESCRIPTOR_ATTR(idVendor, "%04x\n")
 DESCRIPTOR_ATTR(idProduct, "%04x\n")
@@ -2453,7 +2462,6 @@ static void __exit cleanup(void)
 module_exit(cleanup);
 
 /* added by hisi-balong */
-/* added by l00134988 */
 /**
  * android_enable_function_check() - check whether the usb function exists
  * @f_name: the function name

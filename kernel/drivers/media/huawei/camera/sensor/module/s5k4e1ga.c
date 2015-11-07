@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00144661
+ * Email:	  flying.he@huawei.com
  * Date:	  2013-12-27
  *
  * This program is free software; you can redistribute it and/or modify
@@ -79,6 +81,7 @@ struct sensor_power_setting s5k4e1ga_sunny_power_setting[] = {
         .delay = 1,
     },
 
+
 	//SCAM IOVDD 1.8V
 //	{
 //		.seq_type = SENSOR_IOVDD,
@@ -96,6 +99,7 @@ struct sensor_power_setting s5k4e1ga_sunny_power_setting[] = {
 		.sensor_index = SENSOR_INDEX_INVALID,
 		.delay = 1,
 	},
+
 
 	{
 		.seq_type = SENSOR_MCLK,

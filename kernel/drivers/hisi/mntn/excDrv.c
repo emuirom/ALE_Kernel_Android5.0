@@ -1,20 +1,4 @@
-/*******************************************************************************
 
-                  版权所有 (C), 2001-2011, 华为技术有限公司
-
- *******************************************************************************
-  文 件 名   : excDrv.c
-  版 本 号   : 初稿
-  作    者   : 周明发 00145324
-  生成日期   : 2012年6月16日
-  最近修改   :
-  功能描述   : 用于处理系统异常，执行异常信息的获取与保存、系统复位
-  修改历史   :
-  1.日    期   : 2012年6月16日
-    作    者   : 周明发 00145324
-    修改内容   : 创建文件
-
-*******************************************************************************/
 
 /*******************************************************************************
   1 头文件包含
@@ -75,6 +59,7 @@ extern "C" {
 #define SOC_ACPU_SC_BASE        (g_acpu_sc_map_addr)
 #define SOC_MODEM_SC_BASE       (g_modem_sc_map_addr)
 #define SOC_MEDIA_SC_BASE       (g_media_sc_map_addr)
+
 
 struct linux_dirent {
     unsigned long   d_ino;
@@ -814,6 +799,7 @@ void systemError(int modId, int arg1, int arg2, char *arg3, int arg3Length)
         return;
     }
 
+
     systemErrorCcore(BSP_MODU_MNTN, 0, BSP_MNTN_CACHE_FLUSH, 0, 0, 0); /*刷新C核cache*/
 
     if(!in_atomic() && !irqs_disabled() && !in_irq())
@@ -821,6 +807,7 @@ void systemError(int modId, int arg1, int arg2, char *arg3, int arg3Length)
         sys_sync();
         show_mem(0);
     }
+
 
     /* 复位中...禁止抢占，禁中断 (防重入) */
     spin_lock_irqsave(g_pExchRoot->spinlock, flags);
@@ -1152,6 +1139,7 @@ int echc_cust_funt_func_reg(exch_CBReg cb)
         return EXCH_ERROR;
     }
 
+
     /* 队列已满 */
     ret = _queue_leftroom(pqCb);
     if (sizeof(void *) > ret)
@@ -1200,6 +1188,7 @@ void* exchMemMalloc(unsigned int ulSize)
 EXPORT_SYMBOL(systemError);
 EXPORT_SYMBOL(DRV_EXCH_TASK_INFO_ADD);
 EXPORT_SYMBOL(echc_cust_funt_func_reg);
+
 
 /*******************************************************************************
 *                                 hook funciton                                *
@@ -1251,6 +1240,7 @@ void exchTaskSwitchHook(void *pOldTcb, void *pNewTcb)
     g_pExchRoot->taskTicks[info.cpu] = exch_slice_timer_tick_get();
 
 }
+
 
 /*******************************************************************************
  函 数 名: exchIntSwitchHook
@@ -1543,6 +1533,7 @@ static ssize_t exch_init_ready_store
 )
 {
 
+
     pr_info("exch_init_ready_store: %s \n", buf);
 
     /* 若模块尚未准备好，执行初始化 */
@@ -1606,6 +1597,8 @@ static ssize_t exch_exc_file_store
 #endif
     return (ssize_t)count;
 }
+
+
 
 /*******************************************************************************
  函 数 名: exch_reboot_info_show
@@ -1714,6 +1707,7 @@ void set_himntn(int feature, int val)
     else
         himntn[feature] = '0';
 }
+
 
 /*
 若himntn[feature]为'1'，则函数check_himntn返回1
@@ -1839,6 +1833,7 @@ static int exch_init(void)
         int_switch_hook_add((FUNC_VOID)exchIntSwitchHook);
     }
 
+
     exc_hook_add((FUNC_VOID) exchDieHook);
 
     atomic_notifier_chain_register(&panic_notifier_list, &acpu_panic_loop_block);
@@ -1856,6 +1851,7 @@ static int exch_init(void)
     {
         printk(KERN_ERR"exch_init, gic_base_addr remap error.\n");
     }
+
 
     /*TODO: Add acpu_sc in dts, as base addr of ACPU_SC is different between hi6210 and hi6220*/
     root = of_find_compatible_node(NULL,NULL,"hisilicon,hi6210");
@@ -2148,21 +2144,8 @@ void exch_hex_dump(unsigned char *buf, unsigned int size, unsigned char per_row)
 #undef IS_PRINTABLE
 }
 
-/*****************************************************************************
- 函 数 名  : exch_check_dump_space
- 功能描述  : 检查已生成的日志文件大小，如果日志文件过多，则删除最旧的文件
- 输入参数  : p_file 文件指针
- 输出参数  : 无
- 返 回 值  : int 成功返回0 失败返回-1
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年12月24日
-    作    者   : 刘慈红 lKF71598
-    修改内容   : 新生成函数
 
-*****************************************************************************/
 int exch_check_dump_space(unsigned long p_file)
 {
     static unsigned long file_addr = 0x0;
@@ -2197,6 +2180,7 @@ IFC_GEN_CALL5(MAILBOX_IFC_ACPU_TO_CCPU_SYSTEMERROR, systemErrorCcore,
            IFC_INCNT,int, arg2,0,
            IFC_INVAR,char*, arg3,0,
            IFC_INCNT,int, arg3Length,0)
+
 
 /*******************************************************************************
 *                                 test funciton                                *
@@ -2297,6 +2281,7 @@ void exch_cb_reg(void)
 {
   echc_cust_funt_func_reg((exch_CBReg)cb1);
 }
+
 
 void exchTest(int exc_type)
 {
@@ -2405,11 +2390,13 @@ void exch_exc_mdm_panic_cb(void)
     return;
 }
 
+
 EXPORT_SYMBOL(tsAcorePanic);
 
 postcore_initcall(exch_postcore_init);
 subsys_initcall(exch_early_init);
 module_init(exch_entry);
+
 
 #ifdef __cplusplus
     #if __cplusplus

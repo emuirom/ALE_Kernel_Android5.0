@@ -31,21 +31,8 @@
 #include <linux/hisi/util.h>
 //#include <mach/platform.h>
 #include <linux/uaccess.h>				/* For copy_to_user*/
-/*DEEP_SLEEP_FOR_LOG DTS:2013081800468 modifier: yuanfang 00241633 begin*/
 #include <linux/delay.h>
 #include <linux/mtd/hisi_nve_interface.h>
-/*DEEP_SLEEP_FOR_LOG DTS:2013081800468 modifier: yuanfang 00241633 end*/
-/*****************************************************************************
- Description : for kernel call user-space script
-		script : user-space script name
-		params : number of params, 0 without params
-		... : params va_args,
-such as   mach_call_usermodeshell("hifi_freeze.sh", 2, "-j", "24")
- History
-  1.Date: 2012/9/13
-    Author : x00138766
-    Modification : Created function
-*****************************************************************************/
 static char *shcmd = "/system/bin/sh";
 static char *shenvp[] = { "HOME=/data", "TERM=vt100", "USER=root",\
         "PATH=/system/xbin:/system/bin", NULL };
@@ -74,7 +61,6 @@ int mach_call_usermodeshell(char *script, unsigned int params, ...)
 	va_end(args);
 	argv[2 + i] = NULL;
 
-/*DEEP_SLEEP_FOR_LOG DTS:2013081800468 modifier: yuanfang 00241633 begin*/
 	do
 	{
 		ret = call_usermodehelper(shcmd, argv, shenvp, UMH_WAIT_PROC);
@@ -83,7 +69,6 @@ int mach_call_usermodeshell(char *script, unsigned int params, ...)
 		if(num > 300)
 			break;
 	}while(ret == -EBUSY);
-/*DEEP_SLEEP_FOR_LOG DTS:2013081800468 modifier: yuanfang 00241633 end*/
 	if (ret < 0){
 		printk(KERN_ERR"%s : call_usermodehelper fail %d\n", __FUNCTION__, ret);
 	}

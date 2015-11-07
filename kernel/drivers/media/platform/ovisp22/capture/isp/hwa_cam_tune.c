@@ -18,6 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+
 #include <linux/io.h>
 #include "cam_log.h"
 #include "k3_isp.h"
@@ -35,7 +36,12 @@
 #include "cam_util.h"
 #include "k3_isp_io.h"
 
+#if defined (CONFIG_HUAWEI_DSM)
+#include <huawei_platform/dsm/dsm_pub.h>
+#endif
+
 extern k3_isp_data *this_ispdata;
+
 
 int hwa_v4l2_ioctl_g_ctrls(struct file *file, void *fh, struct v4l2_control *v4l2_param)
 {
@@ -197,6 +203,7 @@ int k3_isp_get_algorithm_iso(void)
 	iso = ispv1_gain2iso(gain, summary);
 	return iso;
 }
+
 
 int hwa_v4l2_ioctl_g_ext_ctrls(struct v4l2_ext_control **controls, __u32 cmd_id, __u32 cid_idx)
 {
@@ -663,6 +670,7 @@ int hwa_set_multi_isp_reg(hwq_multi_reg_data *seq_data)
 	return 0;
 }
 
+
 int hwa_set_cap_iso_ratio_value(int ratio)
 {
 	int max_iso, min_iso;
@@ -1101,6 +1109,13 @@ int hwa_get_otp_status(void)
     print_info("%s() status:%d", __func__, status);
     if (status == OTP_INVALID)
     {
+	 print_error("%s() sensor OTP_INVALID", __func__);
+#if defined (CONFIG_HUAWEI_DSM)
+	if (!dsm_client_ocuppy(client_ovisp22)){
+	   dsm_client_record(client_ovisp22,"[%s]Fail to get otp status :%d \n", this_ispdata->sensor->info.name, status);
+	   dsm_client_notify(client_ovisp22, DSM_ISP22_GET_OTP_STATUS_ERROR_NO);
+	}
+#endif
         return OTP_ALL_INVALID_USER;
     }
     else

@@ -53,6 +53,7 @@ typedef struct _mini_irq_reg {
 	u8  mac_irqstatus_h_done_cnt;
 } mini_irq_reg_t;
 
+
 typedef struct _mini_flash_weight {
 	u32 preflash_env;
 	u32 preflash_flash;
@@ -67,6 +68,7 @@ typedef struct _mini_aec_data {
 	u32 lum_max; /* using for save max lum in 4x4 raw lum stat window */
 	u32 lum_sum;
 } mini_aec_data_t;
+
 
 typedef struct _mini_isp_hw_data {
 
@@ -200,7 +202,6 @@ int mini_ispv1_set_contrast(camera_contrast contrast);
 int mini_ispv1_set_scene(camera_scene scene);
 int mini_ispv1_set_brightness(camera_brightness brightness);
 
-/* y00215412 added 2012-08-10 */
 int mini_ispv1_switch_brightness(camera_state state, camera_brightness brightness);
 int mini_ispv1_switch_contrast(camera_state state, camera_contrast contrast);
 
@@ -214,7 +215,6 @@ int mini_ispv1_update_LENC_scale(u32 inwidth, u32 inheight);
 /*using for write ad register(set position) of vcm driver ic by i2c bus*/
 int mini_ispv1_write_vcm(u8 i2c_addr, u16 reg, u16 val, i2c_length length, int mutex_wait);
 
-/* add by ykf63300 */
 int mini_ispv1_get_current_vts(mini_camera_sensor *sensor);
 int mini_ispv1_get_current_fps(mini_camera_sensor *sensor);
 int mini_ispv1_get_band_threshold(mini_camera_sensor *sensor, camera_anti_banding banding);
@@ -228,7 +228,6 @@ void mini_ispv1_save_aecawb_step(mini_aecawb_step_t *step);
 void mini_ispv1_config_aecawb_step(bool flash_mode, mini_aecawb_step_t *step);
 void mini_ispv1_check_flash_prepare(void);
 
-/* added by y00215412 20120820 */
 void mini_ispv1_get_wb_value(mini_awb_gain_t *awb);
 void mini_ispv1_set_wb_value(mini_awb_gain_t *awb);
 bool mini_ispv1_copy_preview_data(u8 *dest, mini_camera_rect_s *rect);
@@ -241,7 +240,6 @@ void mini_ispv1_set_frame_rate_state(camera_frame_rate_state state);
 
 bool mini_ae_is_need_flash(mini_camera_sensor *sensor, mini_aec_data_t *ae_data, u32 target_y_low);
 
-/* added by y00215412 for hdr movie mode */
 bool mini_ispv1_is_hdr_movie_mode(void);
 
 void mini_ispv1_red_clip_correction(void);

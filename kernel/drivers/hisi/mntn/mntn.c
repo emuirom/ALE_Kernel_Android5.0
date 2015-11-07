@@ -34,11 +34,9 @@
 #include <linux/notifier.h>			/* For notifier... */
 #include <linux/hisi/reset.h>			/* For register notifier*/
 #include <linux/hisi/util.h>				/* For mach_call_usermoduleshell*/
-/*DEEP_SLEEP_FOR_LOG DTS:2013081800468 modifier: yuanfang 00241633 begin*/
 #include <linux/delay.h>
 #include <linux/stat.h>
 #include <linux/mtd/hisi_nve_interface.h>
-/*DEEP_SLEEP_FOR_LOG DTS:2013081800468 modifier: yuanfang 00241633 end*/
 #include "excDrv.h"
 #include "mntn_log.h"
 

@@ -45,15 +45,12 @@
 #include <linux/string.h>
 
 
-/* Added by w00199382 for isp 2.2 , 2012/10/16, begin */
 
-/*add by zkf78283 for test */
 #define DUMP_CMD_REG
 //#define DUMP_SIZE_REG
 
 #define DUMP_FILE
 
-/* Added by w00199382 for isp 2.2 , 2012/10/16, end */
 
 #ifdef CONFIG_DEBUG_FS
 #define CAM_DEBUGFS_DIR_NAME            "mit2isp"
@@ -641,7 +638,6 @@ void mini_dump_cmd_reg(void)
 {
 #ifdef	DUMP_CMD_REG
 	int i = 0;
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 
 	/* command set register range : 0x1e800 ~ 0x1e8 */
 	for (i = 0x1e800; i < 0x1e8da; i++)
@@ -659,10 +655,8 @@ void mini_dump_cmd_reg(void)
 	print_info("0x63908=%#x", DBG_GETREG8(0x63908));
 	print_info("0x63909=%#x", DBG_GETREG8(0x63909));
 	print_info("0x6390a=%#x", DBG_GETREG8(0x6390a));
-    /* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 #endif
 }
-/* add by zkf78283 for test isp begin */
 
 void mini_dump_ispzyk_reg(void)
 {
@@ -731,7 +725,6 @@ void mini_dump_ispzyk_reg(void)
 	mntn_print_log(EN_ID_MNTN_CAM_DUMPREG_LOG_MODULE, EN_VIDEO_LOG_LEVLE_INFO, "dump command set reg end++++++++++++++++++++++++++++++\n");
 }
 
-/* add by zkf78283 for test isp end */
 
 void mini_dump_status_after_reg (void)
 {

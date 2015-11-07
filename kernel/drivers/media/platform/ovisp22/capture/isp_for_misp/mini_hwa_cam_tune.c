@@ -18,6 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+
 #include <linux/io.h>
 #include "mini_cam_log.h"
 #include "mini_k3_isp.h"
@@ -138,6 +139,7 @@ int mini_k3_isp_get_ae_coff(ae_coff *ae_data)
 
     return ret;
 }
+
 
 int mini_hwa_v4l2_ioctl_g_ext_ctrls(struct v4l2_ext_control **controls, __u32 cmd_id, __u32 cid_idx)
 {
@@ -665,6 +667,7 @@ int mini_hwa_set_multi_isp_reg(mini_hwq_multi_reg_data *seq_data)
 
 	return 0;
 }
+
 
 int mini_hwa_set_cap_iso_ratio_value(int ratio)
 {

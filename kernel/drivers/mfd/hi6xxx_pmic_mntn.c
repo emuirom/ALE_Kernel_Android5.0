@@ -3,6 +3,7 @@
  *
  * Copyright (c) 2011 Hisilicon Co. Ltd
  *
+ * Dongbin Yu <fansaihua@huawei.com> : 2014-1-26
  *
  * In V8R1 the pmic is same with V9R1's driver,so it is multiplex.
  * That the reason why name of the c document is "hi6xxx".
@@ -29,6 +30,7 @@ static struct dsm_dev dsm_pmu_ocp = {
 };
 static struct dsm_client *pmu_ocp_dclient = NULL;
 #endif
+
 
 static PMIC_MNTN_DESC* g_pmic_mntn = NULL;
 
@@ -255,6 +257,7 @@ static int of_get_pmic_attr(PMIC_MNTN_DESC* pmic_mntn, struct device *dev,
     {
         pmic_mntn->data_width = be32_to_cpu(*data_width);
     }
+
 
     otmp_set = (unsigned int *)of_get_property(np, "hisilicon,otmp-set", NULL);
     pmic_mntn->otmp_set  = 0x02;
@@ -810,6 +813,7 @@ static struct attribute_group pmic_mntn_attr_group = {
     .attrs = pmic_mntn_attrs,
 };
 
+
 static struct of_device_id of_hi6xxx_pmic_mntn_match_tbl[] = {
     {
         .compatible = "hisilicon,hi6552-pmic-mntn",
@@ -1025,6 +1029,7 @@ static int dpm_scan(unsigned int reg_addr,unsigned int reg_data,int scene)
     pmic_dump_file(g_pmic_mntn->init_log_show);
     return 0;
 }
+
 
 static int dpm_regdump(void)
 {

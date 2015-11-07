@@ -38,7 +38,6 @@ config HUAWEI_EMMC_DSM_ONLY_VDET
 	default n
 	help
 	   use device radar only to record emmc vdet log
-
 if MMC
 
 source "drivers/mmc/core/Kconfig"

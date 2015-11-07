@@ -144,7 +144,6 @@ typedef struct tag_TC_NS_Callback_List{
     struct list_head callback_list;
 } TC_NS_Callback_List;
 static TC_NS_Callback_List ta_callback_func_list;
-
 //static unsigned int irq;
 /************global reference end*************/
 #define AGENT_FS_ID 0x46536673      //FSfs
@@ -614,6 +613,7 @@ find_session:
     ret = tc_client_call(context, dev_file, 0);
 	mutex_unlock(&session->ta_session_lock);
 
+
     //TCVERBOSE("end of send smc call to non_secure in tc_ns send _cmd\n");
 
     /*
@@ -958,6 +958,7 @@ operation_erro:
     return ret;
 }
 
+
 int TC_NS_ClientOpen(TC_NS_DEV_File **dev_file, uint8_t kernel_api)
 {
     int ret = TEEC_ERROR_GENERIC;
@@ -1058,6 +1059,7 @@ int TC_NS_ClientClose(TC_NS_DEV_File *dev){
 		}
 	}
 
+
 	if(dev->service_cnt == 0 && list_empty(&dev->services_list)){
 		ret = TEEC_SUCCESS;
 		//del dev from the list
@@ -1077,10 +1079,12 @@ int TC_NS_ClientClose(TC_NS_DEV_File *dev){
 		TCERR("dev file list had been empty already");
 	mutex_unlock(&tc_ns_dev_list.dev_lock);
 
+
 	TCVERBOSE("client close end \n");
 
 	return ret;
 }
+
 
 void shared_vma_open(struct vm_area_struct *vma){
     //TCVERBOSE("debug for shared_vma_open--\n");
@@ -1147,6 +1151,7 @@ static int tc_client_mmap(struct file *filp, struct vm_area_struct *vma)
 
 	return ret;
 }
+
 
 static long tc_client_session_ioctl(struct file *file, unsigned cmd,
 			    unsigned long arg)
@@ -1234,6 +1239,7 @@ static long tc_agent_ioctl(struct file *file, unsigned cmd,
 	TCDEBUG("TC_NS_ClientIoctl ret = 0x%x\n", ret);
 	return ret;
 }
+
 
 static long tc_client_ioctl(struct file *file, unsigned cmd,
 			    unsigned long arg)
@@ -1360,6 +1366,7 @@ int tc_compat_client_ioctl(struct file *flie, unsigned int cmd,
 }
 #endif
 
+
 static const struct file_operations TC_NS_ClientFops = {
         .owner = THIS_MODULE,
         .open = tc_client_open,
@@ -1480,6 +1487,7 @@ static void tc_exit(void)
 	class_destroy(driver_class);
 	unregister_chrdev_region(tc_ns_client_devt, 1);
 	smc_free_data();
+
 
 	tc_mem_destroy();
 }

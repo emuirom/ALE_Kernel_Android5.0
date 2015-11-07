@@ -12,11 +12,9 @@ extern unsigned long hisi_reserved_fb_phymem;
 extern unsigned long hisi_reserved_dumplog_phymem;
 extern unsigned long hisi_reserved_camera_phymem;
 extern unsigned long hisi_reserved_vpp_phymem;
-/*FHD&HD DTS:2013072204915 modifier: yuanfang y00241633 begin*/
 extern unsigned long PLAT_MEM_RESERVED_SIZE_NEW;
 extern unsigned long HISI_MEM_FB_SIZE_NEW[];
 extern unsigned long HISI_FRAME_BUFFER_SIZE;
-/*FHD&HD DTS:2013072204915 modifier: yuanfang y00241633 end*/
 
 #ifndef ALIGN_UP
 #define ALIGN_UP(x, align) (((x) + ((align)-1)) & ~((align)-1))

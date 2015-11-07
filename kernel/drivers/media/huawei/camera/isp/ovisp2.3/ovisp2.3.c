@@ -1,24 +1,5 @@
-/*
- *  Hisilicon K3 SOC camera driver source file
- *
- *  Copyright (C) Huawei Technology Co., Ltd.
- *
- * Date:	  2013-12-11
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+
+
 
 #include <linux/compiler.h>
 #include <linux/fs.h>
@@ -75,6 +56,7 @@ typedef struct _tag_ovisp23_stream_res
 } ovisp23_stream_res_t;
 */
 
+
 typedef struct _tag_ovisp23
 {
 	struct platform_device*                     pdev;
@@ -88,6 +70,7 @@ typedef struct _tag_ovisp23
 #define I2OV(i) container_of(i, ovisp23_t, intf)
 #define I2STM(i) container_of(i, hwisp_stream_t, intf)
 
+
 static char const* ovisp23_get_name(hwisp_intf_t* i);
 static int ovisp23_power_on(hwisp_intf_t* i);
 static int ovisp23_power_off(hwisp_intf_t* i);
@@ -97,6 +80,7 @@ static int ovisp23_create_stream(hwisp_intf_t* i,struct video_device* vdev,hwisp
 static int ovisp23_stream_start(hwisp_intf_t* i, hwisp_stream_intf_t* info);
 static int ovisp23_stream_stop(hwisp_intf_t* i,hwisp_stream_intf_t* info);
 static int ovisp23_record_fixddrfreq(hwisp_intf_t* i, void* ddrfreq);
+
 
 u32 isp_debug_flag;
 
@@ -113,6 +97,7 @@ s_vtbl_ovisp23 =
     .stream_stop = ovisp23_stream_stop,
 	.fix_ddrfreq = ovisp23_record_fixddrfreq,
 };
+
 
 static ovisp23_t
 s_ovisp23 =
@@ -491,6 +476,7 @@ static int ovisp23_config(hwisp_intf_t* i,void* cfg)
     return ret;
 }
 
+
 #define PIPELINE(id) (id)
 void ovisp23_notify_sof( uint32_t id)
 {
@@ -658,6 +644,7 @@ hwisp_buf_t* ovisp23_get_buf_from_readyq(isp_port_e port)
     return NULL;
 }
 
+
 int ovisp23_put_buf_to_doneq(isp_port_e port,hwisp_buf_t* buf)
 {
     struct list_head* pos = NULL;
@@ -747,6 +734,7 @@ static int ovisp23_suspend(struct platform_device *pdev, pm_message_t state)
 	return rc;
 }
 
+
 static int ovisp23_resume(struct platform_device *pdev)
 {
 	int rc = 0;
@@ -777,6 +765,7 @@ s_ovisp23_driver =
 	},
 };
 
+
 static ssize_t ovisp23_debug_show(struct device *dev,
 				struct device_attribute *attr, char *buf);
 static ssize_t ovisp23_debug_store(struct device *dev,
@@ -800,6 +789,7 @@ static ssize_t ovisp23_debug_store(struct device *dev,
 	isp_debug_flag = simple_strtoul(buf, NULL, 0);
 	return count;
 }
+
 
 static int32_t
 ovisp23_platform_probe(
@@ -831,9 +821,7 @@ static void __exit
 ovisp23_exit_module(void)
 {
     hw_free_firmware_memory();
-    /*added for memory hwisp_t leak by y00251056 at 2014/12/18 start **/
     hwisp_unregister(&s_ovisp23.intf);
-    /*added for memory hwisp_t leak by y00251056 at 2014/12/18 end **/
     platform_driver_unregister(&s_ovisp23_driver);
 }
 

@@ -72,7 +72,6 @@
 #define ISP_FOCUS_SNAPSHOT_MODE	0
 #define REG_ISP_FOCUS_MODE			(0x1cd0b)
 
-/* y00215412 added 2012-05-18 for do not lock AE */
 #define REG_ISP_FOCUS_LOCK_AE			(0x1cd10)
 
 /*motor registers*/
@@ -82,12 +81,7 @@
 #define REG_ISP_FOCUS_MOTOR_COARSESTEP			(0x1ccaa)
 #define REG_ISP_FOCUS_MOTOR_FINESTEP			(0x1ccac)
 
-/*
- * added by y00215412 for new firmware 2012-07-11 version.
- * when focus success, how to go back to clear position
- * 1-some steps to go back
- * 0- one step to go back
- */
+
 #define REG_ISP_FOCUS_1STEP_COMEBACK			(0x1ccb1)
 
 #define REG_ISP_FOCUS_MOTOR_FRAMERATE			(0x1ccae)
@@ -145,7 +139,6 @@
 #define REG_ISP_FOCUS_nT_contrast_diff		(0x1cca2)
 
 /* target Y definitions */
-/* should same with ISP register configuration, change by y00215412 2012-06-28 */
 #define DEFAULT_TARGET_Y_LOW			0x2c
 #define DEFAULT_TARGET_Y_HIGH			0x4c
 #define DEFAULT_TARGET_Y_FLASH		0x30
@@ -235,11 +228,6 @@
 /* 0x1cddf for focus aecagc stable status. 1 for stable, 0 for unstable. */
 #define REG_ISP_AECAGC_STABLE	(0x1c60c)//(0x1cddf)
 
-/*****************************************************************
- * Bellow focus params can be configured by user
- * y00215412 collected 2012-10-17 start.
- */
-
 #define YUV_EDGE_STAT_MODE
 
 #define FOCUS_PARAM_JUDGE_BASE_LOW	0x04
@@ -248,7 +236,6 @@
 #define FOCUS_PARAM_ULTRALOW_CONTRAST		0x80
 #define FOCUS_PARAM_LOW_CONTRAST			0x140
 
-/* added by y00215412 for sky focus wrong 2012-12-11. */
 #define FOCUS_PARAM_JUDGE_ERROR_MINDIFF		0x18
 #define FOCUS_PARAM_JUDGE_ERROR_MINSTEPS	0x08
 #define FOCUS_PARAM_JUDGE_LOW_CONTRAST		0xC0
@@ -306,7 +293,6 @@
 #define FOCUS_PARAM_MIN_HEIGHT_RATIO	5
 
 #define FOCUS_PARAM_CAF_RESTART_DIFF_XYZ		0x40
-/* y00215412 collected 2012-10-17 end.**********************************/
 
 #define FLASH_TEST_MAX_COUNT	30
 #define FLASH_CAP_RAW_OVER_EXPO	0xe0
@@ -360,7 +346,7 @@ typedef enum {
 
 	FOCUS_SCHEDULE_CASE_AF_HOLDING,
 
-	FOCUS_SCHEDULE_CASE_VAF_MOVE, /* added for touch af in video mode by j00212990 2013-01-24 */
+	FOCUS_SCHEDULE_CASE_VAF_MOVE,
 	FOCUS_SCHEDULE_CASE_AF_FAST_SHOOT,
 } focus_schedule_case;
 
@@ -371,7 +357,6 @@ typedef enum {
 	AF_RUN_DIRECTION_FORWARD = 1,
 } af_run_direction;
 
-/* last modified by y00215412 for target tracking 2012-01-09 */
 typedef enum {
 	AF_RUN_STAGE_PREPARE = 0,
 	AF_RUN_STAGE_PREPARE_POST,
@@ -389,7 +374,6 @@ typedef enum {
 	VCAF_RUN_STAGE_FORWARD,
 	VCAF_RUN_STAGE_REWIND,
 
-	/* added by y00215412 DTSxxxxx 2012-01-09 */
 	AF_RUN_STAGE_BREAK,
 } af_run_stage;
 

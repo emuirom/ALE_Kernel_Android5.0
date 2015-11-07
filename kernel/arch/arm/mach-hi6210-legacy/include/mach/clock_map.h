@@ -1392,7 +1392,6 @@
 
 #define CLK_DSPPLL_MMC0_GATED_CLKDIV_REG_ADDR       SOC_PERI_SCTRL_SC_CLKCFG8BIT1_ADDR(SCTRL_OFF_BASE_ADDR)  //时钟分频寄存器地址转定义宏
 
-/* Modified by s00249479 in B030 ---- reserved */
 /*
 #define CLK_DSPPLL_MMC0_GATED_CLKDIV_MASK           CALC_REG_MASK(SOC_PERI_SCTRL_SC_CLKCFG8BIT1_clk_8bit_cfg1_value1_mmc0_high_START, \
                                                         SOC_PERI_SCTRL_SC_CLKCFG8BIT1_clk_8bit_cfg1_value1_mmc0_high_END)                  //时钟分频掩码
@@ -1413,7 +1412,6 @@
 
 #define CLK_DSPPLL_MMC1_GATED_CLKDIV_REG_ADDR       SOC_PERI_SCTRL_SC_CLKCFG8BIT2_ADDR(SCTRL_OFF_BASE_ADDR)  //时钟分频寄存器地址转定义宏
 
-/* Modified by s00249479 in B030 ---- reserved */
 /*
 #define CLK_DSPPLL_MMC1_GATED_CLKDIV_MASK           CALC_REG_MASK(SOC_PERI_SCTRL_SC_CLKCFG8BIT2_clk_8bit_cfg2_value1_mmc1_high_START, \
                                                         SOC_PERI_SCTRL_SC_CLKCFG8BIT2_clk_8bit_cfg2_value1_mmc1_high_END)                  //时钟分频掩码
@@ -1433,7 +1431,6 @@
 #define CLK_DSPPLL_MMC2_GATED_CLKSEL_SET_VALID  CLKSEL_SET_INVALID      //父时钟选择有效标志位
 
 #define CLK_DSPPLL_MMC2_GATED_CLKDIV_REG_ADDR       SOC_PERI_SCTRL_SC_CLKCFG8BIT3_ADDR(SCTRL_OFF_BASE_ADDR)  //时钟分频寄存器地址转定义宏
-/* Modified by s00249479 in B030 ---- reserved */
 /*
 #define CLK_DSPPLL_MMC2_GATED_CLKDIV_MASK           CALC_REG_MASK(SOC_PERI_SCTRL_SC_CLKCFG8BIT3_clk_8bit_cfg3_value1_mmc2_high_START, \
                                                         SOC_PERI_SCTRL_SC_CLKCFG8BIT3_clk_8bit_cfg3_value1_mmc2_high_END)                  //时钟分频掩码
@@ -1454,7 +1451,6 @@
 
 #define CLK_MMC0HIGH_CLKDIV_REG_ADDR       SOC_PERI_SCTRL_SC_CLKCFG8BIT1_ADDR(SCTRL_OFF_BASE_ADDR)  //时钟分频寄存器地址转定义宏
 
-/* Modified by s00249479 in B030 ---- reserved */
 /*
 #define CLK_MMC0HIGH_CLKDIV_MASK          CALC_REG_MASK(SOC_PERI_SCTRL_SC_CLKCFG8BIT1_clk_8bit_cfg1_value1_mmc0_high_START, \
                                                         SOC_PERI_SCTRL_SC_CLKCFG8BIT1_clk_8bit_cfg1_value1_mmc0_high_END)                  //时钟分频掩码
@@ -1475,7 +1471,6 @@
 
 #define CLK_MMC1HIGH_CLKDIV_REG_ADDR       SOC_PERI_SCTRL_SC_CLKCFG8BIT2_ADDR(SCTRL_OFF_BASE_ADDR)  //时钟分频寄存器地址转定义宏
 
-/* Modified by s00249479 in B030 ---- reserved */
 /*
 #define CLK_MMC1HIGH_CLKDIV_MASK           CALC_REG_MASK(SOC_PERI_SCTRL_SC_CLKCFG8BIT2_clk_8bit_cfg2_value1_mmc1_high_START, \
                                                         SOC_PERI_SCTRL_SC_CLKCFG8BIT2_clk_8bit_cfg2_value1_mmc1_high_END)                  //时钟分频掩码
@@ -1496,7 +1491,6 @@
 
 #define CLK_MMC2HIGH_CLKDIV_REG_ADDR       SOC_PERI_SCTRL_SC_CLKCFG8BIT3_ADDR(SCTRL_OFF_BASE_ADDR)   //时钟分频寄存器地址转定义宏
 
-/* Modified by s00249479 in B030 ---- reserved */
 /*
 #define CLK_MMC2HIGH_CLKDIV_MASK           CALC_REG_MASK(SOC_PERI_SCTRL_SC_CLKCFG8BIT3_clk_8bit_cfg3_value1_mmc2_high_START, \
                                                         SOC_PERI_SCTRL_SC_CLKCFG8BIT3_clk_8bit_cfg3_value1_mmc2_high_END)                  //时钟分频掩码

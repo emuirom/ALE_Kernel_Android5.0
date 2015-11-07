@@ -1,24 +1,5 @@
-/* 
- *  Hisilicon K3 SOC camera driver source file 
- * 
- *  Copyright (C) Huawei Technology Co., Ltd. 
- * 
- * Date:	  2013-12-11
- *
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
- * (at your option) any later version. 
- *
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
- * GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- */
+
+
 
 #ifndef __HW_ALAN_KERNEL_HWISP_INTERFACE_H__
 #define __HW_ALAN_KERNEL_HWISP_INTERFACE_H__
@@ -248,10 +229,8 @@ hwisp_register(struct platform_device* pdev,
         hwisp_intf_t* isp,
         hwisp_notify_intf_t** notify); 
 
-/*added for memory hwisp_t leak by y00251056 at 2014/12/18 start **/
 extern void
 hwisp_unregister(hwisp_intf_t* isp_intf);
-/*added for memory hwisp_t leak by y00251056 at 2014/12/18 end **/
 
 extern void
 hwisp_tasklet(unsigned long data);
@@ -292,6 +271,7 @@ typedef struct _tag_hwisp_stream
 	unsigned long								enque_buf_count;
 	hwisp_buf_t                                 buf[0];
 } hwisp_stream_t; 
+
 
 #endif // __HW_ALAN_KERNEL_HWISP_INTERFACE_H__
 

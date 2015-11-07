@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00145353
+ * Email:	  alan.hefeng@huawei.com
  * Date:	  2013-12-12
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+
 #ifndef __HW_ALAN_KERNEL_HWCAM_EXTISP_CFG_H__
 #define __HW_ALAN_KERNEL_HWCAM_EXTISP_CFG_H__
 
@@ -27,6 +30,7 @@
 #include <linux/types.h>
 #include <linux/videodev2.h>
 #include <media/huawei/camera.h>
+
 
 typedef enum _tag_hwextisp_config_type
 {
@@ -97,6 +101,7 @@ typedef struct _tag_hwextisp_config_data
     } u;
     struct extented_block_response_buf ext_buf;
 }hwextisp_config_data_t;
+
 
 enum
 {

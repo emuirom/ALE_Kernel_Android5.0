@@ -920,7 +920,6 @@ static struct dsi_cmd_desc jdi_video_on_v3_cmds[] = {
     {DTYPE_DCS_WRITE, 0, 120, WAIT_TYPE_MS,
         sizeof(exit_sleep), exit_sleep},
 
-    /* c00194240 2012-12-17 add gamma2.2 for test begin */
     {DTYPE_GEN_LWRITE, 0, 200, WAIT_TYPE_US,
         sizeof(enable_orise_mode14), enable_orise_mode14},
     {DTYPE_GEN_LWRITE, 0, 200, WAIT_TYPE_US,
@@ -949,7 +948,6 @@ static struct dsi_cmd_desc jdi_video_on_v3_cmds[] = {
         sizeof(enable_orise_mode14), enable_orise_mode14},
     {DTYPE_GEN_LWRITE, 0, 200, WAIT_TYPE_US,
         sizeof(gamma22_Bn_setting), gamma22_Bn_setting},
-    /* c00194240 2012-12-17 add gamma2.2 for test end */
     {DTYPE_GEN_LWRITE, 0, 200, WAIT_TYPE_US,
         sizeof(Delay_TE), Delay_TE},
 

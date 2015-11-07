@@ -445,8 +445,8 @@ static int convert_uah2regval(unsigned int reg_val)
 
     temp = reg_val;
 
-    temp = temp * c_offset_a;
-    temp = div_s64(temp, 1000000);
+    temp = temp * 1000000;
+    temp = div_s64(temp, c_offset_a);
 
     temp = temp * 10000000;
     if( (g_coul_work_mode & PMU_WORK_MODE_MSK) == TCXO_MODE  )
@@ -2799,7 +2799,7 @@ static void get_ocv_by_vol(struct smartstar_coul_device *di)
         used++;
     }
 #else
-	for (i = 0; i < FIFO_DEPTH; i++)/* s00249479 the limit need to be confirm by test when system resume*/
+	for (i = 0; i < FIFO_DEPTH; i++)
 	{
 		SMARTSTAR_REGS_READ(SMARTSTAR_CUR_FIFO_BASE + i * 2, &regval, 2);
 		current_ua = convert_regval2ua(regval);
@@ -2959,7 +2959,6 @@ static void get_initial_ocv(struct smartstar_coul_device *di)
         ocvcur = convert_regval2ua(ocvcurreg);
         hwlog_info("ocvr=%d\n", ocvcur);
 
-        //rbatt = di->batt_data->default_rbatt_mohm; /* s00249479 resistence should be checked by test */
         //ocv = ocv + ocvcur * rbatt/1000;
         ocv = ocv + ocvcur/1000 *(di->r_pcb/1000 + DEFAULT_BATTERY_OHMIC_RESISTANCE);
         hwlog_info("ocv_cur = %d, OCV after adjust %d \n", ocvcur, ocv);
@@ -4417,31 +4416,34 @@ void refresh_fcc(struct smartstar_coul_device *di)
             || (di->batt_ocv>3800000 && di->batt_ocv <3900000)
             )
         )
-	{
-		int fcc_uah, new_fcc_uah, delta_fcc_uah, max_delta_fcc_uah;
-		new_fcc_uah = calculate_real_fcc_uah(di, &fcc_uah);
-        max_delta_fcc_uah = interpolate_fcc(di, di->batt_temp)*DELTA_FCC_PERCENT*10;
-		delta_fcc_uah = new_fcc_uah - fcc_uah;
-		if (delta_fcc_uah < 0)
-			delta_fcc_uah = -delta_fcc_uah;
-		if (delta_fcc_uah > max_delta_fcc_uah)
-		{
-			/* new_fcc_uah is outside the scope limit it */
-			if (new_fcc_uah > fcc_uah)
-				new_fcc_uah = (fcc_uah + max_delta_fcc_uah);
-			else
-				new_fcc_uah = (fcc_uah - max_delta_fcc_uah);
-			hwlog_info("delta_fcc=%d > %d percent of fcc=%d"
-							   "restring it to %d\n",
-							   delta_fcc_uah, DELTA_FCC_PERCENT,
-							   fcc_uah, new_fcc_uah);
-		}
+    {
+        int fcc_uah, fcc_tbl_uah, new_fcc_uah, delta_fcc_uah, max_delta_fcc_uah;
+
+        new_fcc_uah = calculate_real_fcc_uah(di, &fcc_uah);
+        fcc_tbl_uah = interpolate_fcc(di, di->batt_temp)*1000;
+        
+        max_delta_fcc_uah = fcc_tbl_uah*DELTA_FCC_PERCENT/100;
+        delta_fcc_uah = new_fcc_uah - fcc_tbl_uah;
+        if (delta_fcc_uah < 0)
+            delta_fcc_uah = -delta_fcc_uah;
+        if (delta_fcc_uah > max_delta_fcc_uah)
+        {
+            /* new_fcc_uah is outside the scope limit it */
+            if (new_fcc_uah > fcc_tbl_uah)
+                new_fcc_uah = (fcc_tbl_uah + max_delta_fcc_uah);
+            else
+                new_fcc_uah = (fcc_tbl_uah - max_delta_fcc_uah);
+            hwlog_info("delta_fcc=%d > %d percent of fcc=%d"
+                "restring it to %d\n",
+                delta_fcc_uah, DELTA_FCC_PERCENT,
+                fcc_tbl_uah, new_fcc_uah);
+        }
         di->fcc_real_mah = new_fcc_uah / 1000;
-        hwlog_info("refresh_fcc, start soc=%d, new fcc=%d \n",
-            di->charging_begin_soc, di->fcc_real_mah);
+        hwlog_info("refresh_fcc, start soc=%d, new fcc=%d, fcc_tbl_uah=%d,  delta_fcc_uah=%d, max_delta_fcc_uah=%d\n",
+            di->charging_begin_soc, di->fcc_real_mah, fcc_tbl_uah, delta_fcc_uah, max_delta_fcc_uah);
         /* update the temp_fcc lookup table */
-	readjust_fcc_table(di);
-	}
+        readjust_fcc_table(di);
+    }
 }
 
 /*******************************************************

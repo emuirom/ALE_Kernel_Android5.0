@@ -150,6 +150,7 @@ static struct file_operations mdev_fops =
 	.unlocked_ioctl = lmdev_ioctl,
 };
 
+
 static struct lcd_mdevice lmdev = 
 {
 	.ops_lock = __MUTEX_INITIALIZER(lmdev.ops_lock),

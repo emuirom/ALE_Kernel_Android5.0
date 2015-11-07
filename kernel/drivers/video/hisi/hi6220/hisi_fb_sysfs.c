@@ -18,7 +18,8 @@
 #include "balong_fb.h"
 
 //#define ARRAY_SIZE(x)  (sizeof(x)/sizeof(x[0]))
-
+// This macro is the decrement of R and G to improve the lcd's color temperature performence.
+#define CT_CALIBRATION_VALUE 26
 extern struct semaphore balong_fb_blank_sem;
 extern u32 g_601_csc_value[10];
 extern bool g_is_set_color_temperature;
@@ -244,8 +245,16 @@ static ssize_t hisifb_color_temperature_store(struct device* dev,
     {
         g_601_csc_value[i]= 2 * csc_value[i];
     }
+    // This adjust is just designed for boe panel because it's performance too warm.
+    if( colortemp_adjust_flag == 1 )
+    {
+        //Reduce the component value of R and G to improve CT value.
+        g_601_csc_value [0] = g_601_csc_value [0] - CT_CALIBRATION_VALUE;
+        g_601_csc_value [4] = g_601_csc_value [4] - CT_CALIBRATION_VALUE;
+    }
     g_is_set_color_temperature = true;
     up(&g_ct_sem);
+    pr_info("Color_Temperature Paramaters: [R]= %d; [G]= %d; [B]= %d \n",g_601_csc_value [0],g_601_csc_value [4] ,g_601_csc_value [8]);
     return count;
 }
 

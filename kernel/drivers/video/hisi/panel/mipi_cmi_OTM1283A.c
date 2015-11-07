@@ -1243,6 +1243,8 @@ static struct dsi_cmd_desc cmi_display_on_cmds[] =
         sizeof(cmi_power_on_param24), cmi_power_on_param24
     },
 
+
+
     {
         DTYPE_GEN_LWRITE, 0, 100, WAIT_TYPE_US,
         sizeof(cmi_power_on_param25), cmi_power_on_param25
@@ -2586,6 +2588,7 @@ static char cmi_close_access_ff00[] =
     0xFF,
     0xFF, 0xFF, 0xFF,
 };
+
 
 static char inversion_mode_1dot_shift_B4[] =
 {

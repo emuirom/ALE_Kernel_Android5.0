@@ -232,6 +232,7 @@ struct dsi_phy_seq_info {
     u32 rg_hstx_ckg_sel;
 };
 
+
 struct mipi_panel_info {
 	u8 vc;
 	u8 lane_nums;
@@ -288,6 +289,7 @@ struct balong_panel_info {
     struct regulator *lcd_vsn_vcc;
     struct regulator *lcd_vsp_vcc;
 
+
 	u32 bl_max;
 	u32 bl_min;
 	u32 gpio_pwm0;
@@ -331,6 +333,7 @@ struct balong_fb_panel_data {
 	struct platform_device *next;
 };
 
+
 /*******************************************************************************
 ** FUNCTIONS PROTOTYPES
 */
@@ -365,6 +368,8 @@ int balong_fb_set_clock_rate(struct balong_fb_data_type *balongfd, struct clk *c
 #define REG_BASE_ADE_NAME	"reg_base_ade"
 #define REG_BASE_DSI0_NAME	"reg_base_dsi0"
 
+
+
 #define GPIO_LCD_POWER_NAME	"gpio_lcd_power"
 #define GPIO_LCD_PWM0_NAME	"gpio_pwm0"            /* V8R1/V8R2 not use */
 #define GPIO_LCD_PWM1_NAME	"gpio_pwm1"            /* V8R1/V8R2 not use */
@@ -374,6 +379,7 @@ int balong_fb_set_clock_rate(struct balong_fb_data_type *balongfd, struct clk *c
 #define GPIO_LCD_DRV_NAME   "gpio_lcd_drv"         /* V8R1/V8R2 not use */
 #define GPIO_LCD_DRVEN_NAME  "gpio_lcd_drv_en"
 #define GPIO_LCDMIPI_POWER_NAME	"gpio_lcdmipi_power"
+
 
 #define IOMUX_LCD_NAME	"block_lcd"
 #define IOMUX_PWM_NAME	"block_pwm"
@@ -393,5 +399,6 @@ extern int vcc_cmds_tx(struct platform_device *pdev, struct vcc_desc *cmds, int 
 extern int pinctrl_cmds_tx(struct platform_device *pdev, struct pinctrl_cmd_desc *cmds, int cnt);
 extern int gpio_cmds_tx(struct platform_device *pdev, struct gpio_desc *cmds, int cnt);
 extern int get_resource_from_dts(struct platform_device *pdev, struct balong_panel_info *pinfo);
+
 
 #endif /* __BALONG_FB_PANEL_H__ */

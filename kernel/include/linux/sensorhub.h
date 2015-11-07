@@ -2,6 +2,7 @@
  *  Sensor Hub driver
  *
  * Copyright (C) 2012 Huawei, Inc.
+ * Author: qindiwen <qindiwen@huawei.com>
  *
  */
 
@@ -32,6 +33,7 @@
 #define SHB_IOCTL_APP_DELAY_AMBIENT_TEMPERATURE _IOW(SHBIO, 0x10, short)
 #define SHB_IOCTL_APP_DELAY_MCU_LABC            _IOW(SHBIO, 0x11, short)
 #define SHB_IOCTL_APP_DELAY_HALL                _IOW(SHBIO, 0x12, short)
+
 
 /*begin huangwen 20120706*/
 /*get sensor MCU mode */

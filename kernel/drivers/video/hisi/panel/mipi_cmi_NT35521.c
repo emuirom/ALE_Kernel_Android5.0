@@ -53,6 +53,7 @@
 //As the reg0x55 used for CABC and IE/SRE, so add two global variables to mark respective status. 
 static int g_IE_SRE_level = 0x80;
 
+
 /*--------cmi power on initial code -----------*/
 static char cmi_power_on_param1[] =
 {
@@ -450,6 +451,7 @@ static char cmi_power_on_param75[] =
     0xCB,
     0x2E, 0x2E,
 };
+
 
 static char cmi_power_on_param76[] =
 {
@@ -1485,6 +1487,7 @@ static struct dsi_cmd_desc cmi_display_on_cmds[] =
     //	{DTYPE_DCS_WRITE1, 0, 200, WAIT_TYPE_US,
     //		sizeof(bl_enable), bl_enable},
 
+
 };
 static struct dsi_cmd_desc cmi_display_off_cmds[] =
 {
@@ -1618,6 +1621,7 @@ static struct gpio_desc cmi_lcd_gpio_lowpower_cmds[] = {
 static volatile bool g_display_on;
 static struct balong_fb_panel_data cmi_panel_data;
 
+
 /******************************************************************************/
 static struct lcd_tuning_dev *p_tuning_dev = NULL;
 
@@ -1662,6 +1666,7 @@ static DEVICE_ATTR(esd_test, 0644, cmi_show_esd_test, cmi_store_esd_test);
 
 static DEVICE_ATTR(lcd_info, S_IRUGO, cmi_lcd_info_show, NULL);
 
+
 static struct attribute* cmi_attrs[] =
 {
     &dev_attr_lcd_info.attr,
@@ -1704,6 +1709,7 @@ static int mipi_cmi_panel_on(struct platform_device *pdev)
     u8* ade_base = NULL;
     u32 int_st0 = 0, int_st1 = 0;
 #endif
+
 
     BUG_ON(pdev == NULL);
 
@@ -2009,6 +2015,7 @@ static int mipi_cmi_panel_set_backlight(struct platform_device* pdev)
     BUG_ON(pdev == NULL);
     balongfd = (struct balong_fb_data_type*)platform_get_drvdata(pdev);
     BUG_ON(balongfd == NULL);
+
 
     level = balongfd->bl_level;
 

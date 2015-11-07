@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00145353
+ * Email:	  alan.hefeng@huawei.com
  * Date:	  2013-10-29
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,6 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 
 #include <linux/atomic.h>
 #include <linux/fs.h>
@@ -97,6 +100,7 @@ static DEFINE_SPINLOCK(s_ack_queue_lock);
 static struct list_head s_ack_queue = LIST_HEAD_INIT(s_ack_queue);
 static DECLARE_WAIT_QUEUE_HEAD(s_wait_ack);
 static DECLARE_DELAYED_WORK(s_cfgdev_work, hwcam_cfgdev_work);
+
 
 static ssize_t hwcam_guard_thermal_show(struct device_driver *drv,
 								char *buf);

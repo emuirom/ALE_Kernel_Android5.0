@@ -1,17 +1,22 @@
 
 /* DO NOT EDIT - Generated automatically by battery_para_gen.pl */
 
+
+
+
 static struct single_row_lut Default_2300_fcc_temp = {
 	.x		= {-10, 0, 25, 50},
 	.y		= {1863, 1986,2031, 2061},
 	.cols	= 4
 };
 
+
 static struct single_row_lut Default_2300_fcc_sf = {
 	.x		= {0, 100, 200, 300, 400, 500},
 	.y		= {100, 96, 94, 92, 90, 88},
 	.cols	= 6
 };
+
 
 static struct sf_lut Default_2300_pc_sf = {
 	.rows = 1,
@@ -22,6 +27,7 @@ static struct sf_lut Default_2300_pc_sf = {
 		{100}
 	}
 };
+
 
 static struct sf_lut Default_2300_rbatt_sf = {
 	.rows = 28,
@@ -60,6 +66,7 @@ static struct sf_lut Default_2300_rbatt_sf = {
 	}
 };
 
+
 static struct pc_temp_ocv_lut Default_2300_pc_temp_ocv = {
 	.rows = 29,
 	.cols = 4,
@@ -97,6 +104,7 @@ static struct pc_temp_ocv_lut Default_2300_pc_temp_ocv = {
                 {3200, 3200, 3200, 3200} 
 	}
 };
+
 
 struct hisi_smartstar_coul_battery_data Default_2300_battery_data = {
 	.fcc = 2300,

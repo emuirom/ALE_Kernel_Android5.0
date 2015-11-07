@@ -66,6 +66,7 @@
 #ifndef CONFIG_HI3635_USB
 extern struct hiusb_info *g_hiusb_info;
 #endif
+extern int g_otg_enable;
 static int dwc_otg_setup_params(dwc_otg_core_if_t * core_if);
 
 /**
@@ -1296,6 +1297,12 @@ int dwc_otg_core_init(dwc_otg_core_if_t * core_if)
             usbcfg.b.force_host_mode=0;
             usbcfg.b.force_dev_mode=1;
 	}*/
+    printk(KERN_INFO "[USB_DEBUG]---op_state=%d,otg_enable=%d\n",core_if->op_state,g_otg_enable);
+	if(g_otg_enable == 0){
+			printk(KERN_INFO "[USB_DEBUG]------devices\n");
+            usbcfg.b.force_host_mode=0;
+            usbcfg.b.force_dev_mode=1;
+	}
 #endif
 	DWC_WRITE_REG32(&global_regs->gusbcfg, usbcfg.d32);
 
@@ -1757,6 +1764,7 @@ void dwc_otg_core_dev_init(dwc_otg_core_if_t * core_if)
 		dctl.b.encontonbna = 1;
 		DWC_MODIFY_REG32(&dev_if->dev_global_regs->dctl, 0, dctl.d32);
 	}
+
 
 	DWC_WRITE_REG32(&dev_if->dev_global_regs->dcfg, dcfg.d32);
 
@@ -3512,6 +3520,7 @@ void dwc_otg_ep_activate(dwc_otg_core_if_t * core_if, dwc_ep_t * ep)
 
 		}
 
+
 		DWC_WRITE_REG32(addr, depctl.d32);
 		DWC_DEBUGPL(DBG_PCDV, "DEPCTL=%08x\n", DWC_READ_REG32(addr));
 	}
@@ -3656,6 +3665,7 @@ void dwc_otg_ep_deactivate(dwc_otg_core_if_t * core_if, dwc_ep_t * ep)
 	if (ep->is_in == 1)
 		depctl.b.txfnum = 0;
 
+
 	if (core_if->dma_desc_enable) {
 	  depctl.b.epdis = 1;
 	} else if (core_if->dma_enable) {
@@ -3665,6 +3675,7 @@ void dwc_otg_ep_deactivate(dwc_otg_core_if_t * core_if, dwc_ep_t * ep)
 	    depctl.b.snak = 1;
 	  }
 	}
+
 
 	DWC_WRITE_REG32(addr, depctl.d32);
 	depctl.d32 = DWC_READ_REG32(addr);
@@ -3751,7 +3762,6 @@ void dwc_otg_ep_deactivate(dwc_otg_core_if_t * core_if, dwc_ep_t * ep)
 	} else {
 		DWC_MODIFY_REG32(&core_if->dev_if->dev_global_regs->daintmsk,
 				 daintmsk.d32, 0);
-
 		if (!core_if->dma_desc_enable) {
 		  if (ep->is_in == 1)
 		    DWC_WRITE_REG32(&core_if->dev_if->in_ep_regs[ep->num]->diepint, 0xffffffff);
@@ -3947,6 +3957,7 @@ void dwc_otg_ep_start_transfer(dwc_otg_core_if_t * core_if, dwc_ep_t * ep)
 		else
 			ep->xfer_len += (MAX_PKT_CNT * ep->maxpacket < (ep->total_len - ep->xfer_len)) ?
 				 MAX_PKT_CNT * ep->maxpacket : (ep->total_len - ep->xfer_len);
+
 
 		/* Zero Length Packet? */
 		if ((ep->xfer_len - ep->xfer_count) == 0) {

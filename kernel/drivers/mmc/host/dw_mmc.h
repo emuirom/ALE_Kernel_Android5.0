@@ -163,6 +163,7 @@
 #define DMA_ENABLE	(0x1 << 5) /* DMA transfer mode enable/disable bit */
 #define ENABLE_IDMAC	(0x1 << 25)
 
+
 #define INTMSK_ALL	0xFFFFFFFF
 #define INTMSK_CDETECT	(0x1 << 0)
 #define INTMSK_RE	(0x1 << 1)
@@ -185,6 +186,7 @@
 
 #define INT_SRC_IDMAC	(0x0)
 #define INT_SRC_MINT	(0x1)
+
 
 #define CMD_RESP_EXP_BIT	(0x1 << 6)
 #define CMD_RESP_LENGTH_BIT	(0x1 << 7)

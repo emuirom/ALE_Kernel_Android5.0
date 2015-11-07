@@ -106,10 +106,8 @@ int k3_isp_enum_frameintervals(struct v4l2_frmivalenum *fi);
 int k3_isp_try_frameintervals(struct v4l2_frmivalenum *fi);
 int k3_isp_set_zoom(char preview_running, u32 zoom);
 
-/* add by c00144034 for mirror begin */
 int k3_isp_set_zoom_center(char preview_running, u32 user_center_xy);
 int k3_isp_set_zoom_and_center(char preview_running, u32 zoom, u32 user_center_x, u32 user_center_y);
-/* add by c00144034 for mirror end */
 
 int k3_isp_set_ae_lock(int mode);
 int k3_isp_get_zoom(void);
@@ -192,14 +190,11 @@ int k3_isp_get_current_ccm_bgain(void);
 int k3_isp_set_flash_mode(camera_flash flash_mode);
 int k3_isp_get_flash_mode(void);
 
-/* added by ykf63300 */
 int k3_isp_set_hflip(int flip);
 int k3_isp_get_hflip(void);
 int k3_isp_set_vflip(int flip);
 int k3_isp_get_vflip(void);
-/* added by ykf63300 end*/
 
-/* added by ykf63300 2012-05-22*/
 int k3_isp_get_focus_distance(void);
 int k3_isp_get_current_vts(void);
 int k3_isp_get_current_fps(void);
@@ -208,7 +203,6 @@ void k3_isp_set_fps_lock(int);
 
 void k3_isp_set_shoot_mode(camera_shoot_mode shoot_mode);
 
-/* Added by j00179721 for set PM mode */
 void k3_isp_set_pm_mode(u8 pm_mode);
 
 int k3_isp_get_sensor_aperture(void);
@@ -217,10 +211,8 @@ int k3_isp_get_equivalent_focus(void);
 void k3_isp_set_video_stabilization(int bStabilization);
 void k3_isp_set_yuv_crop_pos(int point);
 void k3_isp_get_yuv_crop_rect(crop_rect_s *rect);
-/* add by c00220250 */
 void k3_isp_set_process_mode(capture_type debug_type);
 /* add end */
-/* Added by c00144034 for ZSL */
 void k3_isp_set_zsl_state(camera_zsl zsl_state);
 camera_zsl k3_isp_get_zsl_state(void);
 void k3_isp_set_zsl_proc(camera_zsl_proc zsl_proc);
@@ -243,6 +235,12 @@ void k3_isp_try_ddr_freq(u32 sizeimage, camera_state state);
 void k3_isp_lock_ddr_freq(int freq);
 void k3_isp_unlock_ddr_freq(void);
 void k3_isp_set_hw_3a_mode(int mode);
+
+void k3_isp_set_b_shutter_mode(int b_shutter_mode);
+int  k3_isp_set_b_shutter_long_ae(b_shutter_ae_iso_s* b_shutter_ae_iso);
+int  k3_isp_get_aec_state(void);
+int  k3_isp_set_b_shutter_hdr_ae(b_shutter_hdr_aeciso_s* b_shutter_hdr_aeciso);
+int  k3_isp_set_b_shutter_ecgc(b_shutter_ae_iso_s* b_shutter_tryae_ecgc);
 
 int camera_init(void);
 

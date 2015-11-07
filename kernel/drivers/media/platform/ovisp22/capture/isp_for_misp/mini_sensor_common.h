@@ -37,12 +37,12 @@ typedef enum {
 } mini_isp_3a_state;
 /* modify by zhoutian for mini-ISP end >*/
 
+
 typedef struct {
 	u32 id;
 	u32 value;
 } mini_camera_capability;
 
-/* add by c00144034 for ZSL end */
 
 typedef struct _mini_sensor_reg_t {
 	u32 subaddr;
@@ -79,9 +79,9 @@ typedef struct _mini_framesize_s {
 	u32 hts;		/* horizontal total size */
 	u32 vts;		/* vertical total size */
 	u32 fps;
-	u32 fps_es; /* add by c00168914 for es_chip */
-	u32 banding_step_50hz; /* add by y00215412 for cs chip 25fps */
-	u32 banding_step_60hz; /* add by y00215412 for cs chip 25fps */
+	u32 fps_es;
+	u32 banding_step_50hz;
+	u32 banding_step_60hz;
 	u32 capture_ratio;
 	camera_setting_view_type view_type;
 	camera_resolution_type resolution_type;
@@ -118,12 +118,14 @@ typedef struct mini_crop_rect_s {
 	u32 crop_height;
 } mini_crop_rect_s;
 
+
 typedef struct _mini_axis_triple {
 	int x;
 	int y;
 	int z;
 	struct timeval time;
 } mini_axis_triple;
+
 
 /*default should be designed as center area focus*/
 typedef struct _mini_focus_area_s {
@@ -171,16 +173,11 @@ typedef struct _mini_vcm_info_s {
 	u32 motorResTime;	/* response time, in unit of ms */
 	u32 motorDelayTime;	/* delay time of each step in stride divide case */
 	u32 strideDivideOffset;
-	/* added by z00221179 2013/03/30 start. this variable is uesed for sonyimx134 otp */
 	u32 startCurrentOffset;
-	/* added by z00221179 2013/03/30 end. this variable is uesed for sonyimx134 otp */
 
 	FOCUS_RANGE moveRange;/*0:Auto; 1:Infinite; 2:Macro*/
 
-	/*
-	 * return value: void
-	 * output value: vcm_start/vcm_end is 0 mean has otp, but no vcm code otp.
-	 */
+
 	void (*get_vcm_otp) (u16 *vcm_start, u16 *vcm_end);
 } mini_vcm_info_s;
 
@@ -199,7 +196,6 @@ typedef struct {
 	 */
 	int (*isp_set_focus_area) (mini_focus_area_s *area, u32 zoom);
 	int (*isp_get_focus_result) (mini_focus_result_s *result);
-	/* revised by y00215412 2012-09-21 for zoom focus. */
 	int (*isp_set_focus_zoom) (u32 zoom);
 	int (*isp_set_sharpness_zoom) (u32 zoom);
 
@@ -231,7 +227,6 @@ typedef struct {
 	int (*isp_get_actual_iso) (void);
 	int (*isp_get_exposure_time) (void);
 
-	/* added by ykf63300 2012-05-22 */
 	int (*isp_get_focus_distance) (void);
 	void (*isp_set_fps_lock) (int);
 	u32 (*isp_get_awb_gain)(int withShift);
@@ -262,6 +257,7 @@ typedef struct _mini_image_setting {
 	u8 *awb_param;
 } mini_image_setting_t;
 
+
 typedef struct _mini_ccm_gain {
 	u16 b_gain;
 	u16 g_gain;
@@ -284,7 +280,7 @@ typedef struct _mini_camera_sensor {
 
 	int (*check_sensor) (void);
 	int (*init_reg) (void);
-	int (*init_isp_reg)(void);//add by z00221179 for sonyimx134 2013/4/24
+	int (*init_isp_reg)(void);
 	int (*stream_on) (camera_state state);
 	int (*stream_off)(camera_state state);
 

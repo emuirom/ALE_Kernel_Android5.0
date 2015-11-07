@@ -41,9 +41,7 @@
 #include <mach/hisi_mem.h>
 #include <mach/ddr_map.h>
 
-/*FHD&HD DTS:2013072204915 modifier: quanbaixing q00241663 begin*/
 #define FULLHD_STRING_MAX 1
-/*FHD&HD DTS:2013072204915 modifier: quanbaixing q00241663 end*/
 
 static void __init plat_mem_setup(void)
 {
@@ -175,7 +173,6 @@ static int __init trial_version_setup(char *__unused)
 }
 early_param("trial_version", trial_version_setup);
 
-/*FHD&HD DTS:2013072204915 modifier: quanbaixing q00241663 begin*/
 int isfullhd;
 static int __init isfullhd_setup(char *val)
 {
@@ -195,6 +192,5 @@ int get_isfullhd()
     return isfullhd;
 }
 EXPORT_SYMBOL(get_isfullhd);
-/*FHD&HD DTS:2013072204915 modifier: quanbaixing q00241663 end*/
 
 

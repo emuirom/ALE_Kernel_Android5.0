@@ -42,17 +42,17 @@
 #include <soc_ao_sctrl_interface.h>
 
 #define DX_SB_HASH_LENGTH_IN_WORDS      (4)
-#include "../../../../external/dx/secure_boot/crypto_driver/crypto_driver_defs.h"
-#include "../../../../external/dx/secure_boot/include/dx_pal_types.h"
-#include "../../../../external/dx/secure_boot/include/dx_pal_types_plat.h"
-#include "../../../../external/dx/secure_boot/include/sb_hash.h"
-#include "../../../../external/dx/secure_boot/platform/nvm/nvm.h"
-#include "../../../../external/dx/secure_boot/boot_images_verifier/bootimagesverifier_def.h"
-#include "../../../../external/dx/secure_boot/boot_images_verifier/bootimagesverifier_api.h"
-#include "../../../../external/dx/secure_boot/boot_images_verifier/bootimagesverifier_parser.h"
-#include "../../../../external/dx/secure_boot/boot_images_verifier/bootimagesverifier_swvalidation_anddecryption.h"
 
-#include "../../../../external/dx/secure_boot/include/secureboot_basetypes.h"
+#include "crypto_driver_defs.h"
+#include "dx_pal_types.h"
+#include "dx_pal_types_plat.h"
+#include "sb_hash.h"
+#include "nvm.h"
+#include "bootimagesverifier_def.h"
+#include "bootimagesverifier_api.h"
+#include "bootimagesverifier_parser.h"
+#include "bootimagesverifier_swvalidation_anddecryption.h"
+#include "secureboot_basetypes.h"
 #include "reset_secure.h"
 #include <linux/hisi/hi6xxx-iomap.h>
 //#if 1

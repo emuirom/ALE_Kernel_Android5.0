@@ -1,24 +1,5 @@
-/* 
- *  Hisilicon K3 SOC camera driver source file 
- * 
- *  Copyright (C) Huawei Technology Co., Ltd. 
- * 
- * Date:	  2013-11-16
- *
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
- * (at your option) any later version. 
- *
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
- * GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- */
+
+
 
 #ifndef __HW_ALAN_KERNEL_CAMERA_OBJ_MDL_INTERFACE__
 #define __HW_ALAN_KERNEL_CAMERA_OBJ_MDL_INTERFACE__ 
@@ -64,11 +45,13 @@ typedef struct _tag_hwcam_cfgpipeline_intf hwcam_cfgpipeline_intf_t;
 typedef struct _tag_hwcam_cfgstream_vtbl hwcam_cfgstream_vtbl_t; 
 typedef struct _tag_hwcam_cfgstream_intf hwcam_cfgstream_intf_t; 
 
+
 typedef struct _tag_hwcam_vbuf
 {
     struct vb2_buffer                           buf;
     struct list_head                            node; 
 } hwcam_vbuf_t;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -203,6 +186,7 @@ hwcam_cfgstream_mount_req_create_instance(struct video_device* vdev,
 
 //  hwcam_cfgreq interface definition end
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //          hwcam_usr interface definition begin
@@ -257,6 +241,7 @@ hwcam_user_intf_notify(hwcam_user_intf_t* intf,
 
 //  hwcam_usr interface definition end
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //          hwcam_dev interface definition begin
@@ -284,6 +269,7 @@ hwcam_dev_intf_notify(hwcam_dev_intf_t* intf,
     intf->vtbl->notify(intf, ev); 
 }
 //  hwcam_dev interface definition end
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -344,6 +330,7 @@ extern void
 hwcam_cfgdev_release_graphic_buffer(struct ion_handle* hdl); 
 
 //  hwcam_cfgdev interface definition end
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -456,6 +443,7 @@ hwcam_cfgpipeline_intf_mount_stream(hwcam_cfgpipeline_intf_t* intf,
 }
 
 //  hwcam_cfgpipeline interface definition end
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //

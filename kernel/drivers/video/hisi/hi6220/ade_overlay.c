@@ -925,6 +925,7 @@ void ade_overlay_init(struct ade_overlay_ctrl *overlay_ctrl)
     ovly->ovly_reg.ovly_rst_sel_bit = 5;
     ade_overlay_ovly_init4ovly(&(ovly->ovly_reg));
 
+
     ovly = &(overlay_ctrl->ovly_list[OVERLAY_OVLY_2]);
     ovly->ovly_num = OVERLAY_OVLY_2;
     ovly->ovly_cap = 0;
@@ -934,6 +935,7 @@ void ade_overlay_init(struct ade_overlay_ctrl *overlay_ctrl)
     ovly->ovly_reg.ovly_ctrl        = ADE_OVLY2_CTL_REG;
     ovly->ovly_reg.ovly_rst_sel_bit = 6;
     ade_overlay_ovly_init4ovly(&(ovly->ovly_reg));
+
 
     ovly = &(overlay_ctrl->ovly_list[OVERLAY_OVLY_3]);
     ovly->ovly_num = OVERLAY_OVLY_3;
@@ -2235,6 +2237,7 @@ void ade_overlay_region_set_block_rot(struct ade_overlay_ctrl *overlay_ctl, stru
     return;
 }
 
+
 /*****************  REGION CFG BEGIN *******************************************/
 void ade_overlay_region_set_partial_rdma (struct overlay_region_info *pipe_info, struct  ch_unit_reg *unit_reg, struct cmdfile_buffer *cf_buff, u8 rot_buff)
 {
@@ -2946,6 +2949,7 @@ static void ade_overlay_region_set_scl2_cmd(struct ade_compose_data_type *ade_pr
         return;
     }
 
+
     balongfb_logi_display_debugfs("ade_overlay_region_set_scl2_cmd: input_rect.x = %d,input_rect.y=%d \n", scl_irect->x,scl_irect->y);
     balongfb_logi_display_debugfs("ade_overlay_region_set_scl2_cmd: input_rect.w = %d,input_rect.h=%d \n", scl_irect->w,scl_irect->h);
 
@@ -3167,6 +3171,7 @@ void ade_overlay_commit_get_unit(struct overlay_resource_info *ade_res_info, str
                 (ovly3_res.bits.has_720p_rot)  | \
                 (ovly3_res.bits.has_1080p_rot)) & \
             (rot_res.bits.rot_en));
+
 
     /* bit offline wdma3 */
     commit_unit->bit_offline_wdma3 = ovly1_res.bits.has_wdma3;
@@ -3443,6 +3448,7 @@ static void ade_overlay_commit_set_wdma3(struct ade_compose_data_type *ade_pri_d
     ade_cmdq_wr_cmd(WR_CH3_EN_REG, 1);
     ade_cmdq_wr_cmd2buff(cf_buff->vaddr, &(cf_buff->cmd_len));
 }
+
 
 void ade_overlay_commit_set_ovly2_ch1(struct overlay_compose_info *pcomp_info,
         struct ade_compose_data_type *ade_pri_data,
@@ -3801,6 +3807,7 @@ int  ade_overlay_commit_set_wfd_ch(struct ade_compose_data_type *ade_pri_data, s
     balongfb_logi_display_debugfs("ade_overlay_commit_set_wfd_ch: scl x = %d, y = %d \n",  x, y);
     balongfb_logi_display_debugfs("ade_overlay_commit_set_wfd_ch: scl w = %d, h = %d \n",  w, h);
 
+
     /********************rdma 6*********************/
     rot_info = &(ade_pri_data->overlay_ctl.rot_info);
     ade_overlay_region_set_rdma_cmd(NULL, pipe, rot_info, cf_buf);
@@ -3892,6 +3899,7 @@ void ade_overlay_commit_set_wfd(struct ade_compose_data_type *ade_pri_data,
         ade_cmdq_wr_cmd2buff(cf_buff->vaddr, &(cf_buff->cmd_len));
     }
 }
+
 
 #endif
 
@@ -4152,6 +4160,7 @@ void ade_overlay_commit_set_sec_ovly(struct ade_overlay_ctrl      *overlay_ctl,
     u32    ovly2_max = 0;
     u32    ovly1_max = 0;
     u32    ovly1_min = 0;
+
 
     if ((cf_buff == NULL) || (sec_ovly == NULL) || (pcomp_info == NULL)
             || (overlay_ctl == NULL) || (ade_res_info == NULL)) {
@@ -4545,6 +4554,7 @@ int ade_overlay_commit_set_online(struct ade_compose_data_type *ade_pri_data,
     return 0;
 }
 
+
 void ade_overlay_refresh_set_wdma2(struct ade_compose_data_type  *ade_pri_data, struct cmdfile_buffer  *online_cf_buff)
 {
     u32     stride;
@@ -4920,6 +4930,7 @@ void ade_overlay_layer_get_blk_info(struct overlay_layer_info  *ade_layer_info, 
                 tmp_block[0].blk_w_height_l = tmp_block[0].blk_width_l;
                 //tmp_block[1].blk_w_delta_width_b = 0;
 
+
                 tmp_block[0].rdma_addr  = ade_layer_info->phy_addr;
                 tmp_block[0].rdma_uv_addr = ade_layer_info->uv_addr;
 
@@ -4941,6 +4952,7 @@ void ade_overlay_layer_get_blk_info(struct overlay_layer_info  *ade_layer_info, 
 
                 tmp_block[1].wdma_addr = tmp_block[0].wdma_addr +  tmp_block[0].blk_w_width_b * output_bpp;
                 tmp_block[1].wdma_uv_addr = tmp_block[0].wdma_uv_addr + tmp_block[0].blk_w_width_b;
+
 
             }
 
@@ -5029,6 +5041,7 @@ void ade_overlay_layer_get_blk_info(struct overlay_layer_info  *ade_layer_info, 
                 tmp_block[0].wdma_uv_addr = tmp_block[0].wdma_addr + ade_layer_info->dst_stride* ade_layer_info->width;
                 tmp_block[1].wdma_addr = tmp_block[0].wdma_addr + ade_layer_info->dst_stride * tmp_block[0].blk_w_height_b;
                 tmp_block[1].wdma_uv_addr = tmp_block[0].wdma_uv_addr + ade_layer_info->dst_stride * tmp_block[0].blk_w_height_b / 2;
+
 
             }
 
@@ -5402,6 +5415,7 @@ void ade_overlay_layer_set_wfd_rdma( struct ade_overlay_pipe *pipe, struct overl
     ade_cmdq_wr_cmd(unit_reg->ch_rdma_ch_uv_partial_space, 0);
     ade_cmdq_wr_cmd2buff(cf_buf->vaddr, &(cf_buf->cmd_len));
 
+
     ade_cmdq_wr_cmd(unit_reg->ch_rdma_ch_partial_size, 0);
     ade_cmdq_wr_cmd(unit_reg->ch_rdma_ch_partial_space, 0);
     ade_cmdq_wr_cmd2buff(cf_buf->vaddr, &(cf_buf->cmd_len));
@@ -5409,11 +5423,13 @@ void ade_overlay_layer_set_wfd_rdma( struct ade_overlay_pipe *pipe, struct overl
     ade_cmdq_wr_cmd(unit_reg->ch_rdma_ch_extra_partial_width, 0);
     ade_cmdq_wr_cmd2buff(cf_buf->vaddr, &(cf_buf->cmd_len));
 
+
     ade_cmdq_wr_cmd(unit_reg->ch_rdma_ch_en, 1);
     ade_cmdq_wr_cmd2buff(cf_buf->vaddr, &(cf_buf->cmd_len));
     balongfb_logi_display_debugfs("ade_overlay_layer_set_wfd_rdma: end \n");
 
 }
+
 
 void ade_overlay_layer_set_wfd_clip( struct ade_overlay_pipe *pipe, struct overlay_layer_info  *ade_layer_info, struct cmdfile_buffer  *cf_buff)
 {
@@ -5455,6 +5471,7 @@ void ade_overlay_layer_set_wfd_scl1(struct ade_overlay_pipe *pipe, struct overla
     ade_overlay_set_scl1_bypass(layer_size, cf_buff);
 }
 
+
 void ade_overlay_layer_set_wfd_ctran(struct ade_overlay_pipe *pipe, struct overlay_layer_info  *ade_layer_info, struct cmdfile_buffer  *cf_buff)
 {
     u32 layer_size = 0;
@@ -5479,6 +5496,7 @@ void ade_overlay_layer_set_wfd_ctran(struct ade_overlay_pipe *pipe, struct overl
     ade_cmdq_wr_cmd(unit_reg->ctran_mode_choose, 3);  /* 0: csc,yuv2rgb, 1: fmc, rgb2yuv, 3:argb2argb */
     ade_cmdq_wr_cmd2buff(cf_buff->vaddr, &(cf_buff->cmd_len));
 
+
     ade_cmdq_wr_cmd(unit_reg->ctran_image_size, layer_size);
     ade_cmdq_wr_cmd(unit_reg->ctran_cfg_ok, 1);
     ade_cmdq_wr_cmd2buff(cf_buff->vaddr, &(cf_buff->cmd_len));
@@ -5497,6 +5515,7 @@ void ade_overlay_layer_set_wfd_ovly(struct ade_overlay_ovly  *ovly, struct overl
 
     balongfb_logi_display_debugfs("ade_overlay_layer_set_wfd_ovly: end \n");
 }
+
 
 void ade_overlay_layer_set_wfd_after_ctran( struct ade_overlay_pipe *pipe, struct overlay_layer_info  *ade_layer_info, struct cmdfile_buffer  *cf_buff)
 {
@@ -5538,6 +5557,7 @@ void ade_overlay_layer_set_wfd_wdma(struct overlay_layer_info  *ade_layer_info, 
         balongfb_logi_display_debugfs("ade_overlay_layer_set_wfd_wdma: wdma num is error");
     }
 }
+
 
 #endif
 void ade_overlay_layer_set_blk_rot_rdma(int block_num, struct rot_block_info *blk, struct ade_overlay_pipe *pipe,
@@ -5773,6 +5793,7 @@ static void ade_overlay_layer_set_blk_rot_after_scl(struct rot_block_info *blk, 
     ade_cmdq_wr_cmd2buff(cf_buff->vaddr, &(cf_buff->cmd_len));
 }
 
+
 static void ade_overlay_layer_set_blk_rot_wdma(struct rot_block_info *blk, struct rot_layer_info  *rot_layer_info, struct cmdfile_buffer  *cf_buff)
 {
     u32 output_bpp;
@@ -5999,6 +6020,8 @@ static int ade_overlay_layer_set_blk_rot(struct ade_overlay_pipe *pipe, struct a
 
     return 0;
 }
+
+
 
 /****************  CMD QUEUE CFG end *******************/
 
@@ -6419,6 +6442,7 @@ int ade_overlay_commit(struct ade_compose_data_type *ade_pri_data, struct overla
     int    rslt = 0;
     u32    i;
 
+
     BUG_ON((ade_pri_data == NULL) || (comp_info == NULL));
 
     overlay_ctl  = &(ade_pri_data->overlay_ctl);
@@ -6455,6 +6479,7 @@ int ade_overlay_commit(struct ade_compose_data_type *ade_pri_data, struct overla
 
         ade_overlay_commit_set_rotation(overlay_ctl, pcomp_info, cf_buff, ade_base);
     }
+
 
     /**************2, config after compose SCL2 ********************/
     if (commit_uint.bit_scl2) {
@@ -6595,6 +6620,7 @@ int ade_overlay_refresh(struct ade_compose_data_type    *ade_pri_data, u32 refre
 
     return 0;
 }
+
 
 /* ade_overlay_layer_set: it can be use to block rot, or scl, or ctran once, if the channel
  * support it. such as: use ch1/ch6 to block rotate, use ch5/ch6 to make yuv2rgb, or use ch1/ch5/ch6
@@ -7099,6 +7125,7 @@ int ade_fb_start_video_idle(struct balong_fb_data_type *balongfd)
     return 0;
 }
 
+
 void ade_set_medianoc_for_dfs(struct balong_fb_data_type *balongfd)
 {
     u32  tmp1 = 0;
@@ -7191,6 +7218,7 @@ void ade_core_power_off(struct balong_fb_data_type *balongfd)
     }
 
 }
+
 
 int ade_fb_resume(struct fb_info *info)
 {
@@ -7430,6 +7458,7 @@ int ade_fb_enable(struct fb_info *info)
 {
 
 }
+
 
 /******************************SBL************************************/
 int ade_sbl_ctrl_set(struct balong_fb_data_type *balongfd)

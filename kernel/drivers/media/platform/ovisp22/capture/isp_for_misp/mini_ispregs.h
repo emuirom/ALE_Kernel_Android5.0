@@ -140,7 +140,6 @@ struct mini_isp_reg_t mini_isp_regs_list[] = {
         {0x1d8de, 0x00},
         {0x1d8df, 0x00},
 
-	/* OVISP CTAWB setting for Long Exposure (HDR/3D)  h00206029 20120529 */
 	{0x66206, 0x00}, //center(cwf) window threshold D0
 	{0x66207, 0x00}, //A threshold, range DX  0x15
 	{0x66208, 0x00}, //day threshold, range DY 0xd
@@ -326,7 +325,6 @@ struct mini_isp_reg_t mini_isp_regs_list[] = {
 
 
 	/* OVISP LENC setting for D65 Long Exposure (HDR/3D) */
-	//Y channel re-back to old version(do not plus 8) 20120821 by y00215412
 	{0x1c264, 0x00},//Y1
 	{0x1c265, 0x00},
 	{0x1c266, 0x00},

@@ -47,21 +47,7 @@ extern int check_secure_mode(void);
   3 函数实现
 *****************************************************************************/
 
-/*****************************************************************************
- 函 数 名  : drv_hifi_power_up
- 功能描述  : 设置HIFI系统控制器
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : void
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年8月29日
-    作    者   : 刘慈红 lKF71598
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 void drv_hifi_power_up(void)
 {
     /*虚实地址转换*/
@@ -136,21 +122,7 @@ void drv_hifi_power_up(void)
 #endif
 }
 
-/*****************************************************************************
- 函 数 名  : drv_hifi_phy2virt
- 功能描述  : Hifi段地址转换
- 输入参数  : share_addr_base 共享内存基地址
- 输出参数  : 无
- 返 回 值  : void
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年8月29日
-    作    者   : 刘慈红 lKF71598
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 void drv_hifi_phy2virt(unsigned int *sec_addr)
 {
     if (*sec_addr >= HIFI_PHY2VIRT_BEGIN_ADDR && *sec_addr <= HIFI_PHY2VIRT_END_ADDR) {
@@ -158,21 +130,7 @@ void drv_hifi_phy2virt(unsigned int *sec_addr)
     }
 }
 
-/*****************************************************************************
- 函 数 名  : drv_hifi_fill_mb_info
- 功能描述  : 填充Hifi邮箱地址信息
- 输入参数  : addr
- 输出参数  : 无
- 返 回 值  : void
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年8月29日
-    作    者   : 刘慈红 lKF71598
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 void drv_hifi_fill_mb_info(unsigned long addr)
 {
     CARM_HIFI_DYN_ADDR_SHARE_STRU *mb_addr;
@@ -199,21 +157,7 @@ void drv_hifi_fill_mb_info(unsigned long addr)
 
 }
 
-/*****************************************************************************
- 函 数 名  : drv_hifi_init_mem
- 功能描述  : 初始化share memery
- 输入参数  : share_addr_base 共享内存基地址
- 输出参数  : 无
- 返 回 值  : void
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年8月29日
-    作    者   : 刘慈红 lKF71598
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 void drv_hifi_init_mem(unsigned int* share_addr_base)
 {
     struct drv_hifi_sec_load_info *sec_info;
@@ -229,23 +173,7 @@ void drv_hifi_init_mem(unsigned int* share_addr_base)
 }
 
 
-/*****************************************************************************
- 函 数 名  : drv_hifi_check_img_head
- 功能描述  : 检查Hifi镜像是否正确
- 输入参数  : img_head 镜像头指针
-             length 镜像数据长度
- 输出参数  : 无
- 返 回 值  : int
-            成功返回 0，失败返回 -1
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年8月30日
-    作    者   : 刘慈红 lKF71598
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 int drv_hifi_check_img_head(struct drv_hifi_image_head *img_head, unsigned length)
 {
     /* check image size and sections num */
@@ -256,24 +184,6 @@ int drv_hifi_check_img_head(struct drv_hifi_image_head *img_head, unsigned lengt
 
     return BSP_RESET_OK;
 }
-
-
-/*****************************************************************************
- 函 数 名  : drv_hifi_check_sections
- 功能描述  : 检查Hifi段信息是否正确
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : int
-             成功返回 0，失败返回 -1
- 调用函数  :
- 被调函数  :
-
- 修改历史      :
-  1.日    期   : 2012年8月30日
-    作    者   : 刘慈红 lKF71598
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 int drv_hifi_check_sections(struct drv_hifi_image_head *img_head,
                                  struct drv_hifi_image_sec *img_sec)
 {
@@ -327,24 +237,6 @@ static void *memcpy_local(void *dest, const void *src, unsigned int count)
 #endif
 	return dest;
 }
-/*****************************************************************************
- 函 数 名  : drv_hifi_load_sec
- 功能描述  : Hifi按每段加载到内存
- 输入参数  : img_head 镜像头指针
-             img_buf 镜像读到内存的指针
-             share_mem 存放非单次加载段信息的内存
- 输出参数  : 无
- 返 回 值  : int
-             成功返回 0，失败返回 -1
- 调用函数  :
- 被调函数  :
-
- 修改历史      :
-  1.日    期   : 2012年8月30日
-    作    者   : 刘慈红 lKF71598
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 int drv_hifi_load_sec(void *img_buf, unsigned int* share_mem)
 {
     struct drv_hifi_sec_load_info *sec_info;
@@ -469,23 +361,7 @@ int drv_hifi_load_sec(void *img_buf, unsigned int* share_mem)
 
 }
 
-/*****************************************************************************
- 函 数 名  : drv_hifi_read_image
- 功能描述  : 读取Hifi镜像
- 输入参数  : void
- 输出参数  : img_head hifi镜像头信息
-             img_buf  hifi镜像信息
- 返 回 值  : int
-             成功返回 0，失败返回 -1
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年8月29日
-    作    者   : 刘慈红 lKF71598
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 int drv_hifi_read_image(void *img_head, void **img_buf)
 {
     struct drv_hifi_image_head *head = NULL;
@@ -531,22 +407,7 @@ int drv_hifi_read_image(void *img_head, void **img_buf)
     return BSP_RESET_OK;
 }
 
-/*****************************************************************************
- 函 数 名  : image_verification
- 功能描述  : hifi镜像校验桩函数
- 输入参数  : void
- 输出参数  : 无
- 返 回 值  : int
-             成功返回 0，失败返回 -1
- 调用函数  :
- 被调函数  :
 
- 修改历史      :
-  1.日    期   : 2012年8月29日
-    作    者   : 刘慈红 lKF71598
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 int image_verification(void **img_buf)
 {
 #ifdef BSP_C_HIFI_RESET_ALONE_SEC_FEATURE
@@ -567,24 +428,6 @@ int image_verification(void **img_buf)
 #endif
     return BSP_RESET_OK;
 }
-
-/*****************************************************************************
- 函 数 名  : execute_load_hifi
- 功能描述  : 完成Hifi镜像加载
- 输入参数  : safe_load 0为安全启动，1为非安全启动
-             share_mem 存放非单次加载段的共享memery
- 输出参数  : 无
- 返 回 值  : int
-             加载成功返回0，加载失败返回-1
- 调用函数  :
- 被调函数  :
-
- 修改历史      :
-  1.日    期   : 2013年4月22日
-    作    者   : 袁旦 00145322
-    修改内容   : 新生成函数
-
-*****************************************************************************/
 int  execute_load_hifi(int safe_load, unsigned long share_mem)
 {
     void *img_buf  = NULL;

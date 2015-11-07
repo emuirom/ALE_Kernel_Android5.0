@@ -302,6 +302,7 @@ void mini_relocate_camera_sensor_by_name(sensor_index_t sensor_index,char *senso
 	camera_sensor **sensor_array = NULL;
     camera_sensor *target_sensor = NULL;
 
+
 	if (sensor_index >= CAMERA_SENSOR_MAX) {
 		print_error("invalid sensor index [%d]", sensor_index);
 		return ;
@@ -332,6 +333,8 @@ void mini_relocate_camera_sensor_by_name(sensor_index_t sensor_index,char *senso
 }
 EXPORT_SYMBOL(mini_relocate_camera_sensor_by_name);
 
+
+
 /*
  **************************************************************************
  * FunctionName: get_camera_sensor_from_array;
@@ -346,6 +349,7 @@ mini_camera_sensor *mini_get_camera_sensor_from_array(sensor_index_t sensor_inde
 {
 	int i = 0;
 	mini_camera_sensor **sensor_array = NULL;
+
 
 	if (sensor_index >= CAMERA_SENSOR_MAX) {
 		print_error("invalid sensor index [%d]", sensor_index);
@@ -682,7 +686,6 @@ EXPORT_SYMBOL(mini_unregister_camera_flash);
 int mini_camera_power_core_ldo(camera_power_state power)
 {
 	int ret = 0;
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/17, begin */
 
         /*V9R1 do not need this to power sensor core vcc*/
 
@@ -717,7 +720,6 @@ int mini_camera_power_core_ldo(camera_power_state power)
 		gpio_free(GPIO_21_5);
 	}
 #endif
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/17, end */
 
 	return ret;
 }
@@ -734,7 +736,6 @@ EXPORT_SYMBOL(mini_camera_power_core_ldo);
  * Other       : NA;
  **************************************************************************
  */
- /* revise by c00220250 to remove compile warnning, 20131225 */
  #if 0
 static void set_camera_timing_type(int status)
 {
@@ -788,7 +789,6 @@ int mini_camera_power_id_gpio(camera_power_state power)
 	int ret = 0;
 
 	print_debug("enter %s", __FUNCTION__);
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/17, begin */
 
         /*FIXME:on V9R1 do not have this id gpio*/
 
@@ -854,7 +854,6 @@ int mini_camera_power_id_gpio(camera_power_state power)
 		}
 	}
 #endif
-                /* Modified  by w00199382 for isp 2.2 , 2012/10/17, end */
 
 	return ret;
 }

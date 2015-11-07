@@ -2026,6 +2026,7 @@ S: 370 01  Ceske Budejovice
 S: Czech Republic
 
 N: Bas Laarhoven
+E: sjml@xs4all.nl
 D: Loadable modules and ftape driver
 S: J. Obrechtstr 23
 S: NL-5216 GP 's-Hertogenbosch
@@ -3988,6 +3989,7 @@ W: http://www.misterjones.org
 D: MD driver
 D: EISA/sysfs subsystem
 S: France
+
 
 # Don't add your name here, unless you really _are_ after Marc
 # alphabetically. Leonard used to be very proud of being the 

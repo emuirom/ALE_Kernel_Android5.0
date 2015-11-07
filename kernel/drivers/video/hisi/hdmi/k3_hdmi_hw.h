@@ -130,6 +130,7 @@
 #define   BIT_INT_KSV_READY                 (0x80)
 #define HDMI_CORE_SYS_VID_BLANK1           0x12Cul
 
+
 /* HDMI IP Core Audio Video */
 #define HDMI_CORE_AV_HDMI_CTRL             0xBCul
 #define HDMI_CORE_AV_DPD                   0xF4ul
@@ -164,6 +165,7 @@
 #define   BIT_RI_CMD_BCAP_EN                (0x02)  /* Enable polling of the BCAP "done" bit (KSV FIFO done 0x40[5]). */
 #define   BIT_RI_CMD_RI_EN                  (0x01)  /* Enable Ri Check. Need to check the Ri On bit (0x026[0]) for firmware handshaking. */
 #define HDMI_CORE_SYS_EPCM                (0xFA*4)  // 0x3E8ul  /* bit5 load ksv */
+
 
 #define HDMI_CORE_AV_AVI_DBYTE             0x110ul
 #define HDMI_CORE_AV_AVI_DBYTE_ELSIZE      0x4ul

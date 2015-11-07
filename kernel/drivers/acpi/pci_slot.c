@@ -10,6 +10,7 @@
  *  	Alex Chiang <achiang@hp.com>
  *
  *  Copyright (C) 2013 Huawei Tech. Co., Ltd.
+ *	Jiang Liu <jiang.liu@huawei.com>
  *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms and conditions of the GNU General Public License,

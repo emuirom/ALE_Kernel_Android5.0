@@ -44,6 +44,7 @@
 #include "hi6xxx_hkadc_ctrl.h"
 /*#include "mdrv_temp_cfg.h"*/
 
+
 #define HKADC_ERRO        1
 
 #define HKADC_CLASS_NAME   "hkadc_debug"

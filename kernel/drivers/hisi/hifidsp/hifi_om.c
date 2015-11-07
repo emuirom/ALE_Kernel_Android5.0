@@ -522,6 +522,7 @@ static int hifi_dump_dsp_thread(void *p)
 		time_diff = time_now - g_om_data.pre_dump_timestamp;
 		g_om_data.pre_dump_timestamp = time_now;
 
+
 		hifi_info_addr = (unsigned char*)ioremap_wc(DRV_DSP_STACK_TO_MEM, DRV_DSP_STACK_TO_MEM_SIZE);
 		if (NULL == hifi_info_addr) {
 			loge("dsp log ioremap_wc hifi_info_addr fail.\n");
@@ -652,6 +653,7 @@ void hifi_om_init(struct platform_device *dev, unsigned char* hifi_priv_base_vir
 #ifdef PLATFORM_HI3XXX
 	g_om_data.dsp_debug_level = 2; /*info level*/
 	g_om_data.first_dump_log = true;
+
 
 	g_om_data.dsp_panic_mark = (unsigned int*)(hifi_priv_base_virt + (DRV_DSP_PANIC_MARK - HIFI_BASE_ADDR));
 	g_om_data.dsp_bin_addr = (char*)(hifi_priv_base_virt + (HIFI_RUN_LOCATION - HIFI_BASE_ADDR));

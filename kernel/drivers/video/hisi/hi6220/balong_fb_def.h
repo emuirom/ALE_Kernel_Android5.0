@@ -159,6 +159,9 @@ void balongfb_loge_top_info(const char* fmt, ...);
 #define balongfb_logi_top_info(fmt, ...)
 #define balongfb_logd_top_info(fmt, ...)
 
+
+
+
 #endif /* CONFIG_DEBUG_FS */
 
 #endif /* __BALONG_FB_DEF_H__ */

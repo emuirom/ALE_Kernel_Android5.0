@@ -44,6 +44,7 @@
 /*ade set core rate command mask*/
 #define SET_CORE_RATE_IMMEDIATELY (0x1)
 
+
 #define ADE_IOCTL_MAGIC HISIFB_IOCTL_MAGIC
 #define FB_CURSOR  _IOW(ADE_IOCTL_MAGIC, 130, struct fb_cursor)
 
@@ -111,6 +112,7 @@ enum ADE_FORMAT {
     ADE_FORMAT_NOT_SUPPORT = 800
 };
 typedef unsigned int    ADE_FORMAT_UINT32;
+
 
 enum ADE_SCL_FORMAT {
     ADE_SCL_ARGB888 = 0,
@@ -525,4 +527,6 @@ struct clock_rate_info {
 };
 
 #endif /*_BALONG_ADE_H_*/
+
+
 

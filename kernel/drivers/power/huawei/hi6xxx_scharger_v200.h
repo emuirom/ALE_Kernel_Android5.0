@@ -60,6 +60,7 @@
 #define BACKUP_EXIST_MAX_MV                    (1900)
 #define HKADC9                                 (9)
 
+
 /*status reg0*/
 #define CHG_STATUS0                     	(SOC_SCHARGER_STATUS0_ADDR(0))
 #define CHG_STATUS0_OTG_ON              	(1 << SOC_SCHARGER_STATUS0_otg_on_START)
@@ -155,6 +156,7 @@
 #define CHG_TERM_ICHG_150MA     			(150)
 #define CHG_TERM_ICHG_MAX       			(200)
 #define CHG_TERM_ICHG_STEP_50   			(50)
+
 
 /*pre voltage and current and batfet control Register CHG_REG0*/
 #define CHG_PRE_VOL_CURRENT_BATFET_REG  	(SOC_SCHARGER_CHG_REG0_ADDR(0))

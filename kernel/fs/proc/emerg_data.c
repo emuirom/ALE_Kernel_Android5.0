@@ -18,6 +18,7 @@ struct proc_dir_entry *emerg_data = NULL;
 extern unsigned int get_datamount_flag(void);
 extern void set_datamount_flag(int value);
 
+
 static int emergdata_info_show(struct seq_file *m, void *v)
 {
 	 int len = 0;
@@ -60,6 +61,7 @@ static int emergdata_open(struct inode *inode, struct file *file)
 	return single_open(file, emergdata_info_show, NULL);
 }
 
+
 static const struct file_operations emergdata_proc_fops = {
 	.open		= emergdata_open,
 	.read		= seq_read,
@@ -68,10 +70,14 @@ static const struct file_operations emergdata_proc_fops = {
 	.release	= single_release,
 };
 
+
 static int __init emergdata_proc_init(void) {	
 	proc_create(EMERGDATA_NAME, 0660, NULL, &emergdata_proc_fops);
 	return 0;
 }
 
+
+
 module_init(emergdata_proc_init);
+
 

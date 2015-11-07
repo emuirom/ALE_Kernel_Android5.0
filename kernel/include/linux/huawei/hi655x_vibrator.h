@@ -31,6 +31,7 @@
 #define DR2_TEST_MODE_CLR	(0x8E)
 #define DR2_OT_EN	(1 << 0)
 
+
 #define DR2_OT_SEL_10		10
 #define DR2_OT_SEL_20		20
 #define DR2_OT_SEL_40		40
@@ -77,6 +78,7 @@
 
 //#define      DR2_DISABLE     (0xFE) /* linearity  disable */
 #define	DR2_DISABLE	(0xFC) /* direct current disable */
+
 
 #define	TIMEOUT_MIN 	(35)
 

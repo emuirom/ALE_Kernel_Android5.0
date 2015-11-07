@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00145353
+ * Email:	  alan.hefeng@huawei.com
  * Date:	  2013-12-05
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,6 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 
 #include <linux/compiler.h>
 #include <linux/fs.h>
@@ -60,6 +63,8 @@ typedef struct _altek6045_private_data_t {
 	unsigned int pin[ISP_MAX];
 }altek6045_private_data_t;
 
+
+
 enum {
 	ALTEK6045_PIPE_0 = 0,
 	ALTEK6045_PIPE_1 = 1,
@@ -76,6 +81,7 @@ enum altek6045_pipe_test_stage {
 	ALTEK6045_PIPE_TEST_DONE = 5,
 	ALTEK6045_PIPE_TEST_MAX = 6,
 };
+
 
 typedef struct _tag_altek6045
 {
@@ -246,6 +252,7 @@ static ssize_t altel6045_powerctrl_store(struct device *dev,
 	return count;
 }
 
+
 static struct device_attribute altel6045_powerctrl =
     __ATTR(power_ctrl, 0664, altel6045_powerctrl_show, altel6045_powerctrl_store);
 
@@ -291,6 +298,7 @@ static ssize_t altel6045_test_pipe_store(struct device_driver *drv,
 								const char *buf, size_t count);
 static DRIVER_ATTR(test_pipe, 0664, altel6045_test_pipe_show, altel6045_test_pipe_store);
 
+
 static ssize_t altel6045_test_pipe_store(struct device_driver *drv,
 												  const char *buf, size_t count)
 {
@@ -317,6 +325,8 @@ static ssize_t altel6045_test_pipe_store(struct device_driver *drv,
             cam_info("%s misp set  DBC mode to off",__func__);
             return count;
         }
+
+
 
 	/* input:test_pipe=0 test_pipe=1 test_pipe=2 */
 	if (0 == strncmp("test_pipe", pos, strlen("test_pipe"))) {
@@ -394,6 +404,7 @@ err:
 	msleep(100);
 	return count;
 }
+
 
 static ssize_t altel6045_test_pipe_show(struct device_driver *drv,
 												char *buf)

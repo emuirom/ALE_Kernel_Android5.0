@@ -1,15 +1,6 @@
 #ifndef _HISI_SMARTSTAR_COUL_H_
 #define _HISI_SMARTSTAR_COUL_H_
-/*****************************************************************************************
-* Filename:	hisi_smartstar_coul.h
-*
-* Discription:  smartstar coulometer headfile.
-* Copyright: 	(C) 2013 huawei.
-*
-* revision history:
-* 2014-1-15 s00249479 -v1.0
-*
-******************************************************************************************/
+
 #include <linux/kernel.h>
 #include <linux/slab.h>
 #include <linux/module.h>
@@ -57,7 +48,7 @@
 #define SMARTSTAR_VOL_INT_BASE    0x14d
 #define SMARTSTAR_OFFSET_CURRENT 0x14f
 #define SMARTSTAR_OFFSET_VOLTAGE 0x151
-#define SMARTSTAR_OCV_VOLTAGE_BASE  0x153  /* s00249479 */
+#define SMARTSTAR_OCV_VOLTAGE_BASE  0x153
 #define SMARTSTAR_VOL_FIFO_BASE 0x155
 #define SMARTSTAR_CUR_FIFO_BASE 0x17d
 #define SMARTSTAR_COUL_STATE_REG 0x1A6

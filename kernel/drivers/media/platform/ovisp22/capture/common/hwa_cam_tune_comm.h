@@ -21,6 +21,7 @@
 #ifndef HWA_CAM_TUNE_H_COMM_INCLUDED
 #define HWA_CAM_TUNE_H_COMM_INCLUDED
 
+
 //#include <mach/boardid.h>
 
 #define V4L2_CID_GET_MULTI_ISP_REG				(V4L2_CID_HWA_BASE + 0)
@@ -63,6 +64,7 @@
 
 #define V4L2_CID_GET_OTP_STATUS                   (V4L2_CID_HWA_BASE + 53)
 
+
 typedef struct hwq_multi_reg_data{
 	u32 length;
         u32 reserved32;
@@ -76,6 +78,7 @@ typedef struct hwq_multi_reg_data{
            u64 reserved64_2;
         };
 }hwq_multi_reg_data;
+
 
 #endif /*HWA_CAM_TUNE_H_INCLUDED */
 

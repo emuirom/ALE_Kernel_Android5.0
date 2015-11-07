@@ -1,24 +1,5 @@
-/*
- *  Hisilicon K3 SOC camera driver source file
- *
- *  Copyright (C) Huawei Technology Co., Ltd.
- *
- * Date:	  2013-12-11
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+
+
 
 #include <linux/compiler.h>
 #include <linux/fs.h>
@@ -186,6 +167,7 @@ static hwisp_notify_vtbl_t s_notify_hwisp =
     .vsync = hwisp_notify_vsync_time,
 };
 
+
 static long
 hwisp_vo_create_isp_stream(
         hwisp_t* isp,
@@ -311,6 +293,7 @@ hwisp_subdev_unsubscribe_event(
     return v4l2_event_unsubscribe(fh, sub);
 }
 
+
 static struct v4l2_subdev_core_ops
 s_subdev_core_ops_hwisp =
 {
@@ -369,7 +352,6 @@ alloc_fail:
     return rc;
 }
 
-/*added for memory hwisp_t leak by y00251056 at 2014/12/18 start **/
 #define HwtoHwisp(isp_intf) container_of(isp_intf, hwisp_t, hw)
 void
 hwisp_unregister(hwisp_intf_t* isp_intf)
@@ -384,5 +366,4 @@ hwisp_unregister(hwisp_intf_t* isp_intf)
 
     kzfree(isp);
 }
-/*added for memory hwisp_t leak by y00251056 at 2014/12/18 end **/
 

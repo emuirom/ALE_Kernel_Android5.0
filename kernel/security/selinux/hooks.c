@@ -1234,6 +1234,14 @@ static int inode_doinit_with_dentry(struct inode *inode, struct dentry *opt_dent
 		goto out_unlock;
 
 	sbsec = inode->i_sb->s_security;
+
+	/* To prevent Null pointer exception */
+	if (!sbsec) {
+		printk(KERN_ERR "[SELinux] sbsec is NULL, inode->i_sb->s_security is already freed. \n");
+		rc = -EINVAL;
+		goto out_unlock;
+	}
+
 	if (!(sbsec->flags & SE_SBINITIALIZED)) {
 		/* Defer initialization until selinux_complete_init,
 		   after the initial policy is loaded and the security
@@ -1555,6 +1563,12 @@ static int inode_has_perm(const struct cred *cred,
 
 	sid = cred_sid(cred);
 	isec = inode->i_security;
+
+	/* To prevent Null pointer exception */
+	if (unlikely(!isec)){
+		printk(KERN_CRIT "[SELinux] isec is NULL, inode->i_security is already freed. \n");
+		return -EINVAL;
+	}
 
 	return avc_has_perm_flags(sid, isec->sid, isec->sclass, perms, adp, flags);
 }
@@ -3896,6 +3910,12 @@ static int sock_has_perm(struct task_struct *task, struct sock *sk, u32 perms)
 	struct common_audit_data ad;
 	struct lsm_network_audit net = {0,};
 	u32 tsid = task_sid(task);
+
+	/* To prevent Null pointer exception */
+	if (unlikely(!sksec)){
+		printk(KERN_CRIT "[SELinux] sksec is NULL, socket is already freed. \n");
+		return -EINVAL;
+	}
 
 	if (sksec->sid == SECINITSID_KERNEL)
 		return 0;

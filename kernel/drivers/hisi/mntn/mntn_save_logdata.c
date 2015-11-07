@@ -60,16 +60,7 @@ extern void sort(void *base, size_t num, size_t size,
 implement functions here
 ********************************************************************/
 
-/********************************************************************
-for: judge whether it is nogui
-input:
-output:
-return:
-1:nogui;0:gui
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 static int mntn_read_nogui_flag(void)
 {
     int ret = 0;
@@ -96,16 +87,7 @@ static int mntn_read_nogui_flag(void)
         return 0;
     }
 }
-/********************************************************************
-for: set relative reg to make sure that mcu sram can be accessed
-input:
-output:
-return:
-0:successful; -1:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 static int mntn_dump_sram_mcu_prepare(void)
 {
     void __iomem * sys_ctrl_addr;	
@@ -125,16 +107,7 @@ static int mntn_dump_sram_mcu_prepare(void)
     return 0;
 }
 
-/********************************************************************
-for: set relative reg after accessing mcu sram
-input:
-output:
-return:
-0:successful; -1:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 static int mntn_dump_sram_mcu_finish(void)
 {
     void __iomem * sys_ctrl_addr;
@@ -153,16 +126,7 @@ static int mntn_dump_sram_mcu_finish(void)
     return 0;
 }
 
-/********************************************************************
-for: get string of current time
-input:
-output:
-return:
-None
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 void mntn_get_cur_time_str(char *poutstr, unsigned int ulen)
 {
     struct tm     tm_rtc = {0};
@@ -176,17 +140,7 @@ void mntn_get_cur_time_str(char *poutstr, unsigned int ulen)
 	snprintf(poutstr, ulen, "%lu%.2d%.2d-%.2d%.2d%.2d", 1900 + tm_rtc.tm_year, tm_rtc.tm_mon + 1, tm_rtc.tm_mday, tm_rtc.tm_hour, tm_rtc.tm_min, tm_rtc.tm_sec);
     }
 }
-/********************************************************************
-for: do save data stored in virtual addr space into file
-input:
-viradd: virtual addr
-output:
-return:
-0:success;others:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_do_save_virtual_addr_log(unsigned char *viradd, unsigned int ulen, const char *ppath, const char *pfilename)
 {
     int iret = 0;
@@ -244,17 +198,6 @@ oper_over2:
     MNTN_FILESYS_PRINT(KERN_ERR"mntn_do_save_virtual_addr_log: over\n");
     return iret;
 }
-/********************************************************************
-for: do save data stored in physical addr space into file
-input:
-viradd: phy addr
-output:
-return:
-0:success;others:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
 int mntn_do_save_phy_addr_log(unsigned int phyadd, unsigned int ulen, const char *ppath, const char *pfilename)
 {
     int iret = 0;
@@ -270,17 +213,7 @@ int mntn_do_save_phy_addr_log(unsigned int phyadd, unsigned int ulen, const char
     iounmap(pdatabuf);
     return iret;
 }
-/********************************************************************
-for: do save reset reason into history.log
-input:
-preason: pointer of string to describe the reason of modem resetting, e.g panic, or wdt
-output:
-return:
-0:success;others:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_upadte_history_info(const char *ptimestr, const char *preason)
 {
     int iret = 0;
@@ -315,33 +248,12 @@ int mntn_upadte_history_info(const char *ptimestr, const char *preason)
 
     return iret;
 }
-/********************************************************************
-for: used for sorting dirs with name ascendingly.
-input:
-output:
-return:
-result ofstrncmp
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
 int mntn_str_cmp(const void *a, const void *b)
 {
     return strncmp((char *)a, (char *)b, MNTN_FILESYS_PURE_DIR_NAME_LEN);
 }
 
-/********************************************************************
-for: rm old log of a dir, if the total number of log has been the max 
-input:
-path: dir name
-unumber: the max number
-output:
-return:
-None
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 void mntn_rm_old_log(const char *ppath, unsigned int unumber)
 {
     char    fullpath_arr[MNTN_FULLPATH_STRING_LEN + 1] = {0};
@@ -381,17 +293,7 @@ void mntn_rm_old_log(const char *ppath, unsigned int unumber)
     kfree(pbuff);
 }
 
-/********************************************************************
-for: judge whether need to save log
-input:
-etype: reset module
-output:
-return:
-1: need to save; 0: needn't save
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_need_save_log(ereset_module etype)
 {
     unsigned int   uflag = 0;
@@ -424,17 +326,7 @@ int mntn_need_save_log(ereset_module etype)
 	return 1;
     }
 }
-/********************************************************************
-for: save log data when modem panic/wdt
-input:
-preason: pointer of string to describe the reason of modem resetting, e.g panic, or wdt
-output:
-return:
-0:success;others:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_mdm_reset_save_log(const char *preason)
 {
     int iret = 0;
@@ -447,12 +339,6 @@ int mntn_mdm_reset_save_log(const char *preason)
 	 return -1;
     }
 
-    if (mntn_need_save_log(BSP_RESET_MODULE_CCORE) == 0) 
-    {
-        MNTN_FILESYS_PRINT(KERN_ERR"mntn_err: Needn't save log data!\n");
-        return 0;
-    }
-	
     /*to remove old log data if there has been MAX_NUMBER logs.*/
     mntn_rm_old_log(MNTN_CP_LOGDIR, MNTN_MDM_LOG_MAX);
 
@@ -474,6 +360,12 @@ int mntn_mdm_reset_save_log(const char *preason)
         MNTN_FILESYS_PRINT(KERN_ERR"mntn_err: Fail to chown cp log dir!\n");
     }
 
+    if (mntn_need_save_log(BSP_RESET_MODULE_CCORE) == 0)
+    {
+        MNTN_FILESYS_PRINT(KERN_ERR"mntn_err: Needn't save all log data, just modem_log.bin\n");
+        iret = mntn_do_save_phy_addr_log(MODEM_DUMP_LOG_ADDR, MODEM_DUMP_LOG_SIZE, (const char*)fullpath_arr, MNTN_MODEM_LOG_FILE);
+        return iret;
+    }
     /*save acpu sram data*/
     iret += mntn_do_save_phy_addr_log(SOC_SRAM_OFF_BASE_ADDR, SRAM_SIZE, (const char*)fullpath_arr, MNTN_SRAME_ACPU_FILE);
 
@@ -517,17 +409,6 @@ int mntn_mdm_reset_save_log(const char *preason)
 oper_over:
     return iret;
 }
-/********************************************************************
-for: save log data when hifi reset
-input:
-preason: pointer of string to describe the reason of hifi resetting
-output:
-return:
-0:success;others:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
 int mntn_hifi_reset_save_log(const char *preason)
 {
     int iret = 0;
@@ -587,17 +468,7 @@ int mntn_hifi_reset_save_log(const char *preason)
 oper_over:
     return iret;
 }
-/********************************************************************
-for: save log data when mcu panic/wdt
-input:
-preason: pointer of string to describe the reason of mcu resetting, e.g panic, or wdt
-output:
-return:
-0:success;others:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_mcu_reset_save_log(const char *preason)
 {
     int iret = 0;

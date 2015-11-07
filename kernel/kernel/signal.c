@@ -1217,8 +1217,8 @@ int do_send_sig_info(int sig, struct siginfo *info, struct task_struct *p,
 
 	if (lock_task_sighand(p, &flags)) {
 #ifdef CONFIG_HUAWEI_KSTATE
-        if (sig == SIGKILL || sig == SIGTERM) {
-            kcollect(KCOLLECT_FREEZER_MASK, "[PID %d KILLED][SIG %d]", p->tgid, sig);
+        if (sig == SIGKILL || sig == SIGTERM || sig == SIGABRT) {
+            hwkillinfo(p->tgid, sig);
         }
 #endif
 		ret = send_signal(sig, info, p, group);

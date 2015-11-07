@@ -159,3 +159,4 @@ extern void cyttsp4_pr_buf(struct device *dev, u8 *pr_buf, u8 *dptr, int size,
 
 #endif /* _LINUX_CYTTSP4_CORE_H */
 
+

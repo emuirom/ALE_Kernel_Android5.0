@@ -16,16 +16,7 @@
 #include <linux/sort.h>
 #include "mntn_filesys.h"
 
-/********************************************************************
-for: to change the mode of a file/dir
-input:
-output:
-return:
-0:successful; -1:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_filesys_chmod(const char *filename, umode_t mode)
 {
     int    iret;
@@ -41,16 +32,7 @@ int mntn_filesys_chmod(const char *filename, umode_t mode)
     set_fs(old_fs);
     return iret;
 }
-/********************************************************************
-for: to change the owner of a file/dir
-input:
-output:
-return:
-0:successful; -1:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_filesys_chown(const char *filename, uid_t user, gid_t group)
 {
     int    iret;
@@ -67,16 +49,7 @@ int mntn_filesys_chown(const char *filename, uid_t user, gid_t group)
     return iret;
 }
 
-/********************************************************************
-for: to remove a file
-input:
-output:
-return:
-0:successful; -1:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_filesys_rm_file(const char *fullname)
 {
     int    iret;
@@ -101,16 +74,7 @@ int mntn_filesys_rm_file(const char *fullname)
     set_fs(old_fs);
     return 0;
 }
-/********************************************************************
-for: to remove all files in the dir pointed by path
-input:
-output:
-return:
-0:successful; -1:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_filesys_rm_all_file(const char *path)
 {
     struct kstat m_stat;
@@ -191,16 +155,7 @@ oper_over2:
 
     return ret;
 }
-/********************************************************************
-for: to remove a dir
-input:
-output:
-return:
-0:successful; others: fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_filesys_rm_dir(const char *dirname)
 {
     char *pdst = (char *)dirname;
@@ -231,16 +186,7 @@ int mntn_filesys_rm_dir(const char *dirname)
     set_fs(old_fs);
     return iret;
 }
-/********************************************************************
-for: to create a dir with 1 level name
-input:
-output:
-return:
-0:successful; others:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 static int __mntn_filesys_create_dir(char *path, umode_t umode)
 {
     int iret = 0;
@@ -259,16 +205,7 @@ static int __mntn_filesys_create_dir(char *path, umode_t umode)
     set_fs(old_fs);
     return 0;
 }
-/********************************************************************
-for: to create a dir with full path name
-input:
-output:
-return:
-0:successful; -1:fail
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_filesys_create_dir(const char *path, umode_t umode)
 {
     char cur_path[MNTN_FILESYS_FNAME_LEN] = {0};
@@ -298,20 +235,6 @@ int mntn_filesys_create_dir(const char *path, umode_t umode)
     }
     return 0;
 }
-/********************************************************************
-for: to list files or dirs in a dir.
-input:
-path: dir name;
-type: type, file or dir
-cnt: size of pout_namelist
-output:
-pout_namelist: file or dir name list, 64bytes/a name, 
-return:
-count number of list
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
 int mntn_filesys_dir_list(const char *path, char *pout_namelist, int cnt, int type)
 {
     struct kstat m_stat;
@@ -396,20 +319,7 @@ oper_over2:
     return tmp_cnt;
 }
 
-/********************************************************************
-for: to write the data in pbuf into file named pname. Create the file with mode if it dosen't exist.
-input:
-pname: file name including dir;
-pbuf_vir: VIRTUAL address;
-ulen: size in byte;
-mode: open mode.
-output:
-return:
-bytes writen into the file
-history:
-time			who			why
-20150205    l00212112     create
-********************************************************************/
+
 int mntn_filesys_write_log(const char *pname, void *pbuf_vir, unsigned int ulen, umode_t mode)
 {
     int bytes = 0;

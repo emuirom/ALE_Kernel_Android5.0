@@ -276,7 +276,6 @@ int inline mini_ispv1_gain2iso(int gain, bool summary)
 		iso /= 2;
 	}
 
-	/* modified by h00206029 2012-05-11 */
 	iso = (iso + 5) / 10 * 10;
 	return iso;
 }
@@ -302,6 +301,7 @@ u32 mini_get_writeback_cap_expo(void)
 {
 	u8 reg5 = GETREG8(COMMAND_REG5);
 	u32 expo = 0;
+
 
 	reg5 &= 0x3;
 	if (reg5 == 0 || reg5 == 2) {
@@ -352,16 +352,6 @@ out:
 	denominator_expo_time = (1000000/expo);
 	return denominator_expo_time;
 }
-
-/*
- **************************************************************************
- * FunctionName: mini_ispv1_get_awb_gain;
- * Description : call by mini_ispv1_preview_done_do_tune and ispv1_hw_set_default;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
 u32 mini_ispv1_get_awb_gain(int withShift)
 {
 	u16 b_gain, r_gain;
@@ -474,7 +464,6 @@ static void ispv1_calc_ev(u8 *target_low, u8 *target_high, int ev)
  */
 int mini_ispv1_set_ev(int ev)
 {
-	/* added by j00212990 */
 #ifdef OVISP_DEBUG_MODE
 	return 0;
 #endif
@@ -498,7 +487,6 @@ int mini_ispv1_set_ev(int ev)
 
 	scene_target_y_low = target_y_low;
 	scene_target_y_high = target_y_high;
-	/* added for focus AE by s00061250 2013-09-22 */
 	mini_save_target_high();
 
 	return ret;
@@ -580,7 +568,6 @@ int mini_ispv1_set_anti_banding(camera_anti_banding banding)
 	print_debug("enter %s", __func__);
 
 	return camera_agent_set_ANTIFLICKER(mini_this_ispdata->sensor->sensor_index,banding);//by wind
-        /* Modified  by w00199382 for isp 2.2 , 2013/1/8, begin */
 
 	switch (banding) {
 	case CAMERA_ANTI_BANDING_OFF:
@@ -610,7 +597,6 @@ int mini_ispv1_set_anti_banding(camera_anti_banding banding)
 		return -1;
 	}
 
-        /* Modified  by w00199382 for isp 2.2 , 2013/1/8, end */
 
 	SETREG8(REG_ISP_BANDFILTER_EN, 0x1);
 	SETREG8(REG_ISP_BANDFILTER_FLAG, op);
@@ -777,48 +763,38 @@ static int ispv1_set_saturation_done(camera_saturation saturation)
 
 	switch (saturation) {
 	case CAMERA_SATURATION_L2:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_U_SATURATION, 0x10);
 		SETREG8(REG_ISP_SDE_V_SATURATION, 0x10);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_SATURATION_L1:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_U_SATURATION, 0x28);
 		SETREG8(REG_ISP_SDE_V_SATURATION, 0x28);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_SATURATION_H0:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_U_SATURATION, 0x40);
 		SETREG8(REG_ISP_SDE_V_SATURATION, 0x40);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_SATURATION_H1:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_U_SATURATION, 0x58);
 		SETREG8(REG_ISP_SDE_V_SATURATION, 0x58);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_SATURATION_H2:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_U_SATURATION, 0x70);
 		SETREG8(REG_ISP_SDE_V_SATURATION, 0x70);
-		/* modify by zkf78283 end */
 		break;
 
 	default:
@@ -842,9 +818,7 @@ static int ispv1_set_contrast_done(camera_contrast contrast)
 	print_debug("enter %s, %d", __func__, contrast);
 
 	SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
-    /* modify by zkf78283 begin */
 	//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_CONTRAST_ENABLE);
-    /* modify by zkf78283 end */
 
 	mini_ispv1_switch_contrast(STATE_PREVIEW, contrast);
 
@@ -1065,7 +1039,7 @@ int mini_ispv1_set_scene(camera_scene scene)
              //SETREG8(REG_ISP_UV_ADJUST, UV_ADJUST_ENABLE);
 		SETREG8(REG_ISP_UV_ADJUST, uv_adjust_ctrl | ISP_UV_SATURATE_ADJUST_ENABLE);
 		SETREG8(REG_ISP_UV_SATURATION, uv_saturation[CAMERA_SCENE_LANDSPACE]);
-		mini_ispv1_set_focus_mode(CAMERA_FOCUS_INFINITY); /* y00215412 revise 2012-08-10 */
+		mini_ispv1_set_focus_mode(CAMERA_FOCUS_INFINITY);
 		mini_ispv1_set_awb(CAMERA_WHITEBALANCE_AUTO);
 		break;
 
@@ -1085,7 +1059,7 @@ int mini_ispv1_set_scene(camera_scene scene)
 		//SETREG8(REG_ISP_UV_ADJUST, UV_ADJUST_DISABLE);
 		SETREG8(REG_ISP_UV_ADJUST, uv_adjust_ctrl & (~ISP_UV_SATURATE_ADJUST_ENABLE));
 		SETREG8(REG_ISP_UV_SATURATION, uv_saturation[CAMERA_SCENE_NIGHT]);
-		mini_ispv1_set_focus_mode(CAMERA_FOCUS_CONTINUOUS_PICTURE); /* y00215412 revise 2012-08-10 */
+		mini_ispv1_set_focus_mode(CAMERA_FOCUS_CONTINUOUS_PICTURE);
 		mini_ispv1_set_awb(CAMERA_WHITEBALANCE_AUTO);
 		break;
 
@@ -1181,7 +1155,7 @@ int mini_ispv1_set_scene(camera_scene scene)
 		//SETREG8(REG_ISP_UV_ADJUST, UV_ADJUST_ENABLE);
 		SETREG8(REG_ISP_UV_ADJUST, uv_adjust_ctrl | ISP_UV_SATURATE_ADJUST_ENABLE);
 		SETREG8(REG_ISP_UV_SATURATION, uv_saturation[CAMERA_SCENE_FIREWORKS]);
-		mini_ispv1_set_focus_mode(CAMERA_FOCUS_INFINITY); /* y00215412 revise 2012-08-10 */
+		mini_ispv1_set_focus_mode(CAMERA_FOCUS_INFINITY);
 		mini_ispv1_set_awb(CAMERA_WHITEBALANCE_AUTO);
 		break;
 
@@ -1207,11 +1181,7 @@ int mini_ispv1_set_scene(camera_scene scene)
 
 	case CAMERA_SCENE_FLOWERS:
 		print_info("case CAMERA_SCENE_FLOWER ");
-		/*
-		 * Turn off the flash
-		 * set focus mode to Macro,
-		 * revised by y00215412 2012-06-27 for ev bug from scene snow/beach to flowers
-		 */
+
 		ispv1_change_fps(CAMERA_FRAME_RATE_AUTO);
 		ispv1_change_max_exposure(mini_this_ispdata->sensor, CAMERA_MAX_EXPOSURE_RESUME);
 		SETREG8(REG_ISP_TARGET_Y_LOW, target_y_low);
@@ -1264,43 +1234,33 @@ static int ispv1_set_brightness_done(camera_brightness brightness)
 
 	switch (brightness) {
 	case CAMERA_BRIGHTNESS_L2:
-		/* modify by zkf78283 beign */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_BRIGHTNESS_ENABLE);
 		SETREG8(REG_ISP_SDE_SIGN_SET, GETREG8(REG_ISP_SDE_SIGN_SET) | ISP_BRIGHTNESS_SIGN_NEGATIVE);
-		/* modify by zkf78283 beign */
 		break;
 
 	case CAMERA_BRIGHTNESS_L1:
-		/* modify by zkf78283 beign */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_BRIGHTNESS_ENABLE);
 		SETREG8(REG_ISP_SDE_SIGN_SET, GETREG8(REG_ISP_SDE_SIGN_SET) | ISP_BRIGHTNESS_SIGN_NEGATIVE);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_BRIGHTNESS_H0:
-		/* modify by zkf78283 beign */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_BRIGHTNESS_ENABLE);
 		SETREG8(REG_ISP_SDE_SIGN_SET, GETREG8(REG_ISP_SDE_SIGN_SET) & (~ISP_BRIGHTNESS_SIGN_NEGATIVE));
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_BRIGHTNESS_H1:
-		/* modify by zkf78283 beign */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_BRIGHTNESS_ENABLE);
 		SETREG8(REG_ISP_SDE_SIGN_SET, GETREG8(REG_ISP_SDE_SIGN_SET) & (~ISP_BRIGHTNESS_SIGN_NEGATIVE));
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_BRIGHTNESS_H2:
-		/* modify by zkf78283 beign */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, GETREG8(REG_ISP_SDE_CTRL) | ISP_BRIGHTNESS_ENABLE);
 		SETREG8(REG_ISP_SDE_SIGN_SET, GETREG8(REG_ISP_SDE_SIGN_SET) & (~ISP_BRIGHTNESS_SIGN_NEGATIVE));
-		/* modify by zkf78283 end */
 		break;
 
 	default:
@@ -1370,7 +1330,6 @@ int mini_ispv1_switch_brightness(camera_state state, camera_brightness brightnes
 	return 0;
 }
 
-/* Add effect, h00206029 20120204 */
 int mini_ispv1_set_effect(camera_effects effect)
 {
 	print_debug("enter %s, %d", __func__, effect);
@@ -1385,7 +1344,6 @@ static int ispv1_set_effect_done(camera_effects effect)
 
 	switch (effect) {
 	case CAMERA_EFFECT_NONE:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, ISP_CONTRAST_ENABLE | ISP_BRIGHTNESS_ENABLE | ISP_SATURATION_ENABLE);
 		SETREG8(REG_ISP_SDE_CTRL0C_CONTRAST, GETREG8(REG_ISP_SDE_CTRL0C_CONTRAST) & ~0x3);
@@ -1404,11 +1362,9 @@ static int ispv1_set_effect_done(camera_effects effect)
 		SETREG8(REG_ISP_SDE_SIGN_SET, 0x0);
 		SETREG8(REG_ISP_SDE_CTRL1A_HTHRE, GETREG8(REG_ISP_SDE_CTRL1A_HTHRE) & ~0x3f);
 		SETREG8(REG_ISP_SDE_CTRL1B_HGAIN, 0x4);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_EFFECT_MONO:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, ISP_MONO_EFFECT_ENABLE);
 		SETREG8(REG_ISP_SDE_CTRL0C_CONTRAST, GETREG8(REG_ISP_SDE_CTRL0C_CONTRAST) & ~0x3);
@@ -1427,11 +1383,9 @@ static int ispv1_set_effect_done(camera_effects effect)
 		SETREG8(REG_ISP_SDE_SIGN_SET, 0x0);
 		SETREG8(REG_ISP_SDE_CTRL1A_HTHRE, GETREG8(REG_ISP_SDE_CTRL1A_HTHRE) & ~0x3f);
 		SETREG8(REG_ISP_SDE_CTRL1B_HGAIN, 0x4);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_EFFECT_NEGATIVE:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, ISP_NEGATIVE_EFFECT_ENABLE);
 		SETREG8(REG_ISP_SDE_CTRL0C_CONTRAST, GETREG8(REG_ISP_SDE_CTRL0C_CONTRAST) | 0x2);
@@ -1450,11 +1404,9 @@ static int ispv1_set_effect_done(camera_effects effect)
 		SETREG8(REG_ISP_SDE_SIGN_SET, 0x0);
 		SETREG8(REG_ISP_SDE_CTRL1A_HTHRE, GETREG8(REG_ISP_SDE_CTRL1A_HTHRE) & ~0x3f);
 		SETREG8(REG_ISP_SDE_CTRL1B_HGAIN, 0x84);
-		/* modify by zkf78283 end */
 		break;
 
 	case CAMERA_EFFECT_SEPIA:
-		/* modify by zkf78283 begin */
 		SETREG8(REG_ISP_TOP2, GETREG8(REG_ISP_TOP2) | ISP_SDE_ENABLE);
 		//SETREG8(REG_ISP_SDE_CTRL, ISP_FIX_U_ENABLE | ISP_FIX_V_ENABLE);
 		//SETREG8(REG_ISP_SDE_U_REG, 0x30);
@@ -1475,7 +1427,6 @@ static int ispv1_set_effect_done(camera_effects effect)
 		SETREG8(REG_ISP_SDE_SIGN_SET, 0x0);
 		SETREG8(REG_ISP_SDE_CTRL1A_HTHRE, GETREG8(REG_ISP_SDE_CTRL1A_HTHRE) & ~0x3f);
 		SETREG8(REG_ISP_SDE_CTRL1B_HGAIN, 0x4);
-		/* modify by zkf78283 end */
 		break;
 
 	default:
@@ -1488,7 +1439,6 @@ static int ispv1_set_effect_done(camera_effects effect)
 
 static int ispv1_set_effect_saturation_done(camera_effects effect, camera_saturation saturation, camera_contrast contrast, camera_brightness brightness)
 {
-        /* Modified  by w00199382 for isp 2.2 , 2012/11/2, begin */
 	if(effect != CAMERA_EFFECT_NONE) {
 		ispv1_set_effect_done(effect);
 	} else {
@@ -1498,7 +1448,6 @@ static int ispv1_set_effect_saturation_done(camera_effects effect, camera_satura
 		ispv1_set_saturation_done(saturation);
 	}
 	return 0;
-        /* Modified  by w00199382 for isp 2.2 , 2012/11/2, end */
 
 }
 
@@ -1548,7 +1497,6 @@ void mini_ispv1_cmd_id_do_ecgc(struct work_struct *work)
 
 	print_debug("enter %s, cmd id 0x%x", __func__, mini_isp_hw_data.aec_cmd_id);
 
-	/* added by y00215412 for hdr movie mode */
 	if (mini_ispv1_is_hdr_movie_mode() == true)
 	{
 		wait_flag =  GETREG8(REG_ISP_I2C_WAIT_SIGNAL);
@@ -1579,7 +1527,6 @@ void mini_ispv1_cmd_id_do_ecgc(struct work_struct *work)
 		{
 			print_error("firmware do no set  0x1c5a2 = 0x%x  ", GETREG8(REG_ISP_I2C_WAIT_SIGNAL));
 		}
-		/* Modified  by w00199382 for isp 2.2 , 2013/7/27, begin*/
 
 		return;
 	}
@@ -1597,7 +1544,6 @@ void mini_ispv1_cmd_id_do_ecgc(struct work_struct *work)
 					sensor->set_gain(gain);
 			}
 
-			/* Modified  by w00199382 for isp 2.2 , 2013/7/27, begin*/
 
 			/*firmware will up the signal and wait for drv down the flag then set sensor use i2c*/
 			wait_flag =  GETREG8(REG_ISP_I2C_WAIT_SIGNAL);
@@ -1610,7 +1556,7 @@ void mini_ispv1_cmd_id_do_ecgc(struct work_struct *work)
 			{
 				print_error("firmware do no set  0x1c5a2 = 0x%x  ", GETREG8(REG_ISP_I2C_WAIT_SIGNAL));
 			}
-			/* Modified  by w00199382 for isp 2.2 , 2013/7/27, begin*/
+
 
 	} else {
 		print_error("%s:unknow cmd id", __func__);
@@ -1712,7 +1658,6 @@ static bool ispv1_change_frame_rate(
 
 	print_debug("enter %s: state %d, frame_rate_level %d", __func__, *state, frame_rate_level);
 
-	/* add by y00215412 2012-11-05, state CAMERA_EXPO_PRE_REDUCEx is highest priority. */
 	if (*state == CAMERA_EXPO_PRE_REDUCE1) {
 		/* desired level should go to FPS_HIGH level */
 		level_changed = true;
@@ -1816,11 +1761,6 @@ error_out:
 #define BOARD_ID_CS_U9510		0x67
 #define BOARD_ID_CS_U9510E		0x66
 #define BOARD_ID_CS_T9510E		0x06
-
-/*
- * change by y00215412 for flash capture 2012-06-27
- * flash_awb_gain is marked by Golden Module.
- */
 mini_awb_gain_t mini_flash_platform_awb[FLASH_PLATFORM_MAX] =
 {
 	{0xc8, 0x80, 0x80, 0x104}, /* U9510 */
@@ -2076,6 +2016,7 @@ static inline FLASH_AWBTEST_POLICY get_awbtest_policy(void)
 void mini_ispv1_check_flash_prepare(void)
 {
 
+
 	mini_awb_gain_t *preset_awb = &(mini_isp_hw_data.flash_preset_awb);
 	mini_awb_gain_t *led_awb0 = &(mini_isp_hw_data.led_awb[0]);
 	mini_awb_gain_t *led_awb1 = &(mini_isp_hw_data.led_awb[1]);
@@ -2156,10 +2097,6 @@ static void ispv1_check_flash_exit(void)
 {
 	mini_ispv1_config_aecawb_step(false, &mini_isp_hw_data.aecawb_step);
 }
-
-/*
- * change logs:
- */
 static void ispv1_poll_flash_lum(void)
 {
 	static u8 frame_count;
@@ -2372,7 +2309,6 @@ awbtest_out:
 	}
 }
 
-/* added by y00215412 for dynamic y denoise changed  2012-11-7 start. */
 #if 0
 void mini_ispv1_switch_dns(mini_camera_sensor *sensor, camera_state state, bool flash_on, u32 expo_line)
 {
@@ -2458,6 +2394,7 @@ void mini_ispv1_switch_dns(mini_camera_sensor *sensor, camera_state state, bool 
 
 }
 
+
 void mini_ispv1_mannal_iso_dynamic_framerate(mini_camera_sensor *sensor)
 {
 	static u32 count = 0;
@@ -2474,6 +2411,8 @@ void mini_ispv1_mannal_iso_dynamic_framerate(mini_camera_sensor *sensor)
 	u32 cur_expo = (mini_ispv1_get_expo_line() >> 4);
 
 	GETREG32(REG_ISP_MAX_EXPOSURE, max_expo);
+
+
 
 	expo_th_low2mid  =  auto_fps_manual_iso_th[0];
 	expo_th_mid2high = auto_fps_manual_iso_th[1];
@@ -2511,7 +2450,6 @@ void mini_ispv1_mannal_iso_dynamic_framerate(mini_camera_sensor *sensor)
 	}
 }
 
-/* added by y00215412 for dynamic y denoise changed  2012-11-7 end. */
 
 static void ispv1_dynamic_framerate(mini_camera_sensor *sensor, camera_iso iso)
 {
@@ -2530,8 +2468,8 @@ static void ispv1_dynamic_framerate(mini_camera_sensor *sensor, camera_iso iso)
 	gain_th_high2mid = auto_fps_th[2];
 	gain_th_mid2low = auto_fps_th[3];
 
+
 	if (CAMERA_ISO_AUTO != iso) {
-		/* add by y00215412 2012-11-05. */
 		if (state == CAMERA_EXPO_PRE_REDUCE1 || state == CAMERA_EXPO_PRE_REDUCE2) {
 			//|| ispv1_get_frame_rate_level() != 0) {
 			ispv1_change_frame_rate(&state, CAMERA_FRAME_RATE_UP, sensor);
@@ -2540,7 +2478,6 @@ static void ispv1_dynamic_framerate(mini_camera_sensor *sensor, camera_iso iso)
 		}
 		mini_ispv1_mannal_iso_dynamic_framerate(sensor);
 	} else {
-		/* add by y00215412 2012-11-05, state CAMERA_EXPO_PRE_REDUCE is highest priority. */
 		if (state == CAMERA_EXPO_PRE_REDUCE1 || state == CAMERA_EXPO_PRE_REDUCE2) {
 			ret = ispv1_change_frame_rate(&state, CAMERA_FRAME_RATE_UP, sensor);
 			mini_ispv1_set_frame_rate_state(state);
@@ -2629,7 +2566,6 @@ void mini_ispv1_preview_done_do_tune(void)
 	}
 
 	if ((FLASH_TESTING == ispdata->flash_flow) || (FLASH_FROZEN == ispdata->flash_flow)) {
-		/*added by y00215412 2012-12-18 to improve framerate first to speed up FLASH_TESTING */
 		if (state == CAMERA_EXPO_PRE_REDUCE1 || state == CAMERA_EXPO_PRE_REDUCE2
 			|| mini_ispv1_get_frame_rate_level() != 0) {
 			mini_ispv1_set_aecagc_mode(AUTO_AECAGC);
@@ -2743,7 +2679,6 @@ int mini_ispv1_tune_ops_init(mini_k3_isp_data *ispdata)
 	mini_ispv1_do_aeag_wq_init();
 	camera_ajustments_flag = true;
 
-	/* add by y00215412 2012-11-05 to init frame_rate_state. */
 	mini_ispv1_set_frame_rate_state(CAMERA_FPS_STATE_HIGH);
 
 	ispv1_init_sensor_config(sensor);
@@ -2768,16 +2703,14 @@ void mini_ispv1_tune_ops_exit(void)
 	mini_ispv1_aeag_exit();
 }
 
-/*
- * something need to do before start_preview and start_capture
- */
+
 void mini_ispv1_tune_ops_prepare(camera_state state)
 {
 	mini_k3_isp_data *ispdata = mini_this_ispdata;
 	mini_camera_sensor *sensor = ispdata->sensor;
 	u32 unit_width = ispdata->pic_attr[STATE_PREVIEW].in_width / ISP_LUM_WIN_WIDTH_NUM;
 	u32 unit_height = ispdata->pic_attr[STATE_PREVIEW].in_height / ISP_LUM_WIN_HEIGHT_NUM;
-	mini_coordinate_s center; /* added for focus AE by s00061250 2013-06-27 */
+	mini_coordinate_s center;
 
 	if (STATE_PREVIEW == state) {
 
@@ -2830,7 +2763,6 @@ void mini_ispv1_tune_ops_withdraw(camera_state state)
 		}
 }
 
-/* added by y00215412 for hdr movie mode begin */
 bool mini_ispv1_is_hdr_movie_mode(void)
 {
 	u8 ae_ctrl_mode = GETREG8(REG_ISP_AE_CTRL_MODE); /* 1 - AP's ae . 0 - ISP ae. */
@@ -2845,7 +2777,6 @@ bool mini_ispv1_is_hdr_movie_mode(void)
 	else
 		return false;
 }
-/* added by y00215412 for hdr movie mode end */
 
 /*
  **************************************************************************
@@ -2928,15 +2859,7 @@ static void deal_uv_data_from_preview(u8 *pdata, u32 preview_width, u32 preview_
 	}
 
 }
-/*
- **************************************************************************
- * FunctionName: ispv1_uv_stat_work_func;
- * Description : NA;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 static void ispv1_uv_stat_work_func(struct work_struct *work)
 {
 	u32 preview_width = mini_this_ispdata->pic_attr[STATE_PREVIEW].out_width;

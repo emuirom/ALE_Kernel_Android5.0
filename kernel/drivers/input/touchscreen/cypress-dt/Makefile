@@ -4,6 +4,7 @@
 
 # Each configuration option enables a list of files.
 
+
 obj-$(CONFIG_CYPRESS_CYTTSP4_BUS) += cyttsp4_bus.o
 obj-$(CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP4_I2C)	+= cyttsp4_i2c.o
 obj-$(CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP4)	+= cyttsp4_core.o

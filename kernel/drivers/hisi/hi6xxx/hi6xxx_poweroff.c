@@ -1,4 +1,5 @@
 
+
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -60,6 +61,9 @@
 #include "soc_smart_interface.h"
 #endif
 
+
+
+
 #define HI6XXX_REBOOT_CODE_SRAM_PHYS  ((phys_addr_t)(PWRCTRL_ACPU_REBOOT))
 #define HI6XXX_REBOOT_CODE_SIZE       (SZ_512)
 
@@ -77,10 +81,13 @@ static void __iomem *hi6xxx_reset_sram_virts = NULL; /*sctrl register address fo
 static void __iomem *hi6xxx_reset_reg_virts = NULL; /*sctrl register address for reboot */
 static void __iomem *hi6xxx_reset_flag_virts = NULL; /*storage for reboot flag */
 
+
 static void __iomem *powerhold_gpio_base;
 static int g_powerhold_gpio_offset = 0;
 static int g_powerhold_no = -1;
 #define  POWER_HOLD_GPIO  0
+
+
 
 #ifdef CONFIG_DEBUG_FS
 static unsigned long hi6xxx_shutdown_time_start = 0;
@@ -105,6 +112,9 @@ static void hi6xxx_save_shutdown_time(void)
     }
 }
 #endif
+
+
+
 
 extern void machine_restart(char *cmd);
 static void hisi_power_off(void)
@@ -176,6 +186,12 @@ static __init int hisi_poweroff_init(void)
 	return ret;
 }
 
+
+
+
+
+
+
 /*MUST NOT use sp and fp, optimize for this*/
 #pragma GCC optimize("O3")
 
@@ -194,6 +210,7 @@ static inline void __hi6xxx_reboot_code(void)
     return;
 }
 #pragma GCC reset_options
+
 
 static void hi6xxx_sram_reboot(void)
 {
@@ -374,6 +391,12 @@ static struct platform_driver hi6xxx_reset_driver = {
 	},
 };
 
+
+
+
+
+
+
 #ifdef CONFIG_DEBUG_FS
 
 static ssize_t shutdown_dbgfs_write(struct file *fp, const char __user *ubuf,
@@ -395,7 +418,9 @@ static ssize_t shutdown_dbgfs_write(struct file *fp, const char __user *ubuf,
     return cnt;
 }
 
+
 static struct dentry *shutdown_debugfs;
+
 
 static int shutdown_recored_time_show(struct seq_file *m, void *unused)
 {
@@ -408,10 +433,12 @@ static int shutdown_recored_time_show(struct seq_file *m, void *unused)
     return 0;
 }
 
+
 static int shutdown_recored_time_open(struct inode *inode, struct file *file)
 {
 	return single_open(file, shutdown_recored_time_show, NULL);
 }
+
 
 static const struct file_operations shutdown_save_fops = {
 	.owner = THIS_MODULE,
@@ -421,6 +448,7 @@ static const struct file_operations shutdown_save_fops = {
 	.llseek = seq_lseek,
 	.release = single_release,
 };
+
 
 static int __init shutdown_debugfs_init(void)
 {

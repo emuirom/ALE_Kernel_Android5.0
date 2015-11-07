@@ -16,6 +16,12 @@ NAME = TOSSUG Baby Fish
 # o  print "Entering directory ...";
 MAKEFLAGS += -rR --no-print-directory
 
+export TARGET_PRODUCT=hi6210sft
+export BALONG_TOPDIR:=$(CURDIR)/../vendor/hisi
+export KERNEL_ARM_TYPE:=arm64
+export OBB_PRODUCT_NAME:=hi6210sft
+export TARGET_BOARD_PLATFORM:=hi6210sft
+export TARGET_ARM_TYPE:=arm64
 # Avoid funny character set dependencies
 unexport LC_ALL
 LC_COLLATE=C
@@ -350,6 +356,7 @@ AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
 
+BALONG_INC := -I$(srctree)/drivers -I$(srctree)/mm -I$(srctree)/drivers/hisi/ap/config/product/hi6210sft/include -I$(srctree)/drivers/hisi/ap/platform/hi6210sft
 # Use USERINCLUDE when you must reference the UAPI directories only.
 USERINCLUDE    := \
 		-I$(srctree)/arch/$(hdr-arch)/include/uapi \

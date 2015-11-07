@@ -19,7 +19,6 @@
 #ifndef __K3_EDID_H__
 #define __K3_EDID_H__
 
-//todo z00222844 for max timing
 #define K3_FB_MAX_WIDTH  1600
 #define K3_FB_MAX_HEIGHT 2560
 
@@ -366,15 +365,19 @@ typedef struct _hdmi_edid {
                                 Aspect Ratio = (Stored Value + 99) ÷ 100*/
     u8  max_vert_image_size;  /* 22 同上，表示垂直高度，精确到cm。当表示宽高比时，则表示竖屏宽高比*/
 
+
+
     u8  display_gamma;        /* 23 显示传输特征，范围1.00 到 3.54 存储值遵循以下公式
                                 Stored Value = (GAMMA x 100) – 100
                                 如果设置为ffh，那么该字节没有定义，而是在扩展块中进行的定义
                                 GAMMA值为生产厂商定义*/
 
+
     u8  power_features;       /* 24 用来显示支持的不同显示特征，详见3.14ofEDIDrAr2
                                 7、6、5位为显示电源管理，如果第7位设置为0，
                                 那么第4、3位为显示颜色类型，如果设置为1,那么第4、3位为颜色编码格式
                                 2、1、0三位表示其他支持特征*/
+
 
     /**/
     u8  chroma_info[10];      /* 25-34 高9位到2位作为一个字节，低两位1-0和前一个字节的地两位作为一对。

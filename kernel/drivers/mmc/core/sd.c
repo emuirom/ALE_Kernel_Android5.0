@@ -48,6 +48,10 @@ struct dsm_sdcard_cmd_log dsm_sdcard_cmd_logs[] =
 
 #endif
 
+#ifdef CONFIG_HW_SD_HEALTH_DETECT
+static unsigned int g_sd_speed_class = 0;
+#endif
+
 static const unsigned int tran_exp[] = {
 	10000,		100000,		1000000,	10000000,
 	0,		0,		0,		0
@@ -264,6 +268,9 @@ static int mmc_read_ssr(struct mmc_card *card)
 
 	card->ssr.speed_class = UNSTUFF_BITS(ssr, 440 - 384, 8);
 
+#ifdef CONFIG_HW_SD_HEALTH_DETECT
+	g_sd_speed_class = card->ssr.speed_class;
+#endif
 	/*
 	 * UNSTUFF_BITS only works with four u32s so we have to offset the
 	 * bitfield positions accordingly.
@@ -726,6 +733,7 @@ MMC_DEV_ATTR(oemid, "0x%04x\n", card->cid.oemid);
 MMC_DEV_ATTR(serial, "0x%08x\n", card->cid.serial);
 MMC_DEV_ATTR(speed_class, "0x%08x\n", card->ssr.speed_class);
 
+
 static struct attribute *sd_std_attrs[] = {
 	&dev_attr_cid.attr,
 	&dev_attr_csd.attr,
@@ -815,7 +823,14 @@ try_again:
 	    printk(KERN_ERR "%s:send acmd41 to get ocr fail,err=%d\n",mmc_hostname(host),err);
 		return err;
 	}
-	printk(KERN_ERR "%s:send acmd41 with ocr:0x%x,get rocr:0x%x\n",mmc_hostname(host),ocr,*rocr);
+	if(rocr)
+	{
+	    printk(KERN_ERR "%s:send acmd41 with ocr:0x%x,get rocr:0x%x\n",mmc_hostname(host),ocr,*rocr);
+	}
+	else
+	{
+	    printk(KERN_ERR "%s:rocr is null!!!\n",mmc_hostname(host));
+	}
 
 	/*
 	 * In case CCS and S18A in the response is set, start Signal Voltage
@@ -1477,6 +1492,33 @@ err:
 
 	return err;
 }
+
+#ifdef CONFIG_HW_SD_HEALTH_DETECT
+unsigned int mmc_get_sd_speed()
+{
+   unsigned int speed = 0;
+   switch(g_sd_speed_class){
+   case 0x00:
+        speed = 0;
+        break;
+   case 0x01:
+        speed = 2;
+        break;
+   case 0x02:
+        speed = 4;
+        break;
+   case 0x03:
+        speed = 6;
+        break;
+   case 0x04:
+        speed = 10;
+        break;
+   default:
+        speed = 2;
+}
+   return speed;
+}
+#endif
 
 #ifdef CONFIG_HUAWEI_SDCARD_DSM
 char *dsm_sdcard_get_log(int cmd,int err)

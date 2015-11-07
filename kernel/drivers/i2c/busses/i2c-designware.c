@@ -195,6 +195,7 @@ static void __iomem *sctrl_base;
 
 #define I2C_DW_MAX_DMA_BUF_LEN          (60*1024)
 
+
 static char *abort_sources[] = {
 	[ABRT_7B_ADDR_NOACK] =
 		"slave address not acknowledged (7bit mode)",
@@ -225,6 +226,7 @@ struct dw_i2c_dma_data {
 	struct scatterlist	sg;
 	u8			*buf;
 };
+
 
 /**
  * struct dw_i2c_dev - private i2c-designware data
@@ -325,6 +327,7 @@ static int i2c_dw_xfer_msg_dma(struct dw_i2c_dev *dev, int *alllen);
 static int i2c_dw_dma_tx_refill(struct dw_i2c_dev *dev);
 static void i2c_dw_dma_rx_callback(void *data);
 
+
 static void i2c_dw_dma_probe_initcall(struct dw_i2c_dev *dev)
 {
 	struct dma_chan *chan;
@@ -350,6 +353,7 @@ static void i2c_dw_dma_probe_initcall(struct dw_i2c_dev *dev)
 		.direction = DMA_FROM_DEVICE,
 		.src_maxburst = 16,
 	};
+
 
 	/* Try to acquire a generic DMA engine slave TX channel */
 	dma_cap_zero(mask);
@@ -438,6 +442,8 @@ static void i2c_dw_dma_remove(struct dw_i2c_dev *dev)
 		dma_release_channel(dev->dmarx.chan);
 }
 
+
+
 /*
  * The current DMA TX buffer has been sent.
  * Try to queue up another DMA buffer.
@@ -496,6 +502,7 @@ static int i2c_dw_dma_tx_refill(struct dw_i2c_dev *dev)
 	return 1;
 }
 
+
 /*
  * Returns:
  *	1 if we queued up a RX DMA buffer.
@@ -542,6 +549,7 @@ static int i2c_dw_dma_rx_trigger_dma(struct dw_i2c_dev *dev)
 	return 1;
 }
 
+
 static void i2c_dw_dma_rx_callback(void *data)
 {
 	struct dw_i2c_dev *dev = data;
@@ -558,6 +566,7 @@ static void i2c_dw_dma_rx_callback(void *data)
 	dma_sync_sg_for_cpu(dev->dev, &dmarx->sg, 1, DMA_FROM_DEVICE);
 	dev->dmacr &= ~DW_IC_RXDMAE;
 	writew(dev->dmacr, dev->base + DW_IC_DMA_CR);
+
 
 	for (; dev->msg_read_idx < dev->msgs_num; dev->msg_read_idx++) {
 		if (!(msgs[dev->msg_read_idx].flags & I2C_M_RD))
@@ -929,7 +938,6 @@ i2c_dw_xfer_msg(struct dw_i2c_dev *dev)
 {
 	struct i2c_msg *msgs = dev->msgs;
 	u32 intr_mask;
-    /*add by w00215368 send stop manually*/
     u32 final_len;
 	int tx_limit, rx_limit;
 	u32 buf_len = dev->tx_buf_len;
@@ -1054,6 +1062,7 @@ static int i2c_dw_handle_tx_abort(struct dw_i2c_dev *dev)
 	else
 		return -EIO;
 }
+
 
 static int i2c_dw_xfer_msg_dma(struct dw_i2c_dev *dev, int *alllen)
 {
@@ -1190,6 +1199,7 @@ static int i2c_param_check(struct dw_i2c_dev *dev, struct i2c_msg msgs[], int nu
 	return 0;
 }
 
+
 #ifdef CONFIG_AUDIENCE
 static void send_reset_signal(struct dw_i2c_dev *dev)
 {
@@ -1217,6 +1227,7 @@ i2c_dw_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
 	if(ret < 0){
 		return ret;
 	}
+
 
 	mutex_lock(&dev->lock);
 	//i2c_clk_domain_enable(dev, 0);
@@ -1529,6 +1540,7 @@ static int devm_pinctrl_state_select(struct dw_i2c_dev *dev,const char *name)
 	return 0;
 }
 
+
 static int dw_i2c_probe(struct platform_device *pdev)
 {
 	struct dw_i2c_dev *dev;
@@ -1603,6 +1615,7 @@ static int dw_i2c_probe(struct platform_device *pdev)
 	}
 
 	dev->mapbase = mem->start;
+
 
 	param1 = readl(dev->base + DW_IC_COMP_PARAM_1);
 
@@ -1779,6 +1792,7 @@ static int i2c_dw_resume(struct platform_device *pdev)
 #define i2c_dw_suspend		NULL
 #define i2c_dw_resume		NULL
 #endif
+
 
 /* work with hotplug and coldplug */
 MODULE_ALIAS("platform:i2c_designware");

@@ -20,6 +20,7 @@
 #include <asm/clkdev.h>
 #include <mach/clock.h>
 
+
 static DEFINE_MUTEX(clock_list_lock);
 static LIST_HEAD(clocks);
 
@@ -200,6 +201,7 @@ int clk_set_parent(struct clk *c, struct clk *parent)
 	int ret = 0;
 	unsigned long flags;
 
+
 	clk_lock_save(c, flags);
 	if (!c->ops || !c->ops->set_parent) {
 		ret = -ENOSYS;
@@ -271,6 +273,7 @@ long clk_round_rate(struct clk *c, unsigned long rate)
 {
 	unsigned long flags;
 	long ret;
+
 
 	clk_lock_save(c, flags);
 	if (!c->ops || !c->ops->round_rate) {
@@ -364,6 +367,7 @@ void k3v2_clk_init_from_table(struct k3v2_clk_init_table *table)
 }
 EXPORT_SYMBOL(k3v2_clk_init_from_table);
 
+
 void __init k3v2_init_clock(void)
 {
 
@@ -380,6 +384,7 @@ char *clk_enabled_check(struct clk *c)
 {
 	char *result = NULL;
 
+
 	if (c->ops && c->ops->check_enreg)
 		result = c->ops->check_enreg(c);
 
@@ -390,6 +395,7 @@ char *clk_source_check(struct clk *c)
 {
 	char *result = NULL;
 
+
 	if (c->ops && c->ops->check_selreg)
 		result = c->ops->check_selreg(c);
 
@@ -399,6 +405,7 @@ char *clk_source_check(struct clk *c)
 char *clk_rate_check(struct clk *c)
 {
 	char *result = NULL;
+
 
 	if (c->ops && c->ops->check_divreg)
 		result = c->ops->check_divreg(c);
@@ -414,6 +421,7 @@ static int __clk_lock_all_spinlocks(void)
 {
 	struct clk *c;
 
+
 	list_for_each_entry(c, &clocks, node)
 	if (!spin_trylock(&c->spinlock))
 			goto unlock_spinlocks;
@@ -427,9 +435,11 @@ unlock_spinlocks:
 	return -EAGAIN;
 }
 
+
 static void __clk_unlock_all_spinlocks(void)
 {
 	struct clk *c;
+
 
 	list_for_each_entry_reverse(c, &clocks, node)
 		spin_unlock(&c->spinlock);
@@ -598,6 +608,7 @@ static int clk_debugfs_register_one(struct clk *c)
 {
 	struct dentry *d, *child, *child_tmp;
 
+
 	d = debugfs_create_dir(c->name, clk_debugfs_root);
 	if (!d)
 		return -ENOMEM;
@@ -644,6 +655,7 @@ static int clk_debugfs_register(struct clk *c)
 {
 	int err;
 	struct clk *pa = c->parent;
+
 
 	if (pa && !pa->dent) {
 		err = clk_debugfs_register(pa);

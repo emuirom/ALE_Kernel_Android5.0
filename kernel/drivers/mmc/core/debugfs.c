@@ -357,6 +357,7 @@ static const struct file_operations mmc_dbg_ext_csd_fops = {
 	.llseek		= default_llseek,
 };
 
+
 #ifdef CONFIG_HW_MMC_TEST
 static int mmc_card_addr_open(struct inode *inode, struct file *filp)
 {

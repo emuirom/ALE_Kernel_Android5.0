@@ -50,6 +50,7 @@
 #include "soc_ao_sctrl_interface.h"
 #include "soc_pmctrl_interface.h"
 
+
 #include "soc_media_sctrl_interface.h"
 
 #include "soc_baseaddr_interface.h"
@@ -60,6 +61,14 @@
 #define DEBUG_DEBUG 0
 #define LOG_TAG "K3_ISPV1_IO"
 #include "cam_log.h"
+
+#if defined (CONFIG_HUAWEI_DSM)
+#include <huawei_platform/dsm/dsm_pub.h>
+#endif
+
+#if defined (CONFIG_HUAWEI_DSM)
+extern struct dsm_client *client_ovisp22;
+#endif
 
 #define CSI_INT_EN 0x00000000
 
@@ -72,11 +81,9 @@ static ispio_controller ispv1_io_ctl;
 
 static ispio_hw_t ispv1_io;
 
-/* Modified  by w00199382 for isp 2.2 , 2012/11/22, begin */
 
 #define CSI1_REG_OFFSET  (0x800)
 
-/* Modified  by w00199382 for isp 2.2 , 2012/11/22, end */
 
 #define CSI0_REG_BASE  (ispv1_io.csi0_base)
 #define CSI1_REG_BASE  (ispv1_io.csi1_base)
@@ -121,6 +128,7 @@ static ispio_hw_t ispv1_io;
 
 static void ispv1_io_set_default(void);
 
+
 void ispv1_csi_isr_disable(void)
 {
 	u8 __iomem * reg_base;
@@ -156,6 +164,7 @@ void ispv1_csi_isr_enable(void)
 	}
 }
 
+
 #ifdef REG_CSI_IRQ
 static long csi0_err_cnt = 0;
 static long csi1_err_cnt = 0;
@@ -180,6 +189,16 @@ static irqreturn_t k3_csi0_isr(int irq, void *dev_id)
 
 	if ((irq_status1 | irq_status2) != 0)
 	{
+
+#if defined (CONFIG_HUAWEI_DSM)
+	if (100 == csi0_err_cnt ){
+		if (!dsm_client_ocuppy(client_ovisp22)){
+			dsm_client_record(client_ovisp22,"[%s]K3 CSI0 mian camera Error \n",__func__);
+			dsm_client_notify(client_ovisp22, DSM_ISP22_K3_MCAM_CSI_ERROR_NO);
+		}
+	}
+#endif
+
         if (0 == (csi0_err_cnt % 100))
         {
             print_error("k3_csi_isr1 ERR1[%#x], ERR2[%#x]\n", irq_status1, irq_status2);
@@ -202,7 +221,7 @@ static irqreturn_t k3_csi0_isr(int irq, void *dev_id)
             csi0_err_cnt++;
 	     if(4000 == csi0_err_cnt)
 	     {
-                  systemError(0x25, EXCH_S_CSI, 0,0,0);
+                  systemError(0x25, EXCH_S_CSI0, 0,0,0);
 		    csi0_err_cnt = 0;
 	     }
 
@@ -235,6 +254,15 @@ static irqreturn_t k3_csi1_isr(int irq, void *dev_id)
 	if ((irq_status1 | irq_status2) != 0)
 	{
 
+#if defined (CONFIG_HUAWEI_DSM)
+	if (100 == csi1_err_cnt ){
+		if (!dsm_client_ocuppy(client_ovisp22)){
+			dsm_client_record(client_ovisp22,"[%s]K3 CSI1 sub camera  Error \n",__func__);
+			dsm_client_notify(client_ovisp22, DSM_ISP22_K3_SCAM_CSI_ERROR_NO);
+		}
+	}
+#endif
+
         if (0 == (csi1_err_cnt % 100))
         {
             print_error("k3_csi_isr2 ERR1[%#x], ERR2[%#x]\n", irq_status1, irq_status2);
@@ -257,11 +285,12 @@ static irqreturn_t k3_csi1_isr(int irq, void *dev_id)
             csi1_err_cnt++;
             if(4000 == csi1_err_cnt)
             {
-                 systemError(0x25, EXCH_S_CSI, 0,0,0);
+                 systemError(0x25, EXCH_S_CSI1, 0,0,0);
 		   csi1_err_cnt = 0;
 	     }
 
     }
+
 
 	/* automatic clear all interrupts */
 
@@ -303,6 +332,7 @@ int ispv1_get_resource(void)
 
 	print_debug("%s", __func__);
 
+
     np = of_find_compatible_node(NULL, NULL, "hisi,hisi_csi");
 	if (np ==NULL)
 	{
@@ -318,7 +348,6 @@ int ispv1_get_resource(void)
     dev=  &pdev->dev;
 	/* get reg base */
 
-    /* Modified  by w00199382 for isp 2.2 , 2012/11/22, begin */
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	if (res == NULL) {
@@ -326,6 +355,7 @@ int ispv1_get_resource(void)
 		ret = -ENXIO;
 		goto fail;
 	}
+
 
     /*FIXME: BSP has not support the interface IO_ADDRESS*/
 
@@ -335,7 +365,6 @@ int ispv1_get_resource(void)
 		return -ENOMEM;
 	}
     ispv1_io.csi1_base = ispv1_io.csi0_base + CSI1_REG_OFFSET;
-    /* Modified  by w00199382 for isp 2.2 , 2012/11/22, end */
 
 	register_cam_dbg_info(DBG_INFO_CSI0_BASE, (void *)ispv1_io.csi0_base);
 	register_cam_dbg_info(DBG_INFO_CSI1_BASE, (void *)ispv1_io.csi1_base);
@@ -388,6 +417,8 @@ int ispv1_get_resource(void)
 	}
 	ispv1_io.csi2_clk= clk;
 
+
+
 #ifdef REG_CSI_IRQ
 	print_info("request csi0 & csi1 irq");
 	ret = request_irq(ispv1_io.csi0_irq, k3_csi0_isr, 0, "csi0_irq", 0);
@@ -435,6 +466,8 @@ fail:
 		ispv1_io.csi2_clk = NULL;
 	}
 
+
+
 	return ret;
 }
 
@@ -453,12 +486,11 @@ void ispv1_release_resource(void)
 		ispv1_io.csi1_irq = 0;
 	}
 #endif
-        /* Modified  by w00199382 for isp 2.2 , 2012/11/22, begin */
 
         /*FIXME: BSP has not support the interface IO_ADDRESS*/
 
         iounmap(ispv1_io.csi0_base);
-        /* Modified  by w00199382 for isp 2.2 , 2012/11/22, end */
+
 
 	if (ispv1_io.csi0_clk) {
 		clk_put(ispv1_io.csi0_clk);
@@ -490,6 +522,10 @@ void ispv1_csi_phy_set(camera_power_state type, csi_index_t index)
 
     return;
 }
+
+
+
+
 
 int ispv1_load_phy_setting(char *filename, u8 *settle_time, u8 *camera_source)
 {
@@ -584,6 +620,7 @@ int ispv1_csi_poweron(csi_index_t index)
 		ret = clk_prepare_enable(ispv1_io.csi0_clk);
 		if (IS_ERR_OR_NULL(ispv1_io.csi0_clk))
 		    return ret;
+
 
 	} else {
 	    ret = clk_prepare_enable(ispv1_io.csi2_clk);
@@ -951,6 +988,7 @@ int ispv1_ioconfig(camera_power_state power_state, data_interface_t type)
 	int ret = 0;
 	print_info("%s camera iomux config", __func__);
 
+
 	if (power_state == POWER_ON) {
 		ret = pinctrl_select_state(ispv1_io.isp_pinctrl, ispv1_io.pinctrl_def); //work mode
 		if (ret != 0) {
@@ -987,6 +1025,7 @@ int ispv1_io_hw_init(struct platform_device *pdev)
 
 	ispv1_io.pdev = pdev;
 
+
     /* pinctrl enable */
 	ispv1_io.isp_pinctrl = devm_pinctrl_get(&pdev->dev);
 	if (IS_ERR(ispv1_io.isp_pinctrl)) {
@@ -1002,6 +1041,7 @@ int ispv1_io_hw_init(struct platform_device *pdev)
 	if (IS_ERR(ispv1_io.pinctrl_idle)) {
         print_error("%s : could not get idle state\n", __FUNCTION__);
     }
+
 
 	return ret;
 }

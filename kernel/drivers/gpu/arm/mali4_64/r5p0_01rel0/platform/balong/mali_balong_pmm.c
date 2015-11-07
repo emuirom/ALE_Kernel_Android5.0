@@ -350,22 +350,7 @@ static int mali_runtime_idle(struct device *device)
 
 /*Globle Variant Defination end----------------------------------*/
 
-/*****************************************************************************
- function name  : mali_clk_get
- description    : clock get
- input vars     : void
- output vars    : NA
- return value   : mali_bool
- calls          : clk_get
 
- called         : mali_platform_powerup
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 mali_bool mali_clk_get(struct platform_device *pdev)
 {
     MALI_DEBUG_PRINT(3, ("mali_clk_get begin\n"));
@@ -420,22 +405,7 @@ mali_bool mali_clk_get(struct platform_device *pdev)
     return MALI_TRUE;
 }
 
-/*****************************************************************************
- function name  : mali_clk_put
- description    : clock put
- input vars     : void
- output vars    : NA
- return value   : void
- calls          : clk_put
 
- called         : deinit_mali_clock_regulator
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void mali_clk_put(void)
 {
     MALI_DEBUG_PRINT(3, ("mali_clk_put begin\n"));
@@ -470,22 +440,7 @@ void mali_clk_put(void)
 
 }
 
-/*****************************************************************************
- function name  : mali_clock_on
- description    : clock on mali by calling clk
- input vars     : void
- output vars    : NA
- return value   : void
- calls          : clk_enable
 
- called         : mali_platform_powerup
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 _mali_osk_errcode_t mali_clock_on(void)
 {
     int err;
@@ -574,22 +529,7 @@ _mali_osk_errcode_t mali_clock_on(void)
     MALI_DEBUG_PRINT(3, ("mali_clock_on finish\n"));
     return _MALI_OSK_ERR_OK;
 }
-/*****************************************************************************
- function name  : mali_clock_off
- description    : clock off mali by calling clk
- input vars     : void
- output vars    : NA
- return value   : void
- calls          : clk_disable
 
- called         : mali_platform_powerdown
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void mali_clock_off(void)
 {
     MALI_DEBUG_PRINT(3, ("mali_clock_off begin\n"));
@@ -630,22 +570,7 @@ void mali_clock_off(void)
     MALI_DEBUG_PRINT(3, ("mali_clock_off  end\n"));
 }
 
-/*****************************************************************************
- function name  : mali_domain_powerup_finish
- description    : powerup finish to run
- input vars     : void
- output vars    : NA
- return value   : void
- calls          : mali_reg_writel
 
- called         : mali_platform_powerup
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void mali_domain_powerup_finish(void)
 {
     unsigned int ret = 0;
@@ -682,22 +607,7 @@ void mali_domain_powerup_finish(void)
 
     MALI_DEBUG_PRINT(3, ("mali domain power up end! \n"));
 }
-/*****************************************************************************
- function name  : mali_domain_powerdown_begin
- description    : powerdown begin with it
- input vars     : void
- output vars    : NA
- return value   : void
- calls          : mali_reg_writel
 
- called         : mali_platform_powerdown
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void mali_domain_powerdown_begin(void)
 {
     MALI_DEBUG_PRINT(3, ("mali domain power down start! \n"));
@@ -715,22 +625,7 @@ void mali_domain_powerdown_begin(void)
     MALI_DEBUG_PRINT(3, ("mali domain power down end! \n"));
 }
 
-/*****************************************************************************
- function name  : mali_regulator_enable
- description    : powerup mali by calling regulator
- input vars     : void
- output vars    : NA
- return value   : void
- calls          : regulator_enable
 
- called         : mali_platform_powerup
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 _mali_osk_errcode_t mali_regulator_enable(void)
 {
     int i, ret;
@@ -762,22 +657,7 @@ _mali_osk_errcode_t mali_regulator_enable(void)
     }
 }
 
-/*****************************************************************************
- function name  : mali_regulator_disable
- description    : powerdown mali by calling regulator
- input vars     : void
- output vars    : NA
- return value   : void
- calls          : regulator_disable
 
- called         : mali_platform_powerdown
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 _mali_osk_errcode_t mali_regulator_disable(void)
 {
     mali_domain_powerdown_begin();
@@ -798,22 +678,7 @@ _mali_osk_errcode_t mali_regulator_disable(void)
     return _MALI_OSK_ERR_OK;
 }
 
-/*****************************************************************************
- function name  : init_mali_clock_regulator
- description    : mali clk and regulator init
- input vars     : void
- output vars    : NA
- return value   : mali_bool
- calls          : mali_clk_get
 
- called         : mali_platform_init
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 static mali_bool init_mali_clock_regulator(struct platform_device *pdev)
 {
     u32 ret = 0;
@@ -872,22 +737,7 @@ static mali_bool init_mali_clock_regulator(struct platform_device *pdev)
 
 }
 
-/*****************************************************************************
- function name  : deinit_mali_clock_regulator
- description    : mali clk and regulator deinit
- input vars     : void
- output vars    : NA
- return value   : mali_bool
- calls          : mali_clk_put,mali_regulator_disable
 
- called         : mali_platform_deinit
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 static mali_bool deinit_mali_clock_regulator(void)
 {
     if ( (NULL == mali_clock) || (NULL == mali_regulator))
@@ -906,24 +756,6 @@ static mali_bool deinit_mali_clock_regulator(void)
 
     return MALI_TRUE;
 }
-
-
-/*****************************************************************************
- function name  : mali_gpu_utilization_handler
- description    : mali ddk send utilization here when timer=50 out
- input vars     : void
- output vars    : NA
- return value   : _mali_osk_errcode_t
- calls          : mali_dvfs_handler
-
- called         : calculate_gpu_utilization
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 void mali_gpu_utilization_handler(u32 utilization)
 {
     /*DVFS when power on*/
@@ -1031,22 +863,7 @@ static mali_core_type mali_get_gpu_type(void)
     return (mali_core_type)gpu_type;
 }
 
-/*****************************************************************************
- function name  : mali_platform_powerdown
- description    : powerdown mali by calling interface of low software
- input vars     : void
- output vars    : NA
- return value   : _mali_osk_errcode_t
- calls          : AMAPI_mali_clk_off
-                  AMAPI_mali_power_down
- called         : mali_platform_power_mode_change
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 _mali_osk_errcode_t mali_platform_powerdown(void)
 {
 
@@ -1082,23 +899,6 @@ _mali_osk_errcode_t mali_platform_powerdown(void)
     MALI_DEBUG_PRINT(3,("after mali_platform_powerdown state %x \n", g_swGpuPowerState));
     MALI_SUCCESS;
 }
-
-/*****************************************************************************
- function name  : mali_platform_powerup
- description    : powerup mali by calling interFace of low software
- input vars     : void
- output vars    : NA
- return value   : _mali_osk_errcode_t
- calls          : AMAPI_mali_power_up
-                  AMAPI_mali_clk_on
- called         : mali_platform_power_mode_change
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 _mali_osk_errcode_t mali_platform_powerup(void)
 {
 
@@ -1163,24 +963,6 @@ static void mali_platform_powerup_no_drv(void)
     MALI_DEBUG_PRINT(2, ("mali_platform_powerup_no_drv end!\n"));
 }
 #endif
-
-
-/*****************************************************************************
- function name  : mali_platform_init
- description    : init mali by calling interFace of low software and dvfs
- input vars     : void
- output vars    : NA
- return value   : _mali_osk_errcode_t
- calls          : mali_clock_init
-                  mali_dvfs_status_init
- called         : mali_driver_init
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 _mali_osk_errcode_t mali_platform_init(struct platform_device *pdev)
 {
 #if MALI_PWRON_NO_DRV
@@ -1253,22 +1035,7 @@ _mali_osk_errcode_t mali_platform_init(struct platform_device *pdev)
 }
 
 
-/*****************************************************************************
- function name  : mali_platform_deinit
- description    : deinit mali by calling interFace of low software and dvfs
- input vars     : void
- output vars    : NA
- return value   : _mali_osk_errcode_t
- calls          : mali_clock_deinit
-                  mali_dvfs_status_deinit
- called         : mali_driver_exit
 
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 _mali_osk_errcode_t mali_platform_deinit(void)
 {
     #if MALI_DVFS_ENABLED
@@ -1288,26 +1055,6 @@ mali_bool get_gpu_power_status(void)
 {
     return g_swGpuPowerState;
 }
-
-/*****************************************************************************
- function name  : mali_platform_deinit
- description    : power mode change action
- input vars     : void
- output vars    : NA
- return value   : _mali_osk_errcode_t
- calls          : mali_platform_powerup
-                  mali_platform_powerdown
- called         : mali_pm_powerup
-                  mali_pm_powerdown
-                  mali_pm_runtime_suspend
-                  mali_pm_runtime_resume
-
- history        :
-  1.data        : 04/03/2014
-    author      : s00250033
-    modify      : new
-
-*****************************************************************************/
 _mali_osk_errcode_t mali_platform_power_mode_change(mali_power_mode power_mode)
 {
     switch (power_mode)
@@ -1335,22 +1082,7 @@ _mali_osk_errcode_t mali_platform_power_mode_change(mali_power_mode power_mode)
     MALI_SUCCESS;
 }
 
-/*****************************************************************************
- function name  : mali_remap_soc_addr
- description    : remap mali related io address for register accessing
- input vars     : void
- output vars    : NA
- return value   : _mali_osk_errcode_t
- calls          : ioremap
- called         : mali_hisi_mem_init
 
-
- history        :
-  1.date        : 18/07/2014
-    author      : l00280506
-    modify      : new
-
-*****************************************************************************/
 static _mali_osk_errcode_t mali_remap_soc_addr(void)
 {
     MALI_DEBUG_PRINT(3, ("mali_remap_soc_addr() called\n"));
@@ -1371,22 +1103,7 @@ static _mali_osk_errcode_t mali_remap_soc_addr(void)
 }
 
 
-/*****************************************************************************
- function name  : mali_unmap_soc_addr
- description    : remap mali related io address for register accessing
- input vars     : void
- output vars    : NA
- return value   : void
- calls          : iounmap
- called         : mali_platform_deinit
 
-
- history        :
-  1.date        : 18/07/2014
-    author      : l00280506
-    modify      : new
-
-*****************************************************************************/
 static void mali_unmap_soc_addr(void)
 {
     MALI_DEBUG_PRINT(3, ("mali_unmap_soc_addr() called\n"));

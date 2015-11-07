@@ -1,5 +1,6 @@
 Read the Fscking Papers!
 
+
 This document describes RCU-related publications, and is followed by
 the corresponding bibtex entries.  A number of the publications may
 be found at http://www.rdrop.com/users/paulmck/RCU/.  For others, browsers
@@ -179,6 +180,7 @@ tree using software transactional memory to protect concurrent updates
 RCU-protected resizeable hash tables [Triplett:2011:RPHash], the 3.0 RCU
 trainwreck [PaulEMcKenney2011RCU3.0trainwreck], and Neil Brown's "Meet the
 Lockers" LWN article [NeilBrown2011MeetTheLockers].
+
 
 Bibtex Entries
 
@@ -1795,6 +1797,7 @@ Revised:
 "
 }
 
+
 ########################################################################
 #
 #	"What is RCU?" LWN series.
@@ -1858,6 +1861,7 @@ Revised:
 #	"What is RCU?" LWN series.
 #
 ########################################################################
+
 
 @unpublished{SteveRostedt2008dyntickRCUpatch
 ,Author="Steven Rostedt and Paul E. McKenney"

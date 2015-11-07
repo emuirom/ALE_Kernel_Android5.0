@@ -56,6 +56,7 @@
 #include "soc_baseaddr_interface.h"
 #include "isp_io_mutex.h"
 
+
 #include "hw_soft_3a.h"
 #define DEBUG_DEBUG 0
 #define LOG_TAG "K3_ISP"
@@ -80,10 +81,11 @@
 #define DDR_CURR_BANDWIDTH_PATH "/sys/class/devfreq/ddrfreq/ddr_bandwidth"
 
 /* VARIABLES AND ARRARYS */
-static k3_isp_data isp_data;
+k3_isp_data isp_data;
 static isp_hw_controller *isp_hw_ctl;
 static isp_tune_ops *camera_tune_ops;
 static camera_flash_state flash_exif = FLASH_OFF;
+
 
 static camera_capability k3_cap[] = {
 	{V4L2_CID_AUTO_WHITE_BALANCE, THIS_AUTO_WHITE_BALANCE},
@@ -139,6 +141,7 @@ int k3_isp_get_process_mode(void)
     #endif
 	return (int)isp_hw_ctl->isp_get_process_mode();
 }
+
 
 int k3_isp_get_k3_capability(u32 id, u32 *value)
 {
@@ -196,10 +199,6 @@ void k3_isp_check_flash_level(camera_flash_state state)
 		if (FLASH_ON == state) {
 			if (((isp_data.flash_mode == CAMERA_FLASH_AUTO) && (true == isp_hw_ctl->isp_is_need_flash(isp_data.sensor))) ||
 				isp_data.flash_mode == CAMERA_FLASH_ON) {
-				/*
-				 * isp_hw_ctl->isp_set_aecagc_mode(MANUAL_AECAGC);
-				 * isp_hw_ctl->isp_set_awb_mode(MANUAL_AWB);
-				 */
 
 				isp_data.flash_flow = FLASH_TESTING;
 				flashlight->turn_on(TORCH_MODE, preflash_level);
@@ -325,6 +324,7 @@ int k3_isp_set_camera(camera_sensor *open_sensor, camera_sensor *close_sensor)
 
     isp_hw_ctl->refresh_support_fmt(&isp_data.support_pixfmt, &isp_data.pixfmt_count);
 
+
     if (isp_data.sensor->get_frame_intervals)
         isp_data.sensor->get_frame_intervals(&isp_data.frame_rate);
 
@@ -445,7 +445,9 @@ int k3_isp_refresh_fmt(struct v4l2_format *fmt,camera_state state)
     u32                                 pix_clk;
     u32                                 index;
 
+
     print_info("k3_isp_refresh_fmt:");
+
 
     if (STATE_PREVIEW == state){
         index = isp_data.sensor->preview_frmsize_index;
@@ -548,9 +550,9 @@ int k3_isp_try_fmt(struct v4l2_format *fmt, camera_state state, camera_setting_v
 	sensor_frmsize.width = fs.discrete.width;
 	sensor_frmsize.height = fs.discrete.height;
 	if (CAMERA_ZSL_ON == k3_isp_get_zsl_state()) {
-		ret = isp_data.sensor->set_framesizes(STATE_PREVIEW, &sensor_frmsize, 0, view_type, true);
+		ret = isp_data.sensor->set_framesizes(STATE_PREVIEW, &sensor_frmsize, 0, view_type, true, isp_data.b_shutter_state, isp_data.ecgc_support_type);
 	} else {
-	    ret = isp_data.sensor->set_framesizes(state, &sensor_frmsize, 0, view_type, false);
+	    ret = isp_data.sensor->set_framesizes(state, &sensor_frmsize, 0, view_type, false, isp_data.b_shutter_state,isp_data.ecgc_support_type);
 	}
 	if (ret != 0) {
 		print_error("%s:fail to set sensor framesize, width = %d, height= %d",
@@ -583,10 +585,8 @@ int k3_isp_try_fmt(struct v4l2_format *fmt, camera_state state, camera_setting_v
 	print_debug("==state:%d in_width:%d\n", state, isp_data.pic_attr[state].in_width);
 	print_debug("==state:%d in_height:%d\n", state, isp_data.pic_attr[state].in_height);
 
-	/* added by c00144034 for mirror begin */
 	/* save view mode for ZOOM_VIEW_MODE */
 	isp_data.zoom_ext.view_mode = fmt->fmt.pix.priv;
-	/* added by c00144034 for mirror end */
 
 	if (CAMERA_ZSL_OFF == k3_isp_get_zsl_state()) {
 	    ret = k3_isp_refresh_fmt(fmt,state);
@@ -693,7 +693,6 @@ int k3_isp_stream_on(struct v4l2_pix_format *pixfmt,
 			&isp_data.pic_attr[state].in_height);
 	}
 
-	/* add by c00144034 for mirror begin */
     isp_data.zoom_ext.zoom = isp_data.zoom;
     isp_data.zoom_ext.zoom_view_center_xy = (isp_data.pic_attr[STATE_PREVIEW].out_width/2 << 16) | (isp_data.pic_attr[STATE_PREVIEW].out_height/2);
     isp_data.zoom_ext.zoom_view_center_x  = isp_data.pic_attr[STATE_PREVIEW].out_width/2;
@@ -702,7 +701,6 @@ int k3_isp_stream_on(struct v4l2_pix_format *pixfmt,
     isp_data.zoom_ext.full_view_center_y  = isp_data.pic_attr[STATE_PREVIEW].out_height/2;
     isp_data.zoom_ext.raw_view_center_x   = isp_data.pic_attr[STATE_PREVIEW].in_width / 2;
     isp_data.zoom_ext.raw_view_center_y   = isp_data.pic_attr[STATE_PREVIEW].in_height / 2;
-	/* add by c00144034 for mirror end*/
 
 	if (isp_data.sensor->isp_location == CAMERA_USE_K3ISP)
 		isp_hw_ctl->isp_tune_ops_prepare(state);
@@ -736,6 +734,7 @@ int k3_isp_stream_on(struct v4l2_pix_format *pixfmt,
 		/* pm_qos_update_request(&isp_data.qos_request, DDR_CAPTURE_MIN_PROFILE); */
 #endif
 
+
         if (CAMERA_ZSL_ON == k3_isp_get_zsl_state())
         {
             isp_data.zsl_ctrl.history_buf_cnt = buf_arr->buf_count;
@@ -755,7 +754,6 @@ int k3_isp_stream_on(struct v4l2_pix_format *pixfmt,
 		if (isp_data.sensor->stream_on)
 			isp_data.sensor->stream_on(state);
 
-		/* y00215412 change position here. */
 		if (isp_hw_ctl->cold_boot_set)
 			isp_hw_ctl->cold_boot_set(isp_data.sensor);
 
@@ -821,6 +819,7 @@ inline static int k3_isp_set_back_idx(u8 raw_buf_cnt)
         else
             isp_data.zsl_ctrl.zsl_back_idx = 0;
     }
+
 
     /* zsl_proc_idx will be changed after execute proc_img_with_preview,we
     allow execute proc_img_with_preview after stop_zap_raw_with_preview.*/
@@ -1091,6 +1090,7 @@ void k3_isp_poweroff(void)
 void k3_isp_auto_focus(int flag)
 {
 	print_debug("enter %s", __func__);
+
 
 	if (isp_data.sensor->af_enable) {
 		camera_tune_ops->isp_auto_focus(flag);
@@ -1587,7 +1587,6 @@ int k3_isp_set_zoom(char preview_running, u32 zoom)
 
     return 0;
 }
-/* add by c00144034 for mirror begin */
 /*
  **************************************************************************
  * FunctionName: k3_isp_set_zoom_center;
@@ -1609,6 +1608,7 @@ int k3_isp_set_zoom_center(char preview_running, u32 zoom_view_center_xy)
         print_error("overflow.zoom_view_center_x=%d,zoom_view_center_y=%d.",zoom_view_center_x,zoom_view_center_y);
         return 0;
     }
+
 
     if (zoom_view_center_xy != isp_data.zoom_ext.zoom_view_center_xy)
     {
@@ -1665,11 +1665,13 @@ int k3_isp_update_zoom_center(
     zoom_t     *zoom_ext = &isp_data.zoom_ext;
     pic_attr_t *pic_attr = &isp_data.pic_attr[STATE_PREVIEW];
 
+
     if ((zoom_view_center_x ==0) && (zoom_view_center_y ==0))
 	{
 	    print_error("invalid para.");
 	    return -EINVAL;
 	}
+
 
 	print_debug("mirror:old:zoom_ext->zoom=%d,zoom_ext->full_view_center_x=%d,zoom_ext->full_view_center_y=%d,zoom_ext->raw_view_center_x=%d,zoom_ext->raw_view_center_y=%d",
 	            zoom_ext->zoom,
@@ -1758,6 +1760,7 @@ int k3_isp_update_zoom_center(
 	print_debug("mirror:after:raw_view_center_x=%d,raw_view_center_y=%d",
 	            raw_view_center_x,
 	            raw_view_center_y);
+
 
     /* save the new */
 	zoom_ext->zoom                  = zoom;
@@ -1873,7 +1876,6 @@ int k3_isp_set_zoom_and_center(
 #endif
 	return ret;
 }
-/* add by c00144034 for mirror end */
 
 int k3_isp_set_ae_lock(int mode)
 {
@@ -1932,7 +1934,6 @@ int k3_isp_get_actual_iso(void)
 		ret = camera_tune_ops->isp_get_actual_iso();
 	} else if (CAMERA_USE_SENSORISP == isp_data.sensor->isp_location) {
 		if (isp_data.sensor->get_gain) {
-			/* revised by y00215412 2012-06-28 for Front camera ISO too large */
 			ret = isp_data.sensor->get_gain() * 100 / 0x10;
 			ret = ((ret / 2) + 5) / 10 * 10;
 		}
@@ -1946,15 +1947,7 @@ int k3_isp_get_focus_distance(void)
 	return camera_tune_ops->isp_get_focus_distance();
 }
 
-/*
- **************************************************************************
- * FunctionName: k3_isp_get_awb_gain;
- * Description : call by k3_v4l2_ioctl_g_ctrl;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 int k3_isp_get_awb_gain(int withShift)
 {
 	int ret = 0;
@@ -1967,15 +1960,7 @@ int k3_isp_get_awb_gain(int withShift)
 	return ret;
 }
 
-/*
- **************************************************************************
- * FunctionName: k3_isp_get_focus_code;
- * Description : call by k3_v4l2_ioctl_g_ctrl;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 int k3_isp_get_focus_code(void)
 {
 	int ret = 0;
@@ -2042,7 +2027,6 @@ int k3_isp_get_equivalent_focus(void)
 	return 0;
 }
 
-/* added by y00231328 for awb settings change with CCM pre-gain 2012-11-1 start. */
 int k3_isp_get_current_ccm_rgain(void)
 {
 	int ret = 0;
@@ -2066,7 +2050,6 @@ int k3_isp_get_current_ccm_bgain(void)
 	}
 	return ret;
 }
-/* added by y00231328 for awb settings change with CCM pre-gain 2012-11-1 end. */
 
 /*
  * YUV windows to RAW windows(after RAW DCW)
@@ -2094,11 +2077,6 @@ int k3_isp_yuvrect_to_rawrect(camera_rect_s *yuv, camera_rect_s *raw)
 
 	return 0;
 }
-
-/*
- * added by y00215412 for AE zoom issue
- * here yuv is already converted based on full size YUV
- */
 int k3_isp_yuvrect_to_rawrect2(camera_rect_s *yuv, camera_rect_s *raw)
 {
 	u32 crop_width,	crop_height; /* cropped size of original raw rect */
@@ -2130,6 +2108,7 @@ int k3_isp_yuvrect_to_rawrect2(camera_rect_s *yuv, camera_rect_s *raw)
 
 	return 0;
 }
+
 
 int k3_isp_rawrect_to_yuvrect(camera_rect_s *yuv, camera_rect_s *raw)
 {
@@ -2187,6 +2166,7 @@ int k3_isp_antishaking_rect_out2stat(camera_rect_s *out, camera_rect_s *stat)
 
 	return 0;
 }
+
 
 int k3_isp_antishaking_rect_stat2out(camera_rect_s *out, camera_rect_s *stat)
 {
@@ -2250,10 +2230,8 @@ static void k3_isp_calc_zoom(camera_state state, scale_strategy_t scale_strategy
 		temp_height = temp_width * (attr->out_height) / (attr->out_width);
 	}
 
-	/* add by c00144034 for mirror begin */
 	attr->crop_width_for_view_angle = temp_width;
 	attr->crop_height_for_view_angle = temp_height;
-	/* add by c00144034 for mirror end */
 
 	/* do not support float compute, so multiple YUV_SCALE_DIVIDEND */
 	scale_width = (YUV_SCALE_DIVIDEND * temp_width) / attr->out_width;
@@ -2319,6 +2297,7 @@ static void k3_isp_calc_zoom(camera_state state, scale_strategy_t scale_strategy
 		||(YUV_SCALE_DIVIDEND !=  attr->yuv_down_scale_nscale)
 		||(1 != attr->yuv_dcw)){
 
+
 			/*To avoid edge color anomalies need more 4 pixel in zoom mode*/
 			attr->crop_width = (attr->crop_width & ~0x03) + 4;
 			attr->crop_height = (attr->crop_height & ~0x03) + 4;
@@ -2333,6 +2312,7 @@ static void k3_isp_calc_zoom(camera_state state, scale_strategy_t scale_strategy
 	}
 	attr->crop_x = (attr->yuv_in_width - attr->crop_width) / 2;
 	attr->crop_y = (attr->yuv_in_height - attr->crop_height) / 2;
+
 
         /*make sure the crop start is even*/
         attr->crop_x = (attr->crop_x / 2) * 2;
@@ -2376,15 +2356,7 @@ int k3_isp_get_vflip(void)
 	return 0;
 }
 
-/*
- **************************************************************************
- * FunctionName: k3_isp_set_shot_mode;
- * Description : called by k3_v4l2_ioctl_s_ctrl;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 void k3_isp_set_shoot_mode(camera_shoot_mode shoot_mode)
 {
 	print_info("enter %s, shot mode is %d", __func__, shoot_mode);
@@ -2589,6 +2561,8 @@ int k3_isp_set_zsl_cap_raw(u8 raw_buf_cnt,struct v4l2_pix_format *pixfmt,buffer_
     }
 }
 
+
+
 /*
  **************************************************************************
  * FunctionName: k3_isp_get_zsl_proc_img;
@@ -2618,6 +2592,7 @@ void k3_isp_set_zsl_proc_img(u8 zsl_proc_img)
 {
     isp_data.zsl_ctrl.zsl_proc_type = zsl_proc_img;
 }
+
 
 /*
  **************************************************************************
@@ -2667,6 +2642,7 @@ void k3_isp_set_zsl_cap_valid(bool zsl_cap_valid)
 	isp_data.zsl_ctrl.zsl_cap_valid = zsl_cap_valid;
 }
 
+
 void k3_isp_set_video_stabilization(int bStabilization)
 {
 	print_debug("enter %s()", __func__);
@@ -2685,7 +2661,6 @@ void k3_isp_set_yuv_crop_pos(int point)
 	isp_hw_ctl->isp_set_yuv_crop_pos(point);
 }
 
-/* control on-line or off-line mode. add by c00220250 */
 void k3_isp_set_process_mode(capture_type process_mode)
 {
  	print_info("enter %s()", __func__);
@@ -2700,6 +2675,53 @@ void k3_isp_set_hw_3a_mode(int mode)
 	   	 isp_data.hw_3a_switch = mode;
 		ispv1_hw_3a_switch(isp_data.hw_3a_switch);
 	}
+}
+
+void k3_isp_set_b_shutter_mode(int b_shutter_mode)
+{
+	print_info("enter %s()", __func__);
+	isp_hw_ctl->isp_set_b_shutter_mode(b_shutter_mode);
+}
+
+int k3_isp_set_b_shutter_long_ae(b_shutter_ae_iso_s* b_shutter_ae_iso)
+{
+	int retVal = -1;
+	print_info("%s enter %s()", BSHUTTER_LOG_TAG, __func__);
+
+	retVal = isp_hw_ctl->isp_set_b_shutter_long_ae(b_shutter_ae_iso);
+
+	return retVal;
+}
+
+int k3_isp_set_b_shutter_hdr_ae(b_shutter_hdr_aeciso_s* b_shutter_hdr_ae_iso)
+{
+	int retVal = -1;
+	print_info("%s enter %s()", BSHUTTER_LOG_TAG, __func__);
+
+	retVal = isp_hw_ctl->isp_set_b_shutter_hdr_ae(b_shutter_hdr_ae_iso);
+
+	return retVal;
+}
+
+int k3_isp_get_aec_state(void)
+{
+	bool retVal = false;
+	print_info("%s enter %s()", BSHUTTER_LOG_TAG, __func__);
+	retVal=isp_hw_ctl->isp_get_aec_state();
+	if(true == retVal)
+		return CAMERA_AEC_STABLE;
+	else
+		return CAMERA_AEC_NONE_STABLE;
+}
+
+int k3_isp_set_b_shutter_ecgc(b_shutter_ae_iso_s* b_shutter_tryae_ecgc)
+{
+	int retVal = -1;
+	print_info("%s enter %s()", BSHUTTER_LOG_TAG, __func__);
+
+	retVal = isp_hw_ctl->isp_set_b_shutter_ecgc(b_shutter_tryae_ecgc);
+
+	return retVal;
 }
 
 /*
@@ -2742,22 +2764,18 @@ static void k3_isp_set_default(void)
 		isp_data.video_stab = 0;
 	}
 	isp_data.zoom				= 0;
-	/* add by c00144034 for mirror begin */
 	isp_data.zoom_ext.zoom      = 0;
-	/* add by c00144034 for mirror end */
 
 	isp_data.sensor				= NULL;
 	isp_data.support_pixfmt			= NULL;
 	isp_data.pixfmt_count			= 0;
 
-	/* add by j00179721 2012-03-30*/
 	isp_data.fps_mode	=	CAMERA_FRAME_RATE_AUTO;
 	isp_data.assistant_af_flash = false;
 	isp_data.af_need_flash = false;
 
 	isp_data.shoot_mode = CAMERA_SHOOT_SINGLE;
 
-	/* added by c00144034 for zsl begin*/
 	isp_data.zsl_ctrl.zsl_state              = CAMERA_ZSL_OFF;
  	isp_data.zsl_ctrl.zsl_online_enable      = true;/* zsl_online_enable to control wethler use online when capture small picture. */
 	isp_data.zsl_ctrl.zsl_proc_mode          = CAMERA_ZSL_OFFLINE;
@@ -2770,12 +2788,18 @@ static void k3_isp_set_default(void)
 	isp_data.zsl_ctrl.history_buf_idx        = 0;   /* zsl capture buffer index */
 	isp_data.zsl_ctrl.focused_frame_cnt      = 1;
 	isp_data.hw_3a_switch					 = HW_3A_OFF;
-	/* added by c00144034 for zsl end*/
 
 	isp_data.ae_lock                         = AUTO_AECAGC;
 	isp_data.awb_lock                        = AUTO_AWB;
 
 	isp_data.ddr_lock_freq		= 0;
+
+	//initial b_shutter relative struct
+	memset(&isp_data.b_shutter_aecagc,0, sizeof(isp_data.b_shutter_aecagc));
+	memset(&isp_data.b_shutter_hdr_aecagc,0, sizeof(isp_data.b_shutter_hdr_aecagc));
+	memset(&isp_data.b_shutter_tryae_aecagc,0, sizeof(isp_data.b_shutter_tryae_aecagc));
+	isp_data.b_shutter_state = CAMERA_B_SHUTTER_MODE_OFF;
+	isp_data.ecgc_support_type = ECGC_TYPE_MAX ;
 }
 
 /* c00144034:zsl */
@@ -2919,6 +2943,8 @@ int k3_isp_zsl_try_fmt(pic_fmt_s *pic_fmt,char preview_state)
 	return 0;
  }
 
+
+
 /*
  **************************************************************************
  * FunctionName: k3_isp_zsl_calc_idi;
@@ -2960,6 +2986,7 @@ int k3_isp_zsl_calc_idi(struct v4l2_format *preview_fmt,
     pix_clk = pix_clk + pix_clk/10 + pix_clk/20 ;
     print_debug("change hts*vts*1.05*1.1");
     print_debug("%s:pix_clk=%dM",__func__,pix_clk/1000000);
+
 
 #ifdef ISP_DEBUG_ZSL
     isp_data.zsl_ctrl.zsl_online_enable = zsl_online_enable;
@@ -3068,6 +3095,7 @@ int k3_isp_zsl_refresh_fmt(struct v4l2_format *preview_fmt,
 		isp_data.pic_attr[state_try].sensor_width = ((isp_data.pic_attr[state_try].sensor_width /32)*32);
 		isp_data.pic_attr[state_try].sensor_height=((isp_data.pic_attr[state_try].sensor_height /8)*8);
     	}
+
 
     isp_data.pic_attr[state_try].in_width      = isp_data.pic_attr[state_try].sensor_width;
     isp_data.pic_attr[state_try].in_height     = isp_data.pic_attr[state_try].sensor_height;

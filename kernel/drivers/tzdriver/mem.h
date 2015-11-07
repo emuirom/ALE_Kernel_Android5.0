@@ -1,10 +1,4 @@
-/*
- * FileName:
- * Author:         v00297436 
- * Description:
- * Version:
- * Function List:
- */
+
 
 #ifndef _MEM_H_
 #define _MEM_H_

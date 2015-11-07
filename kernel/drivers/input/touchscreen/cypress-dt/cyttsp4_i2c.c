@@ -205,6 +205,7 @@ static int cyttsp4_i2c_probe(struct i2c_client *client,
 	dev_dbg(dev, "%s: debug on\n", __func__);
 	dev_vdbg(dev, "%s: verbose debug on\n", __func__);
 
+
 	rc = of_property_read_string(dev->of_node,"cy,power_pin", &power_pin);
 	if (rc) {
 		pr_err("%s: OF error rc=%d\n", __func__, rc);
@@ -311,6 +312,7 @@ static int cyttsp4_i2c_probe(struct i2c_client *client,
 
 	msleep(5);
 	// huawei patch end
+
 
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
 		dev_err(dev, "%s: fail check I2C functionality\n", __func__);

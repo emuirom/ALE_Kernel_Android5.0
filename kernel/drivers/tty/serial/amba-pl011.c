@@ -241,6 +241,7 @@ void dev_uart_dsm_client_notify(const char* content,int value, int errNum, struc
 	}
 }
 
+
 /*
  * Reads up to 256 characters from the FIFO or until it's empty and
  * inserts them into the TTY layer. Returns the number of characters
@@ -295,6 +296,7 @@ static int pl011_fifo_to_tty(struct uart_amba_port *uap)
 
 	return fifotaken;
 }
+
 
 /*
  * All the DMA operation mode stuff goes inside this ifdef.
@@ -2392,22 +2394,6 @@ static int pl011_probe_dt_alias(int index, struct device *dev)
 
 	return ret;
 }
-
-/*****************************************************************************
- 函 数 名  : get_uart_console
- 功能描述  : 获得当前console的结构体
- 输入参数  : 无
- 输出参数  : 无
- 返 回 值  : 返回当前struct console结构体
- 调用函数  : 无
- 被调函数  : ashell_console_register
-
- 修改历史      :
-  1.日    期   : 2012年9月13日
-    作    者   : 张彪 zkf67996
-    修改内容   : 移植v3r2
-
-*****************************************************************************/
 
 struct console* get_uart_console(void) /* add by hisi-balong */
 {

@@ -24,6 +24,7 @@
 #include <linux/videodev2.h>
 //#define ISP_ZSL_BURST_OPT  /*to be debug */
 
+
 #define M_CAMERA_ANALOG_VDD     "mcamera_avdd"
 #define M_CAMERA_CORE_VDD       "mcamera_core"
 #define M_CAMERA_IO_VDD         "mcamera_io"
@@ -145,6 +146,7 @@ typedef enum {
 	CAMERA_ISO_1600,
 } camera_iso;
 
+
 typedef enum {
 	CAMERA_FLASH_ON = 0,
 	CAMERA_FLASH_TORCH,
@@ -183,6 +185,7 @@ typedef enum {
 	CAMERA_RESOLUTION_MAX,
 } camera_resolutions;
 
+
 typedef enum {
 	CAMERA_NO_FLIP = 0,
 	CAMERA_H_FLIP,
@@ -198,6 +201,7 @@ typedef enum {
 	CAMERA_BRIGHTNESS_H2,
 	CAMERA_BRIGHTNESS_MAX,
 } camera_brightness;
+
 
 typedef enum {
 	CAMERA_ANTI_BANDING_AUTO = 0,
@@ -223,7 +227,7 @@ typedef enum {
 	CAMERA_FOCUS_EDOF,
 	CAMERA_FOCUS_CONTINUOUS_VIDEO,
 	CAMERA_FOCUS_CONTINUOUS_PICTURE,
-	CAMERA_FOCUS_AUTO_VIDEO, /* added for touch af in video mode by j00212990 2013-01-24 */
+	CAMERA_FOCUS_AUTO_VIDEO,
 	CAMERA_FOCUS_CAF_FORCE_AF,
 	CAMERA_FOCUS_FAST_SHOOT,
 	CAMERA_FOCUS_MAX,
@@ -265,13 +269,11 @@ typedef enum {
 	CAMERA_SHOOT_BURST
 } camera_shoot_mode;
 
-/*added and changed by y00215412 2012-11-05 start */
 typedef enum {
 	CAMERA_FPS_STATE_HIGH = 0,
 	CAMERA_FPS_STATE_MIDDLE,
 	CAMERA_FPS_STATE_LOW,
 
-	/* changed by y00215412 for 3 level frame rate. */
 	CAMERA_EXPO_PRE_REDUCE1, /* before change fps from middle to high, maybe enter this state */
 	CAMERA_EXPO_PRE_REDUCE2, /* before change fps from low to middle, maybe enter this state */
 	CAMERA_FRAME_RATE_STATE_MAX
@@ -281,11 +283,19 @@ typedef enum {
 	CAMERA_FRAME_RATE_UP = 0,
 	CAMERA_FRAME_RATE_DOWN,
 } camera_frame_rate_dir;
-/*added and changed by y00215412 2012-11-05 end */
 
-/* add by c00144034 for ZSL begin */
 
-/* add by c00144034 for ZSL */
+
+typedef enum {
+    CAMERA_B_SHUTTER_MODE_OFF = 0,
+    CAMERA_B_SHUTTER_MODE_ON
+} camera_b_shutter_mode;
+
+typedef enum {
+    CAMERA_AEC_NONE_STABLE = 0,
+    CAMERA_AEC_STABLE
+} camera_aec_stable_state;
+
 typedef enum {
     CAMERA_ZSL_OFF = 0,
     CAMERA_ZSL_ON
@@ -303,21 +313,19 @@ typedef enum {
     CAMERA_ZSL_CAP_CMD_RESUME
 } camera_zsl_cap_cmd;
 
-/* add by c00144034 for ZSL end */
 
 typedef enum {
 	VIEW_HDR_MOVIE = 0,
 	VIEW_FULL = 1,
 	VIEW_CROP,
-	/* add by c00144034 for mirror begin */
 	VIEW_ZOOM_MODE,
-	/* add by c00144034 for mirror end */
 } camera_setting_view_type;
 
 typedef enum {
 	RESOLUTION_16_9 = 0,
 	RESOLUTION_4_3,
 } camera_resolution_type;
+
 
 /* For focus start or stop command */
 typedef enum _FOCUS_ACTION {
@@ -347,6 +355,7 @@ typedef enum _VCM_TYPE{
 	VCM_DW9714_Liteon,
 	VCM_OTHER,
 } VCM_TYPE;
+
 
 typedef enum {
 	LED_FLASH = 0,
@@ -378,6 +387,7 @@ typedef enum {
 	CLK_1500M = 0x5a,
 
 } mipi_clk;
+
 
 typedef enum {
 	FLASH_100MA = 0x04,

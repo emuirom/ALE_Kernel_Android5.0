@@ -1,9 +1,4 @@
-/*
- * atfdriver.c
- *
- *  Created on: 2014-8-25
- *      Author: l00265041
- */
+
 #include <asm/compiler.h>
 #include "atfdriver.h"
 

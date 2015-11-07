@@ -64,6 +64,7 @@ struct cyttsp4_btn_data {
 	u8 pr_buf[CY_MAX_PRBUF_SIZE];
 };
 
+
 static inline void cyttsp4_btn_key_action(struct cyttsp4_btn_data *bd,
 	int btn_no, int btn_state)
 {

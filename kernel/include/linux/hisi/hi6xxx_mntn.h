@@ -65,7 +65,7 @@ typedef enum tagBSP_MODULE_E
     BSP_MODU_IPC,
     BSP_MODU_MNTN,
     BSP_MODU_SSI,       /*增加SSI模块，added by z00187553*/
-    BSP_MODU_HKADC,     /*增加HKADC模块，added by zkf37782   */
+    BSP_MODU_HKADC,
     BSP_MODU_PMU,       /*增加PMU模块，added by z00187553*/
     BSP_MODU_HIFI,      /*0x29*//*增加HIFI模块，added by w00193956*/
     BSP_MODU_AUDIO,

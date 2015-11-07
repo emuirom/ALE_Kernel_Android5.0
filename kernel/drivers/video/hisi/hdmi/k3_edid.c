@@ -135,6 +135,7 @@ static hdmi_video_timings all_timings_direct[] = {
     {1280, 1470, 148500,  40, 440, 220, 5,  5, 20, 0, 0, 0}
 };
 
+
 /* Array which maps the timing values with corresponding CEA / VESA code */
 static int code_index[ARRAY_SIZE(all_timings_direct)] = {
     /* <--0 CEA 26--> */

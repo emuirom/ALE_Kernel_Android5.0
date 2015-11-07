@@ -64,6 +64,7 @@
 #endif
 #include <asm/fiq_glue.h>
 
+
 #if defined(CONFIG_FPE_NWFPE) || defined(CONFIG_FPE_FASTFPE)
 char fpe_type[8];
 
@@ -101,6 +102,7 @@ EXPORT_SYMBOL(system_serial_high);
 
 unsigned int elf_hwcap __read_mostly;
 EXPORT_SYMBOL(elf_hwcap);
+
 
 #ifdef MULTI_CPU
 struct processor processor __read_mostly;
@@ -950,6 +952,7 @@ void __init setup_arch(char **cmdline_p)
 	if (mdesc->init_early)
 		mdesc->init_early();
 }
+
 
 static int __init topology_init(void)
 {

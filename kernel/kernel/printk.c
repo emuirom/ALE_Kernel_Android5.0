@@ -92,6 +92,7 @@ extern int hilog_loaded;
 EXPORT_SYMBOL(log_buf_info);
 EXPORT_SYMBOL(res_log_buf);
 
+
 #define    HI_DECLARE_SEMAPHORE(name)	\
 	struct semaphore name = __SEMAPHORE_INITIALIZER(name, 0)
 
@@ -608,6 +609,7 @@ static int check_syslog_permissions(int type, bool from_file)
 	}
 	return security_syslog(type);
 }
+
 
 /* /dev/kmsg - userspace message inject/listen interface */
 struct devkmsg_user {
@@ -1862,6 +1864,7 @@ static void call_console_drivers(int level, const char *text, size_t len)
 
 #ifdef CONFIG_HISI_LOG
 
+
 static void emit_one_char(char c)
 {
 	if (log_buf_info->waddr == KERNEL_LOG_BUF_LEN)
@@ -1953,6 +1956,7 @@ static int  emit_log_char_to_rbuf(const char *text, u16 text_len, struct log *ms
 				(log_buf_info+i)->raddr = 0;
 			}
 
+
 			strncpy((char *)(log_buf_info+1), kdumplog, sizeof(kdumplog));
 		}
 
@@ -1976,6 +1980,10 @@ static int  emit_log_char_to_rbuf(const char *text, u16 text_len, struct log *ms
 	return 0;
 }
 #endif
+
+
+
+
 
 /*
  * Zap console related locks when oopsing. Only zap at most once
@@ -2442,6 +2450,7 @@ asmlinkage void early_printk(const char *fmt, ...)
 	va_end(ap);
 }
 #endif
+
 
 /*get console uart index*/
 int get_console_index(void)

@@ -409,6 +409,7 @@ static void __exit hisi_lpm3_exit(void)
 }
 module_exit(hisi_lpm3_exit);
 
+
 MODULE_AUTHOR("wangtao.jean@huawei.com>");
 MODULE_DESCRIPTION(" LOW POWER M3 DRIVER");
 MODULE_LICENSE("GPL");

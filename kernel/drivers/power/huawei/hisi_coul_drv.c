@@ -27,6 +27,7 @@ HWLOG_REGIST();
 #define HISI_SCOUL_INF(fmt,args...) do { printk(KERN_ERR "[hisi coul]" fmt, ## args); } while (0)
 #endif
 
+
 static struct hisi_coul_ops    *g_hisi_coul_ops = NULL;
 static enum HISI_COULOMETER_TYPE  g_hisi_coul_type = COUL_UNKNOW;
 /*lint -e773*/
@@ -46,6 +47,7 @@ enum HISI_COULOMETER_TYPE hisi_coulometer_type(void)
 {
     return g_hisi_coul_type;
 }
+
 
 /****************************************************************************
   Function:     is_hisi_coul_ready
@@ -90,6 +92,7 @@ int hisi_coul_reg_read(void)
     return 0;
 }
 #endif
+
 
 /****************************************************************************
   Function:     is_hisi_battery_exist
@@ -433,6 +436,7 @@ int hisi_battery_fcc(void)
     return -EPERM;
 }
 
+
 /****************************************************************************
   Function:     hisi_battery_tte
   Description:  return the time to empty in minute
@@ -470,6 +474,7 @@ int hisi_battery_ttf(void)
 
     return -EPERM;
 }
+
 
 /****************************************************************************
   Function:     hisi_battery_health
@@ -590,6 +595,7 @@ void hisi_coul_charger_event_rcv(unsigned int event)
     blocking_notifier_call_chain(&notifier_list, event, NULL);
 }
 
+
 /****************************************************************************
   Function:     hisi_coul_ops_register
   Description:  register the hisi coul ops
@@ -639,12 +645,14 @@ int hisi_coul_ops_unregister (struct hisi_coul_ops *coul_ops)
     return -EINVAL;
 }
 
+
 int __init hisi_coul_init(void)
 {
     hwlog_info("hisi_coul_init\n");
     return 0;
 }
 module_init(hisi_coul_init);
+
 
 void __exit hisi_coul_exit(void)
 {

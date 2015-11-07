@@ -206,9 +206,6 @@ _ARM_FUNCTION_CALLED_FROM_C(pwrctrl_asm_deep_sleep_entry)
     MOV pc,r1           /*跳转到sram执行*/
 
     .ltorg
-
-
-
 pwrctrl_asm_wake_entry:
         /*查询ACPU0进入低功耗阶段刷L2CACHE标志，若未设置，则跳过刷L2CACHE*/
         LDR r0, =PWRCTRL_ACPU0_L2CACHE_FLUSH_FLAG
@@ -222,8 +219,6 @@ pwrctrl_asm_wake_entry:
 no_flush: 
         BL pwrctrl_asm_wake_entry2
         .ltorg
-
-
 flush_l2cache:
 #if defined(CHIP_BB_HI6210)
 	mov r0,#0

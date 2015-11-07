@@ -4,6 +4,7 @@
  * Copyright (C) 2014 Hisilicon, Inc.
  *
  * Author:
+ *		Bintian Wang <bintian.wang@huawei.com>
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -28,6 +29,7 @@
 
 #define MT_DEVICE		0
 #define MT_NORMAL_NC    3
+
 
 struct hisi_va_mem_des
 {
@@ -152,6 +154,7 @@ unsigned long hisi_lookup_va(unsigned long pa)
     int i;
     unsigned long va = 0;
 
+
 	for(i = 0; i < sizeof(hi6210_va_desc)/sizeof(struct hisi_va_mem_des); i++) {
         if ((pa >= hi6210_va_desc[i].pa) && (pa < (hi6210_va_desc[i].pa + hi6210_va_desc[i].length))) {
             va = hi6210_va_desc[i].va + pa - hi6210_va_desc[i].pa;
@@ -241,6 +244,9 @@ static int memcmp_align(const void *cs, const void *ct, unsigned int count)
 			break;
 	return res;
 }
+
+
+
 
 /**
  * memset - Fill a region of memory with the given value

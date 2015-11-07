@@ -154,6 +154,7 @@ static int __cpuinit hotcpu_k3_prepare(struct notifier_block *nfb,
 	return NOTIFY_OK;
 }
 
+
 static int __cpuinit hotcpu_k3_later(struct notifier_block *nfb,
 					unsigned long action, void *hcpu)
 {
@@ -190,6 +191,7 @@ static struct notifier_block __refdata hotcpu_later_notifier = {
 };
 
 /*******************hotplug cpu operation ****************************/
+
 
 /*******************Cpufreq_driver interface *************/
 static int k3v2_verify_freq(struct cpufreq_policy *policy)
@@ -379,6 +381,7 @@ static struct cpufreq_driver k3v2_driver = {
 };
 
 /******************cpufreq_driver interface end*****************************/
+
 
 /******************ipps driver interface begin*****************************/
 

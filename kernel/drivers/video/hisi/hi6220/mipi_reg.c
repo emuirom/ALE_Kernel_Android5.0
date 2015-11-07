@@ -27,7 +27,9 @@
  *
  */
 
+
 #include "mipi_reg.h"
+
 
 /******************************************************************************
 ** FUNCTIONS IMPLEMENTATIONS
@@ -572,6 +574,7 @@ void set_dsi_mode(u32 mode)
 
         /* switch to video mode */
         set_MIPIDSI_MODE_CFG(MIPIDSI_VIDEO_MODE);
+
 
         /* enable generate High Speed clock */
         set_MIPIDSI_LPCLK_CTRL_phy_txrequestclkhs(1);

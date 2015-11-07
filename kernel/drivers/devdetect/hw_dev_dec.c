@@ -71,6 +71,7 @@ static struct dev_flag_device rt_dev_dct = {
     .index = 0,
 };
 
+
 static uint64 dev_flag_long = 0; // save the check result
 static uint64 boardid_devcheck_flag_long = 0;// save the config message of device, which need to check at board check and running test.
 static uint64 rt_devcheck_flag_long = 0;// save the config message of device
@@ -138,6 +139,7 @@ static DEVICE_ATTR(dev_flag, S_IRUGO, dev_flag_show, NULL);
 static DEVICE_ATTR(boardid_devcheck_flag, S_IRUGO, boardid_devcheck_flag_show, NULL);
 
 static DEVICE_ATTR(rt_devcheck_flag, S_IRUGO, rt_devcheck_flag_show, NULL);
+
 
 static int  dev_dct_probe(struct platform_device *pdev){
     int ret = 0;
@@ -223,6 +225,7 @@ static const struct of_device_id device_check_match_table[] = {
 };
 MODULE_DEVICE_TABLE(of, device_check_match_table);
 
+
 static struct platform_driver dev_dct_driver = {
     .driver = {
     .name   = DTS_COMP_DEVICE_CHECK_NAME,
@@ -245,6 +248,7 @@ late_initcall_sync(hw_dev_dct_init);
 
 module_exit(hw_dev_dct_exit);
 
+MODULE_AUTHOR("sjm");
 MODULE_DESCRIPTION("Device Detect Driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:dev_dct");

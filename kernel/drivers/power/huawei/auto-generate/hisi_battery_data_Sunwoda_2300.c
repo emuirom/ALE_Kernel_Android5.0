@@ -22,6 +22,7 @@ static struct sf_lut Sunwoda_2300_pc_sf = {
     }
 };
 
+
 static struct sf_lut Sunwoda_2300_rbatt_sf = {
     .rows = 28,
     .cols = 6,
@@ -96,6 +97,7 @@ static struct pc_temp_ocv_lut Sunwoda_2300_pc_temp_ocv = {
         {3200, 3200, 3200, 3200, 3200, 3200},
     }
 };
+
 
 struct hisi_smartstar_coul_battery_data Sunwoda_2300_battery_data = {
     .id_voltage_min = 80,

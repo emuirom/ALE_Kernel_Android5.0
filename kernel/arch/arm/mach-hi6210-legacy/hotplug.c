@@ -144,6 +144,7 @@ void  platform_cpu_die(unsigned int cpu)
 #endif
     pwrctrl_asm_deep_sleep_entry();	
 
+
 	if (pen_release != cpu) {
 		for (;;) {
 			/*
@@ -174,6 +175,7 @@ void  platform_cpu_die(unsigned int cpu)
 
 	}
 
+
     return;
 }
 
@@ -186,6 +188,7 @@ int platform_cpu_disable(unsigned int cpu)
 {
     return cpu == 0 ? -1 : 0;
 }
+
 
 /*balong v9r1 soc related function, to enable slave power down*/
 void platform_cpu_power_down(int cpu)
@@ -266,6 +269,7 @@ void platform_cpu_power_down(int cpu)
 #else
     SOC_SCTRL_SC_ACPU_CTRL0_UNION *ctrl0;
 
+
     /*make sure cpu in wfi status*/
     do {
         reg = readl(SOC_SCTRL_SCCPUCORESTAT_ADDR(IO_ADDRESS(REG_BASE_SC_OFF)));
@@ -330,6 +334,7 @@ void platform_cpu_power_on(int cpu)
     SOC_SCTRL_SC_ACPU_CTRL0_UNION *ctrl0;
     SOC_AO_SCTRL_SC_ARM_PWDN_HARDDIS0_UNION *harddis0;
 
+
     /*configure cpu wfi mask*/
     reg = readl(SOC_SCTRL_SC_ACPU_CTRL0_ADDR(IO_ADDRESS(REG_BASE_SC_OFF)));
     ctrl0 = (SOC_SCTRL_SC_ACPU_CTRL0_UNION *)&reg;
@@ -370,6 +375,7 @@ void platform_cpu_power_on(int cpu)
     unsigned int reg,tmp;
     SOC_SCTRL_SC_ACPU_CTRL0_UNION *ctrl0;
     SOC_AO_SCTRL_SC_ARM_PWDN_HARDDIS0_UNION *harddis0;
+
 
     /*configure cpu wfi mask*/
     reg = readl(SOC_SCTRL_SC_ACPU_CTRL0_ADDR(IO_ADDRESS(REG_BASE_SC_OFF)));
@@ -476,6 +482,7 @@ static int platform_cpu_down_notify (struct notifier_block *nfb,
     }
     return NOTIFY_DONE;
 }
+
 
 static struct notifier_block __refdata platform_cpu_up_notifier = {
     .notifier_call = platform_cpu_up_notify,

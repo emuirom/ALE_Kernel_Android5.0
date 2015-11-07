@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00145353
+ * Email:	  alan.hefeng@huawei.com
  * Date:	  2013-12-27
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+
 #include <linux/module.h>
 #include <linux/printk.h>
 #include <linux/of.h>
@@ -34,6 +37,7 @@
 
 extern struct hw_csi_pad hw_csi_pad;
 static hwsensor_vtbl_t s_ov5648_x1s_vtbl;
+
 
 int ov5648_x1s_config(hwsensor_intf_t* si, void  *argp);
 
@@ -94,6 +98,7 @@ struct sensor_power_setting hw_ov5648_x1s_power_setting[] = {
 		.sensor_index = SENSOR_INDEX_INVALID,
 		.delay = 3,
 	},
+
 
 	{
 		.seq_type = SENSOR_MCLK,
@@ -237,6 +242,7 @@ s_ov5648_x1s_vtbl =
 	.power_up = ov5648_x1s_power_up,
 	.power_down = ov5648_x1s_power_down,
 
+
 	.match_id = ov5648_x1s_match_id,
 
 	.csi_enable = ov5648_x1s_csi_enable,
@@ -263,6 +269,7 @@ int ov5648_x1s_config(
 		case SEN_CONFIG_POWER_OFF:
 
 				ret = si->vtbl->power_down(si);
+
 
 			break;
 		case SEN_CONFIG_WRITE_REG:

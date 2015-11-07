@@ -1254,6 +1254,7 @@ static struct dsi_cmd_desc tm_display_on_cmds[] = {
 //	{DTYPE_DCS_WRITE1, 0, 200, WAIT_TYPE_US,
 //		sizeof(bl_enable), bl_enable},
 
+
 };
 static struct dsi_cmd_desc tm_display_off_cmds[] = {
     {DTYPE_DCS_WRITE1, 0, 200, WAIT_TYPE_US,
@@ -1377,6 +1378,7 @@ static struct gpio_desc tianma_lcd_gpio_lowpower_cmds[] = {
 static volatile bool g_display_on;
 static struct balong_fb_panel_data tm_panel_data;
 
+
 /******************************************************************************/
 static struct lcd_tuning_dev *p_tuning_dev = NULL;
 
@@ -1419,6 +1421,7 @@ static DEVICE_ATTR(esd_test, 0644, tm_show_esd_test, tm_store_esd_test);
 #endif
 
 static DEVICE_ATTR(lcd_info, S_IRUGO, tm_lcd_info_show, NULL);
+
 
 static struct attribute *tm_attrs[] = {
 	&dev_attr_lcd_info.attr,

@@ -41,12 +41,14 @@
 #include <linux/types.h>
 #include <linux/limits.h>
 
+
 //#define dev_dbg  dev_info
 //#define dev_vdbg dev_info
 #define CYPRESS_2V85_EN 50 // LCD_2V85_EN1   GPIO_6_2
 #define CYPRESS_1V80_EN 53 // LCD_1V8_EN1    GPIO_6_5
 #define CYPRESS_GPIO_EN 60 // CYPRESS_GPIO_EN GPIO_7_5
 #define TOUCH_IRQ_GPIO  34  //TOUCH_IRQ_GPIO GPIO_4_2
+
 
 extern struct bus_type cyttsp4_bus_type;
 

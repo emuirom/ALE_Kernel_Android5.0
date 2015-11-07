@@ -54,6 +54,8 @@ static struct dsm_dev dsm_dw_mmc = {
 static struct dsm_client *dclient = NULL;
 #endif
 
+
+
 static void __iomem *pericrg_base = NULL;
 
 static int hs_timing_config[][9][TUNING_INIT_CONFIG_NUM] = {
@@ -91,6 +93,8 @@ static int hs_timing_config[][9][TUNING_INIT_CONFIG_NUM] = {
 	}
 };
 
+
+
 static const u32 tuning_block_128[] = {
 	0xFF00FFFF, 0x0000FFFF, 0xCCCCFFFF, 0xCCCC33CC,
 	0xCC3333CC, 0xFFFFCCCC, 0xFFFFEEFF, 0xFFEEEEFF,
@@ -109,8 +113,13 @@ static const u32 tuning_block_64[] = {
 	0xFDFFFDFF, 0xFFBFFFDF, 0xFFF7FFBB, 0xDE7B7FF7
 };
 
+
+
+
 static int emmc_hs200_tuning_point = 0;
 static int sd_sdr104_tuning_point  = 0;
+
+
 
 /*当read、massread操作时发包使用*/
 struct semaphore  sem_to_rfile_sync_req;
@@ -164,6 +173,7 @@ static void dw_mci_hi6xxx_set_timing(struct dw_mci *host, int id, int timing, in
 				use_sam_dly = 0;
 		}
 	}
+
 
 	if ((id == 1) && (timing == MMC_TIMING_UHS_SDR104)) {
 		if ((sam_phase_val == 0) || (sam_phase_val >= 10))
@@ -286,6 +296,7 @@ void dw_mci_hi6xxx_set_clock(struct dw_mci *host, unsigned int clock)
 	int div;
 	u32 loop_count, reg;
 
+
 	/* before changing clock. clock needs to be off */
 	dw_mci_hi6xxx_clock_onoff(host, CLK_DISABLE);
 
@@ -330,6 +341,7 @@ void dw_mci_hi6xxx_set_clock(struct dw_mci *host, unsigned int clock)
 	dw_mci_hi6xxx_clock_onoff(host, CLK_ENABLE);
 
 }
+
 
 static void dw_mci_hi6xxx_sd_ioctrl_gpio(struct dw_mci_hs_priv_data *priv)
 {
@@ -648,6 +660,7 @@ static void dw_mci_hi6xxx_tuning_set_flags(struct dw_mci *host, int sample, int 
 		host->tuning_sample_flag &= ~(1 << sample);
 }
 
+
 /* By tuning, find the best timing condition
  *	1 -- tuning is not finished. And this function should be called again
  *	0 -- Tuning successfully.
@@ -818,6 +831,7 @@ void dw_mci_sdio_card_detect(struct dw_mci *host)
 		return;
 	}
 
+
 	dw_mci_set_cd(host);
 	/*dw_mci_work_routine_card*/
 	queue_work(host->card_workqueue, &host->card_work);
@@ -836,6 +850,8 @@ void dw_mci_set_cd(struct dw_mci *host){
 	}
 }
 EXPORT_SYMBOL(dw_mci_set_cd);
+
+
 
 #ifdef CONFIG_HI110X_WIFI_ENABLE
 static struct dw_mci* hi_sdio_host = NULL;
@@ -856,6 +872,7 @@ void hi110x_sdio_detectcard_to_core(int enable)
 }
 EXPORT_SYMBOL(hi110x_sdio_detectcard_to_core);
 #endif
+
 
 #if defined (CONFIG_HUAWEI_DSM)
  void dw_mci_dsm_dump(struct dw_mci  *host, int err_num)
@@ -912,6 +929,7 @@ EXPORT_SYMBOL(hi110x_sdio_detectcard_to_core);
 EXPORT_SYMBOL(dw_mci_dsm_dump);
 
 #endif
+
 
 static int dw_mci_hi6xxx_priv_init(struct dw_mci *host)
 {
@@ -1195,6 +1213,7 @@ static irqreturn_t dw_mci_hi6xxx_card_detect(int irq, void *data)
 	return IRQ_HANDLED;
 };
 
+
 static int dw_mci_hi6xxx_get_cd(struct dw_mci *host, u32 slot_id)
 {
 	unsigned int status;
@@ -1208,6 +1227,7 @@ static int dw_mci_hi6xxx_get_cd(struct dw_mci *host, u32 slot_id)
 	dev_info(host->dev," sd status = %d\n", status);
 	return status;
 }
+
 
 static int dw_mci_hi6xxx_cd_detect_init(struct dw_mci *host)
 {
@@ -1242,6 +1262,7 @@ static int dw_mci_hi6xxx_cd_detect_init(struct dw_mci *host)
 	return 0;
 }
 
+
 static int dw_mci_hi6xxx_card_busy(struct dw_mci *host)
 {
 	if ((mci_readl(host, STATUS) & SDMMC_DATA_BUSY)
@@ -1252,6 +1273,7 @@ static int dw_mci_hi6xxx_card_busy(struct dw_mci *host)
 
 	return 0;
 }
+
 
 /* Common capabilities of hi3630 SoC */
 static unsigned long hi6xxx_dwmmc_caps[3] = {
@@ -1340,6 +1362,7 @@ static int dw_mci_hi6xxx_3_3v_signal_voltage_switch(struct dw_mci_slot *slot)
 	}
 
 }
+
 
 /*SOC1006*/
 static int dw_mci_hi6xxx_1_8v_signal_voltage_switch(struct dw_mci_slot *slot)
@@ -1448,6 +1471,7 @@ static int dw_mci_hi6xxx_1_8v_signal_voltage_switch(struct dw_mci_slot *slot)
 
 	return ret;
 }
+
 
 static int dw_mci_hi6xxx_start_signal_voltage_switch(struct mmc_host *mmc,
 		struct mmc_ios *ios)
@@ -1576,6 +1600,7 @@ static void dw_mci_hi6xxx_tuning_fail_excprocess(struct dw_mci *host)
 	unsigned int _clkena;
 	unsigned int _fifoth;
 
+
     if(NULL == host)
 	{
 	    printk("mshci_tuning_fail_excprocess: host is null \n");
@@ -1627,6 +1652,7 @@ static void dw_mci_hi6xxx_tuning_fail_excprocess(struct dw_mci *host)
 			"TMOUT=%x, RINTSTS=%x, TCBCNT=%x, TBBCNT=%x, IDSTS=%x, BUFADDR=%x, FIFOTH=%x \n",retval,
 			_intmask_flags,_timeout,_rintsts,_tcbcnt,_tbbcnt,_idsts,_bufaddr,fifoth);
 
+
 	udelay(20);
 
 	dw_mci_hi6xxx_reinit(host);
@@ -1675,6 +1701,7 @@ static void dw_mci_hi6xxx_tuning_fail_excprocess(struct dw_mci *host)
 			"RINTSTS=%x, TCBCNT=%x, TBBCNT=%x, IDSTS=%x, BUFADDR=%x，CLKENA=%x, FIFOTH=%x\n",
 			retval, intmask_flags, _rintsts, _tcbcnt, _tbbcnt, _idsts, _bufaddr, _clkena,_fifoth);
 }
+
 
 /*
 SOC1005
@@ -1773,6 +1800,7 @@ int dw_mci_hi6xxx_mmc_es_tuning(struct dw_mci_slot *slot)
     pm_runtime_get_sync(mmc_dev(mmc));
     mci_writel(host, UHS_REG_EXT,0x00);
 
+
     if (data.blksz > len)
         data.blksz = len;
 
@@ -1794,6 +1822,7 @@ int dw_mci_hi6xxx_mmc_es_tuning(struct dw_mci_slot *slot)
 
     /* enter tuning */
 retry:
+
 
     /*需要全部turning*/
     if (is_tuning_all_phased)
@@ -1869,6 +1898,7 @@ retry:
 
                 tuning_result_index[i] = 1;
 
+
             }
         }
     }
@@ -1891,6 +1921,7 @@ retry:
 
     if ((best_tuning_point_len > 1)&&(0 == best_tuning_point_len%2))/*偶数*/
     {
+
 
         best_tuning_sample_point = best_start_point + best_tuning_point_len/2 - 1;
 
@@ -2156,6 +2187,7 @@ int dw_mci_hi6xxx_mmc_cs_tuning(struct dw_mci_slot *slot)
 
     mci_writel(host, UHS_REG_EXT,0x00);
 
+
     if (data.blksz > len)
         data.blksz = len;
 
@@ -2173,6 +2205,7 @@ int dw_mci_hi6xxx_mmc_cs_tuning(struct dw_mci_slot *slot)
 
     /* enter tuning */
 retry:
+
 
     /*需要全部turning*/
     if (is_tuning_all_phased)
@@ -2263,6 +2296,7 @@ retry:
 
     printk(KERN_INFO"tuning_point_len is %d,best_tuning_point_len is %d,start_point is %d, best_start_point is %d \n",tuning_point_len,best_tuning_point_len,start_point,best_start_point);
 
+
     if(tuning_point_len > best_tuning_point_len)
     {
         best_tuning_point_len = tuning_point_len;
@@ -2279,6 +2313,7 @@ retry:
 
     if ((best_tuning_point_len > 1)&&(0 == best_tuning_point_len%2))/*偶数*/
     {
+
 
         best_tuning_sample_point = best_start_point + best_tuning_point_len/2 - 1;
 
@@ -2330,6 +2365,7 @@ retry:
             best_tuning_sample_point = -1;
         }
     }
+
 
     if (best_tuning_sample_point >= 0)
     {
@@ -2558,6 +2594,7 @@ int dw_mci_hi6xxx_sd_tuning(struct dw_mci_slot *slot)
 
 retry:
 
+
     /*需要全部turning*/
     if (is_tuning_all_phased)
     {
@@ -2632,6 +2669,7 @@ retry:
 
                 tuning_result_index[i] = 1;
 
+
             }
         }
     }
@@ -2654,6 +2692,7 @@ retry:
 
     if ((best_tuning_point_len > 1)&&(0 == best_tuning_point_len%2))/*偶数*/
     {
+
 
         best_tuning_sample_point = best_start_point + best_tuning_point_len/2 - 1;
 
@@ -2971,6 +3010,7 @@ static int dw_mci_hi6xxx_resume(struct device *dev)
         slot->mmc->ios.timing = MMC_TIMING_LEGACY;
         slot->mmc->ios.clock  = MMC_CCLK_MAX_25M;
     }
+
 
     ret = dw_mci_resume(host);
     if (ret)

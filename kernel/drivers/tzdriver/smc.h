@@ -1,10 +1,4 @@
-/*
- * FileName:
- * Author:         v00297436 
- * Description:
- * Version:
- * Function List:
- */
+
 
 #ifndef _SMC_H_
 #define _SMC_H_

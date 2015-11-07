@@ -157,6 +157,7 @@ static inline void k3_set_default_fmt(struct v4l2_format *fmt, camera_state stat
 {
 	print_debug("enter %s", __func__);
 
+
 	switch (state) {
 	case STATE_PREVIEW:
 		fmt->type = V4L2_BUF_TYPE_VIDEO_OVERLAY;
@@ -283,6 +284,7 @@ static int k3_v4l2_ioctl_s_fmt_capture(struct file *file, void *fh,
 
 	CHECK_STATE(STATE_CAPTURE);
 	CHECK_STATE(STATE_IPP);
+
 
     /* if ZSL state is off */
 	if (CAMERA_ZSL_ON != mini_k3_isp_get_zsl_state()){
@@ -1051,7 +1053,6 @@ static int k3_v4l2_ioctl_s_ctrl(struct file *file, void *fh,
 			break;
 		}
 
-	/* added by c00144034 for ZSL begin*/
     case V4L2_CID_ZSL:
         {
             print_info("set ZSL_state, %d", v4l2_param->value);
@@ -1085,7 +1086,6 @@ static int k3_v4l2_ioctl_s_ctrl(struct file *file, void *fh,
             }
 			break;
 		}
-	/* added by c00144034 for ZSL end*/
 
 	case V4L2_CID_SET_VIDEO_STABILIZATION:
 		{
@@ -1099,7 +1099,6 @@ static int k3_v4l2_ioctl_s_ctrl(struct file *file, void *fh,
 			mini_k3_isp_set_yuv_crop_pos(v4l2_param->value);
 			break;
 		}
-    /* set on-line or off-line mode. add by c00220250 */
     case V4L2_CID_CAPTURE_MODE:
         {
             print_info("set V4L2_CID_CAPTURE_MODE, %d", v4l2_param->value);
@@ -1405,6 +1404,7 @@ static int k3_v4l2_ioctl_s_ext_ctrls(struct file *file, void *fh,
                                         goto end;
                                 }
 
+
 				break;
 			}
 		case V4L2_CID_STATBUFFER_OFFSET:
@@ -1500,6 +1500,7 @@ static int k3_v4l2_ioctl_s_ext_ctrls(struct file *file, void *fh,
     	cam->buffer_arr[state].buf_count++;
     	k3_register_buffer(&(cam->buffer_arr[state].buffers[vbuffer.index]), &vbuffer);
     	INIT_LIST_HEAD(&(cam->buffer_arr[state].buffers[vbuffer.index].queue));
+
 
 #ifdef DUMP_FILE
 	if (state == STATE_CAPTURE)
@@ -2156,7 +2157,6 @@ int k3_v4l2_set_camera(mini_v4l2_ctl_struct *cam, int new_sensor)
 	}
 
 	/* set it to isp */
-	/* FIXME j00179721 should not related by sensor */
 	if (0 != mini_k3_isp_hw_init_regs(sensor)) {
 		print_error("fail to init isp hw register");
 		ret = -ENODEV;
@@ -2167,6 +2167,7 @@ int k3_v4l2_set_camera(mini_v4l2_ctl_struct *cam, int new_sensor)
 	sec_sensor = mini_get_camera_sensor(CAMERA_SENSOR_SECONDARY);
 
 	mini_camera_power_id_gpio(POWER_ON);
+
 
 	if (CAMERA_SENSOR_PRIMARY == new_sensor) {
         k3_v4l2_check_camera(pri_sensor, CAMERA_SENSOR_PRIMARY);
@@ -2185,6 +2186,7 @@ int k3_v4l2_set_camera(mini_v4l2_ctl_struct *cam, int new_sensor)
 			goto out;
 		}
         cam->sensor = *sec_sensor;
+
 
 	}
 	mini_camera_power_id_gpio(POWER_OFF);
@@ -2220,6 +2222,7 @@ static ssize_t k3_sensors_show(struct device *dev, struct device_attribute *attr
 	return ret;
 }
 static DEVICE_ATTR(sensors, S_IRUGO, k3_sensors_show, NULL);
+
 
 //misp debug start
 u32 misp_cmd_delay_time = 5;
@@ -2365,6 +2368,7 @@ static ssize_t misp_debug_store(struct device *dev,
 
 static DEVICE_ATTR(misp_debug, 0644, misp_debug_show, misp_debug_store);
 //misp debug end
+
 
 static struct kobject *k3_camera_kobj;
 static int k3_sensors_create_sysfs(void)
@@ -2847,6 +2851,7 @@ static int k3_v4l2_suspend(struct platform_device *pdev, pm_message_t state)
 }
 #endif /*CONFIG_PM */
 
+
 /*s61250 add for dts begin  */
 
 static const struct of_device_id hisi_isp_dt_match[] = {
@@ -2923,11 +2928,13 @@ ERROR:
 	return cnt;
 }
 
+
 //static ssize_t isp_reg_debug_read(struct file *filp, char __user *buffer,
 //	size_t count, loff_t *ppos)
 //{
 //	return count;
 //}
+
 
 static const struct file_operations debugfs_isp_reg_fops = {
 	.open = isp_reg_debug_open,

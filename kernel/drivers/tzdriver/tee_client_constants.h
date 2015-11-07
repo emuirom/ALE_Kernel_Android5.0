@@ -1,13 +1,4 @@
-/*
- * FileName:
- * Author:         h00211444  Version: 0.0.1  Date: 2012-12-22
- * Description:
- * Version:
- * Function List:
- *                 1.
- * History:
- *     <author>   <time>    <version >   <desc>
- */
+
 
 #ifndef _TEE_CLIENT_CONSTANTS_H_
 #define _TEE_CLIENT_CONSTANTS_H_

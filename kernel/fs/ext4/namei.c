@@ -220,6 +220,7 @@ struct dx_node
 	struct dx_entry	entries[0];
 };
 
+
 struct dx_frame
 {
 	struct buffer_head *bh;
@@ -891,6 +892,7 @@ static int ext4_htree_next_block(struct inode *dir, __u32 hash,
 	return 1;
 }
 
+
 /*
  * This function fills a red-black tree with information from a
  * directory block.  It returns the number directory entries loaded
@@ -940,6 +942,7 @@ static int htree_dirblock_to_tree(struct file *dir_file,
 	brelse(bh);
 	return count;
 }
+
 
 /*
  * This function fills a red-black tree with information from a
@@ -1548,6 +1551,7 @@ static struct dentry *ext4_lookup(struct inode *dir, struct dentry *dentry, unsi
 	return d_splice_alias(inode, dentry);
 #endif
 }
+
 
 struct dentry *ext4_get_parent(struct dentry *child)
 {
@@ -2314,6 +2318,7 @@ static void ext4_dec_count(handle_t *handle, struct inode *inode)
 		drop_nlink(inode);
 }
 
+
 static int ext4_add_nondir(handle_t *handle,
 		struct dentry *dentry, struct inode *inode)
 {
@@ -3033,6 +3038,7 @@ retry:
 		goto retry;
 	return err;
 }
+
 
 /*
  * Try to find buffer head where contains the parent block.

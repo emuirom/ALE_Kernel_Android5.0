@@ -43,6 +43,7 @@
 #include "../../../huawei/touchscreen/huawei_touchscreen_chips.h"
 #include <huawei_platform/log/log_jank.h>
 
+
 #define PWM_LEVEL 100
 static bool g_debug_enable = false;
 
@@ -78,6 +79,7 @@ static char te_enable[] = {
 	0x35,
 	0x00,
 };
+
 
 static char exit_sleep[] = {
 	0x11,
@@ -220,6 +222,10 @@ static struct dsi_cmd_desc jdi_display_on_cmds[] = {
 	{DTYPE_DCS_LWRITE, 0, 200, WAIT_TYPE_US,
 		sizeof(sw_pin_lane_sel_11), sw_pin_lane_sel_11},
 
+
+
+
+
 	{DTYPE_DCS_WRITE, 0, 10, WAIT_TYPE_US,
 		sizeof(exit_sleep), exit_sleep},
 	{DTYPE_DCS_WRITE, 0, 10, WAIT_TYPE_MS,
@@ -237,8 +243,12 @@ static struct dsi_cmd_desc jdi_display_off_cmds[] = {
 		sizeof(enter_sleep), enter_sleep}
 };
 
+
+
+
 static volatile bool g_display_on;
 static struct balong_fb_panel_data jdi_panel_data;
+
 
 /******************************************************************************/
 static struct lcd_tuning_dev *p_tuning_dev = NULL;
@@ -377,6 +387,7 @@ static void jdi_sysfs_deinit(struct platform_device *pdev)
 {
 	sysfs_remove_group(&pdev->dev.kobj, &jdi_attr_group);
 }
+
 
 static void jdi_disp_on(struct balong_fb_data_type *balongfd)
 {

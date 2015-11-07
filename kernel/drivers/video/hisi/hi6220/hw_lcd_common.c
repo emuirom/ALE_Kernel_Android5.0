@@ -75,6 +75,8 @@
   }
  #endif
 
+
+
 void lcd_dcm_pwr_add_timer(void)
 {
 	if (lcd_pwr_status.panel_power_on == 0)

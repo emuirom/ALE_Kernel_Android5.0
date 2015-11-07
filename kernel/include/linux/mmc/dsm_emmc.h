@@ -48,6 +48,7 @@ enum DSM_EMMC_ERR
 	DSM_EMMC_PACKED_FAILURE,
 };
 
+
 struct emmc_dsm_log {
 	char emmc_dsm_log[EMMC_DSM_BUFFER_SIZE];
 	spinlock_t lock;	/* mutex */

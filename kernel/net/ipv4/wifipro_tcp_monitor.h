@@ -72,6 +72,7 @@ extern unsigned int wifipro_log_level;
             printk(KERN_INFO "++++ %s: "msg" ++++\n", __func__, ## __VA_ARGS__); \
        } while (0)
 
+
 struct wifipro_tcp_monitor_inf {
     unsigned int dst_addr;
     unsigned int dst_port;
@@ -111,6 +112,7 @@ typedef struct wifipro_google_sock_backlist {
     char proc_name[WIFIPRO_MAX_PROC_NAME];
     struct wifipro_google_sock_backlist *next;
 } wifipro_g_sock_bl_t;
+
 
 typedef struct wifipro_rtt_stat {
     unsigned int rtt;

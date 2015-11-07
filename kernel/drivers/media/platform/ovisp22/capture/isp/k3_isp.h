@@ -36,10 +36,8 @@ typedef struct _pic_attr {
 	u32 starty;
 	u32 crop_x;
 	u32 crop_y;
-	/* add by c00144034 for mirror begin */
 	u32 crop_width_for_view_angle;
 	u32 crop_height_for_view_angle;
-	/* add by c00144034 for mirror end */
 	u32 crop_width;
 	u32 crop_height;
 	u32 out_width;
@@ -62,7 +60,6 @@ typedef struct _uv_offset {
 	u32 voffset;
 } uv_offset;
 
-/* added by c00144034 for zsl begin */
 typedef struct _zsl_ctrl {
     camera_zsl          zsl_state;
 
@@ -84,9 +81,7 @@ typedef struct _zsl_ctrl {
 
 	u8                  focused_frame_cnt; /* continuous focused frame count */
 }zsl_ctrl_t;
-/* added by c00144034 for zsl end */
 
-/* added by c00144034 for mirror,center changed zoom begin*/
 typedef struct _zoom_t{
     u32                 view_mode;
     u32                 zoom;
@@ -98,7 +93,6 @@ typedef struct _zoom_t{
     u32                 raw_view_center_x;
     u32                 raw_view_center_y;
 } zoom_t;
-/* added by c00144034 for mirror,center changed zoom end*/
 typedef struct _k3_isp_data {
 	bool powered;
 	bool cold_boot;
@@ -115,9 +109,7 @@ typedef struct _k3_isp_data {
 	u32 *support_pixfmt;
 	u32 pixfmt_count;
 	u32 zoom;
-	/* add by c00144034 for mirror begin */
 	zoom_t zoom_ext;
-	/* add by c00144034 for mirror end */
 	int video_stab;
 	struct v4l2_fract frame_rate;
 
@@ -157,11 +149,12 @@ typedef struct _k3_isp_data {
 	struct semaphore frame_sem;
 	/* AndroidK3 added by y36721 for focus 2011-10-28 end */
 
-	/* added by c00144034 for ZSL begin*/
 	zsl_ctrl_t          zsl_ctrl;
 
+	camera_b_shutter_mode b_shutter_state;
+	ecgc_support_type_s   ecgc_support_type;
+
 	bool        		hw_3a_switch;
-    /* added by c00144034 for ZSL end*/
 
     int                 ddr_lock_freq;
     /*for common image, z62576, 20140429, begin*/
@@ -172,7 +165,9 @@ typedef struct _k3_isp_data {
 
     u32                 focus_timeout;
     /*for common image, z62576, 20140429, end*/
-
+	b_shutter_aecagc_s       b_shutter_aecagc;      //used for LongAE mode
+	b_shutter_hdr_aecagc_s   b_shutter_hdr_aecagc;  //used for hdrAE mode
+	b_shutter_tryae_aecagc_s b_shutter_tryae_aecagc;//used for tryAE mode
 } k3_isp_data;
 
 typedef struct _k3_last_state {
@@ -204,9 +199,13 @@ typedef struct _isp_hw_controller {
 #if 0
 	void (*isp_set_process_mode) (u32 w, u32 h);
 #else
-    /* add by c00220250 */
     void (*isp_set_process_mode) (capture_type process_mode);
 #endif
+	void (*isp_set_b_shutter_mode) (camera_b_shutter_mode b_shutter_mode);
+    int (*isp_set_b_shutter_long_ae)(b_shutter_ae_iso_s* b_shutter_ae_iso);
+	bool  (*isp_get_aec_state)(void);
+    int (*isp_set_b_shutter_hdr_ae)(b_shutter_hdr_aeciso_s* b_shutter_hdr_ae_iso);
+	int (*isp_set_b_shutter_ecgc)(b_shutter_ae_iso_s* b_shutter_ae_iso);
 	isp_process_mode_t(*isp_get_process_mode) (void);
 	int (*isp_check_config) (struct v4l2_pix_format *pixfmt, camera_state state);
 	int (*isp_set_zoom) (zoom_t *zoom, zoom_quality_t quality);
@@ -271,7 +270,6 @@ void k3_ispio_deinit(void);
 
 /* Used to switch between yuv rect and raw rect */
 int k3_isp_yuvrect_to_rawrect(camera_rect_s *yuv, camera_rect_s *raw);
-/* added by y00215412 for AE zoom issue */
 int k3_isp_yuvrect_to_rawrect2(camera_rect_s *yuv, camera_rect_s *raw);
 int k3_isp_rawrect_to_yuvrect(camera_rect_s *yuv, camera_rect_s *raw);
 int k3_isp_antishaking_rect_stat2out(camera_rect_s *out, camera_rect_s *stat);

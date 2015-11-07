@@ -40,7 +40,6 @@
 #define V4L2_CID_SENSOR_COUNT		(V4L2_CID_PRIVACY + 22)
 #define V4L2_CID_SENSOR_INFO		(V4L2_CID_PRIVACY + 23)
 
-/*add by w00199382 for smmu*/
 #define  V4L2_CID_BUFFER_SHARE_FD   (V4L2_CID_PRIVACY + 24)
 
 #define V4L2_CID_BUFFER_TYPE		(V4L2_CID_PRIVACY + 25)
@@ -82,7 +81,6 @@
 #define V4L2_CID_AUTO_WHITE_BALANCE_LOCK_SUPPORTED (V4L2_CID_PRIVACY + 62)
 #define V4L2_CID_AUTO_WHITE_BALANCE_LOCK           (V4L2_CID_PRIVACY + 63)
 
-/* added ykf63300 2012-05-22 */
 #define V4L2_CID_GET_FOCUS_DISTANCE                (V4L2_CID_PRIVACY + 64)
 #define V4L2_CID_GET_CURRENT_VTS                   (V4L2_CID_PRIVACY + 65)
 #define V4L2_CID_GET_CURRENT_FPS                   (V4L2_CID_PRIVACY + 66)
@@ -94,14 +92,12 @@
 
 #define V4L2_CID_GET_FOCUS_CODE		(V4L2_CID_PRIVACY + 72)
 
-/* Added by j00179721 using for set PM mode */
 #define V4L2_CID_PM_MODE                     (V4L2_CID_PRIVACY + 73)
 
 #define V4L2_CID_SNAPSHOOT_MODE                     (V4L2_CID_PRIVACY + 74)
 
 #define V4L2_CID_SET_GSENSOR_STAT		(V4L2_CID_PRIVACY + 75)
 
-/* following CID reserved for debug added by y00215412 20120816 */
 #define V4L2_CID_GET_EXPO_LINE		(V4L2_CID_PRIVACY + 80)
 #define V4L2_CID_GET_SENSOR_VTS		(V4L2_CID_PRIVACY + 81)
 #define V4L2_CID_GET_FOCUS_RECT		(V4L2_CID_PRIVACY + 82)
@@ -109,11 +105,9 @@
 #define V4L2_CID_GET_CURRENT_CCM_RGAIN	(V4L2_CID_PRIVACY + 83)
 #define V4L2_CID_GET_CURRENT_CCM_BGAIN	(V4L2_CID_PRIVACY + 84)
 
-/* added by c00144034 for zsl begin */
 #define V4L2_CID_ZSL	                (V4L2_CID_PRIVACY + 90)
 #define V4L2_CID_CAP_RAW	            (V4L2_CID_PRIVACY + 91)/*0:stop cap raw;1~6:start cap raw with raw buf cnt.  */
 #define V4L2_CID_PROCESS_IMG            (V4L2_CID_PRIVACY + 92)
-/* added by c00144034 for zsl end */
 
 /* add by zhoutian for mini-ISP begin */
 #define V4L2_CID_MINI_ISP_SUPPORTED     (V4L2_CID_PRIVACY + 95)
@@ -125,6 +119,7 @@
 
 #define V4L2_CID_SET_3A_MODE             (V4L2_CID_PRIVACY +131)
 
+
 #define V4L2_CID_SET_HW_3A_PARAM         (V4L2_CID_PRIVACY +132)
 
 #define V4L2_CID_SET_VIDEO_STABILIZATION		(V4L2_CID_PRIVACY + 201)
@@ -133,11 +128,15 @@
 #define V4L2_CID_SET_MINIISP_TEST                   (V4L2_CID_PRIVACY + 204)
 #define V4L2_CID_GET_MINIISP_TEST_RESULT   (V4L2_CID_PRIVACY + 205)
 
-/* add by c00144034 for mirror begin */
 /*zoom with center */
 #define V4L2_CID_SET_ZOOM_CENTER		(V4L2_CID_PRIVACY + 211)
 #define V4L2_CID_GET_ZOOM_CENTER		(V4L2_CID_PRIVACY + 212)
-/* add by c00144034 for mirrro end */
+
+#define V4L2_CID_SET_B_SHUTTER_MODE		(V4L2_CID_PRIVACY + 215) //msg used for b shutter mode select
+#define V4L2_CID_SET_B_SHUTTER_LONG_AE	(V4L2_CID_PRIVACY + 216) //msg used for set longAE parm
+#define V4L2_CID_GET_AEC_STATE       	(V4L2_CID_PRIVACY + 217) //msg used for fetch  aecagc stable state
+#define V4L2_CID_SET_B_SHUTTER_HDR_AE  	(V4L2_CID_PRIVACY + 218) //msg used for set hdrAE parm
+#define V4L2_CID_SET_B_SHUTTER_ECGC     (V4L2_CID_PRIVACY + 219) //msg used for set tryAE parm
 
 #define V4L2_CID_HWA_BASE				(V4L2_CID_PRIVACY + 500)
 #define V4L2_CID_HWA_MAX				(V4L2_CID_HWA_BASE + 128)
@@ -147,6 +146,7 @@
 #define MAX_FOCUS_RECT		1
 
 #define CAMERA_SENSOR_NUM_MAX 10
+
 
 #define SENSOR_NAME_MAX_LENTH    20
 
@@ -208,6 +208,7 @@
 				(1 << CAMERA_METERING_AVERAGE)  \
 			)
 
+
 #define THIS_HFLIP	(1 << CAMERA_H_FLIP)
 #define THIS_VFLIP	(\
 				(1 << CAMERA_NO_FLIP) | \
@@ -257,7 +258,6 @@
 				(1 << CAMERA_FLASH_AUTO)   \
 			)
 
-/* add by c00144034 for ZSL */
 #define THIS_ZSL  (\
                 (1 << CAMERA_ZSL_ON)        | \
                 (1 << CAMERA_ZSL_OFF)         \
@@ -276,7 +276,6 @@ typedef enum {
 #endif
     ZSL_PROC_IMG_MODE_MAX
 } zsl_proc_img_t;
-/* add by c00144034 for zsl end */
 
 typedef enum {
 	ISP_CAPTURE_ONLINE = 0,

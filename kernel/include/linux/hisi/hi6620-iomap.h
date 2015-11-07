@@ -2,6 +2,7 @@
  * Copyright (C) 2014 Hisilicon, Inc.
  *
  * Author:
+ *	Bintian Wang <bintian.wang@huawei.com>
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -13,6 +14,7 @@
  * GNU General Public License for more details.
  *
  */
+
 
 #ifndef __MACH_HI6620_IOMAP_H
 #define __MACH_HI6620_IOMAP_H

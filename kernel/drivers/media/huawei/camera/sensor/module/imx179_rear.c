@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00144661
+ * Email:	  flying.he@huawei.com
  * Date:	  2013-12-27
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,6 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 
 #include <linux/module.h>
 #include <linux/printk.h>
@@ -149,6 +152,7 @@ struct sensor_power_setting imx179_rear_power_setting[] = {
         .delay = 1,
     },
 
+
     //MCAM2 DVDD 1.2V
     {
         .seq_type = SENSOR_PMIC,
@@ -166,7 +170,9 @@ struct sensor_power_setting imx179_rear_power_setting[] = {
         .delay = 1,
     },
 
+
 };
+
 
 static sensor_t s_imx179_rear =
 {
@@ -407,6 +413,7 @@ static ssize_t imx179_powerctrl_store(struct device *dev,
 
 	return count;
 }
+
 
 static struct device_attribute imx179_powerctrl =
     __ATTR(power_ctrl, 0664, imx179_powerctrl_show, imx179_powerctrl_store);

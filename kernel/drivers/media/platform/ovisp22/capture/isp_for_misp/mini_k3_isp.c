@@ -84,11 +84,13 @@
 #define ISP_DDR_BLOCK_PROFILE                   (800000)
 #endif
 
+
 /* VARIABLES AND ARRARYS */
 static mini_k3_isp_data isp_data;
 static mini_isp_hw_controller *isp_hw_ctl;
 static mini_isp_tune_ops *camera_tune_ops;
 static camera_flash_state flash_exif = FLASH_OFF;
+
 
 static mini_camera_capability k3_cap[] = {
 	{V4L2_CID_AUTO_WHITE_BALANCE, THIS_AUTO_WHITE_BALANCE},
@@ -144,6 +146,7 @@ int mini_k3_isp_get_process_mode(void)
     #endif
 	return (int)isp_hw_ctl->isp_get_process_mode();
 }
+
 
 int mini_k3_isp_get_k3_capability(u32 id, u32 *value)
 {
@@ -232,10 +235,7 @@ void mini_k3_isp_check_flash_level(camera_flash_state state)
 		if (FLASH_ON == state) {
 			if (((isp_data.flash_mode == CAMERA_FLASH_AUTO) && (true == isp_hw_ctl->isp_is_need_flash(isp_data.sensor))) ||
 				isp_data.flash_mode == CAMERA_FLASH_ON) {
-				/*
-				 * isp_hw_ctl->isp_set_aecagc_mode(MANUAL_AECAGC);
-				 * isp_hw_ctl->isp_set_awb_mode(MANUAL_AWB);
-				 */
+
 
 				flashlight->turn_on(TORCH_MODE, preflash_level);
 				isp_data.flash_state = state;
@@ -366,6 +366,7 @@ int mini_k3_isp_set_camera(mini_camera_sensor *open_sensor, mini_camera_sensor *
 	}
 #endif
 
+
 	/*download mini isp fw */
 	ret = misp_load_fw();
 	if (ret) {
@@ -379,6 +380,7 @@ int mini_k3_isp_set_camera(mini_camera_sensor *open_sensor, mini_camera_sensor *
 		camera_tune_ops = isp_hw_ctl->isp_tune_ops;
 
 	isp_hw_ctl->refresh_support_fmt(&isp_data.support_pixfmt, &isp_data.pixfmt_count);
+
 
 	if (isp_data.sensor->get_frame_intervals)
 		isp_data.sensor->get_frame_intervals(&isp_data.frame_rate);
@@ -572,6 +574,7 @@ int mini_k3_isp_try_fmt(struct v4l2_format *fmt, camera_state state, camera_sett
 	print_debug("==state:%d in_width:%d\n", state, isp_data.pic_attr[state].in_width);
 	print_debug("==state:%d in_height:%d\n", state, isp_data.pic_attr[state].in_height);
 
+
 	/* update format info */
 	isp_hw_ctl->isp_fill_fmt_info(&fmt->fmt.pix);
 	if (state == STATE_CAPTURE)
@@ -691,6 +694,7 @@ int mini_k3_isp_stream_on(struct v4l2_pix_format *pixfmt,
 		/* pm_qos_update_request(&isp_data.qos_request, DDR_CAPTURE_MIN_PROFILE); */
 #endif
 
+
         if (CAMERA_ZSL_ON == mini_k3_isp_get_zsl_state())
         {
             isp_data.zsl_ctrl.history_buf_cnt = buf_arr->buf_count;
@@ -710,7 +714,6 @@ int mini_k3_isp_stream_on(struct v4l2_pix_format *pixfmt,
 		if (isp_data.sensor->stream_on)
 			isp_data.sensor->stream_on(state);
 
-		/* y00215412 change position here. */
 		if (isp_hw_ctl->cold_boot_set)
 			isp_hw_ctl->cold_boot_set(isp_data.sensor);
 
@@ -1056,6 +1059,7 @@ void mini_k3_isp_poweroff(void)
 void mini_k3_isp_auto_focus(int flag)
 {
 	print_debug("enter %s", __func__);
+
 
 	if (isp_data.sensor->af_enable) {
 		camera_tune_ops->isp_auto_focus(flag);
@@ -1676,7 +1680,6 @@ int mini_k3_isp_get_actual_iso(void)
 		ret = camera_tune_ops->isp_get_actual_iso();
 	} else if (CAMERA_USE_SENSORISP == isp_data.sensor->isp_location) {
 		if (isp_data.sensor->get_gain) {
-			/* revised by y00215412 2012-06-28 for Front camera ISO too large */
 			ret = isp_data.sensor->get_gain() * 100 / 0x10;
 			ret = ((ret / 2) + 5) / 10 * 10;
 		}
@@ -1690,15 +1693,7 @@ int mini_k3_isp_get_focus_distance(void)
 	return camera_tune_ops->isp_get_focus_distance();
 }
 
-/*
- **************************************************************************
- * FunctionName: mini_k3_isp_get_awb_gain;
- * Description : call by k3_v4l2_ioctl_g_ctrl;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 int mini_k3_isp_get_awb_gain(int withShift)
 {
 	int ret = 0;
@@ -1711,15 +1706,7 @@ int mini_k3_isp_get_awb_gain(int withShift)
 	return ret;
 }
 
-/*
- **************************************************************************
- * FunctionName: mini_k3_isp_get_focus_code;
- * Description : call by k3_v4l2_ioctl_g_ctrl;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 int mini_k3_isp_get_focus_code(void)
 {
 	int ret = 0;
@@ -1786,7 +1773,6 @@ int mini_k3_isp_get_equivalent_focus(void)
 	return 0;
 }
 
-/* added by y00231328 for awb settings change with CCM pre-gain 2012-11-1 start. */
 int mini_k3_isp_get_current_ccm_rgain(void)
 {
 	int ret = 0;
@@ -1810,7 +1796,6 @@ int mini_k3_isp_get_current_ccm_bgain(void)
 	}
 	return ret;
 }
-/* added by y00231328 for awb settings change with CCM pre-gain 2012-11-1 end. */
 
 /*
  * YUV windows to RAW windows(after RAW DCW)
@@ -1838,11 +1823,6 @@ int mini_k3_isp_yuvrect_to_rawrect(mini_camera_rect_s *yuv, mini_camera_rect_s *
 
 	return 0;
 }
-
-/*
- * added by y00215412 for AE zoom issue
- * here yuv is already converted based on full size YUV
- */
 int mini_k3_isp_yuvrect_to_rawrect2(mini_camera_rect_s *yuv, mini_camera_rect_s *raw)
 {
 	u32 crop_width,	crop_height; /* cropped size of original raw rect */
@@ -1926,6 +1906,7 @@ int mini_k3_isp_antishaking_rect_out2stat(mini_camera_rect_s *out, mini_camera_r
 
 	return 0;
 }
+
 
 int mini_k3_isp_antishaking_rect_stat2out(mini_camera_rect_s *out, mini_camera_rect_s *stat)
 {
@@ -2053,6 +2034,7 @@ static void k3_isp_calc_zoom(camera_state state, scale_strategy_t scale_strategy
 		||(YUV_SCALE_DIVIDEND !=  attr->yuv_down_scale_nscale)
 		||(1 != attr->yuv_dcw)){
 
+
 			/*To avoid edge color anomalies need more 4 pixel in zoom mode*/
 			attr->crop_width = (attr->crop_width & ~0x03) + 4;
 			attr->crop_height = (attr->crop_height & ~0x03) + 4;
@@ -2067,6 +2049,7 @@ static void k3_isp_calc_zoom(camera_state state, scale_strategy_t scale_strategy
 	}
 	attr->crop_x = (attr->yuv_in_width - attr->crop_width) / 2;
 	attr->crop_y = (attr->yuv_in_height - attr->crop_height) / 2;
+
 
         /*make sure the crop start is even*/
         attr->crop_x = (attr->crop_x / 2) * 2;
@@ -2110,15 +2093,7 @@ int mini_k3_isp_get_vflip(void)
 	return 0;
 }
 
-/*
- **************************************************************************
- * FunctionName: k3_isp_set_shot_mode;
- * Description : called by k3_v4l2_ioctl_s_ctrl;
- * Input       : NA;
- * Output      : NA;
- * ReturnValue : NA;
- **************************************************************************
- */
+
 void mini_k3_isp_set_shoot_mode(camera_shoot_mode shoot_mode)
 {
 	print_info("enter %s, shot mode is %d", __func__, shoot_mode);
@@ -2316,6 +2291,8 @@ int mini_k3_isp_set_zsl_cap_raw(u8 raw_buf_cnt,struct v4l2_pix_format *pixfmt,mi
     }
 }
 
+
+
 /*
  **************************************************************************
  * FunctionName: mini_k3_isp_get_zsl_proc_img;
@@ -2345,6 +2322,7 @@ void mini_k3_isp_set_zsl_proc_img(u8 zsl_proc_img)
 {
     isp_data.zsl_ctrl.zsl_proc_type = zsl_proc_img;
 }
+
 
 /*
  **************************************************************************
@@ -2394,6 +2372,7 @@ void mini_k3_isp_set_zsl_cap_valid(bool zsl_cap_valid)
 	isp_data.zsl_ctrl.zsl_cap_valid = zsl_cap_valid;
 }
 
+
 void mini_k3_isp_set_video_stabilization(int bStabilization)
 {
 	print_debug("enter %s()", __func__);
@@ -2412,7 +2391,6 @@ void mini_k3_isp_set_yuv_crop_pos(int point)
 	isp_hw_ctl->isp_set_yuv_crop_pos(point);
 }
 
-/* control on-line or off-line mode. add by c00220250 */
 void mini_k3_isp_set_process_mode(capture_type process_mode)
 {
  	print_info("enter %s()", __func__);
@@ -2428,6 +2406,8 @@ void mini_k3_isp_set_hw_3a_mode(int mode)
 		mini_ispv1_hw_3a_switch(isp_data.hw_3a_switch);
 	}
 }
+
+
 
 /*
  **************************************************************************
@@ -2473,14 +2453,12 @@ static void k3_isp_set_default(void)
 	isp_data.support_pixfmt			= NULL;
 	isp_data.pixfmt_count			= 0;
 
-	/* add by j00179721 2012-03-30*/
 	isp_data.fps_mode	=	CAMERA_FRAME_RATE_AUTO;
 	isp_data.assistant_af_flash = false;
 	isp_data.af_need_flash = false;
 
 	isp_data.shoot_mode = CAMERA_SHOOT_SINGLE;
 
-	/* added by c00144034 for zsl begin*/
 	isp_data.zsl_ctrl.zsl_state              = CAMERA_ZSL_OFF;
  	isp_data.zsl_ctrl.zsl_online_enable      = true;/* zsl_online_enable to control wethler use online when capture small picture. */
 	isp_data.zsl_ctrl.zsl_proc_mode          = CAMERA_ZSL_OFFLINE;
@@ -2494,7 +2472,6 @@ static void k3_isp_set_default(void)
 	isp_data.zsl_ctrl.focused_frame_cnt      = 1;
 	isp_data.idi                             = IDI_SCALE_DOWN_DISABLE;
 	isp_data.hw_3a_switch					 = HW_3A_OFF;
-	/* added by c00144034 for zsl end*/
 
 	/* add by zhoutian for mini-ISP begin */
 
@@ -2662,6 +2639,8 @@ int mini_k3_isp_zsl_try_fmt(mini_pic_fmt_s *pic_fmt,char preview_state)
 	return 0;
  }
 
+
+
 /*
  **************************************************************************
  * FunctionName: k3_isp_zsl_calc_idi;
@@ -2700,6 +2679,7 @@ static int k3_isp_zsl_calc_idi(struct v4l2_format *preview_fmt,
     }
 
     print_debug("%s:pix_clk=%dM",__func__,pix_clk/1000000);
+
 
 #ifdef ISP_DEBUG_ZSL
     isp_data.zsl_ctrl.zsl_online_enable = zsl_online_enable;
@@ -2808,6 +2788,7 @@ int mini_k3_isp_zsl_refresh_fmt(struct v4l2_format *preview_fmt,
 		isp_data.pic_attr[state_try].sensor_width = ((isp_data.pic_attr[state_try].sensor_width /32)*32);
 		isp_data.pic_attr[state_try].sensor_height=((isp_data.pic_attr[state_try].sensor_height /16)*16);
     	}
+
 
     isp_data.pic_attr[state_try].in_width      = isp_data.pic_attr[state_try].sensor_width;
     isp_data.pic_attr[state_try].in_height     = isp_data.pic_attr[state_try].sensor_height;

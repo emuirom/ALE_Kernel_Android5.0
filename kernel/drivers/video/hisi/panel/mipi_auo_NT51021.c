@@ -35,6 +35,7 @@ static bool checksum_enable_ctl = false;
 
 extern int fastboot_set_needed;
 
+
 /*******************************************************************************
 ** Power ON Sequence(sleep mode to Normal mode)
 */
@@ -112,6 +113,7 @@ static uint32_t gpio_lcd_id1;  /*gpio_4_7, gpio_039*/
 static uint32_t gpio_lcd_bias_enable;  /*gpio_5_1, gpio_041*/
 
 static uint32_t g_vddio_type = 0;
+
 
 static struct gpio_desc auo_lcd_gpio_request_cmds[] = {
 	/* VCC */
@@ -249,6 +251,7 @@ static ssize_t set_ce_mode(struct device *dev,
 
 	return snprintf((char *)buf, 16,"%d\n", g_ce_mode);
 }
+
 
 static DEVICE_ATTR(color_enhance_mode, 0664, get_ce_mode, set_ce_mode);
 
@@ -544,6 +547,7 @@ static int mipi_auo_panel_set_backlight(struct platform_device *pdev)
 	return ret;
 }
 
+
 /******************************************************************************/
 static ssize_t mipi_auo_panel_lcd_model_show(struct platform_device *pdev,
 	char *buf)
@@ -817,6 +821,7 @@ static struct hisi_fb_panel_data auo_panel_data = {
 	.set_display_resolution = NULL,
 };
 
+
 /*******************************************************************************
 **
 */
@@ -1010,12 +1015,7 @@ static int mipi_auo_probe(struct platform_device *pdev)
 
 	HISI_FB_DEBUG("-.\n");
 
-/*	rc = sysfs_create_link(NULL,&pdev->dev.kobj,"lcd");                                                                                                      
-	if (rc) {
-		HISI_FB_DEBUG("Fail create lcd link rc=%d\n", rc);
-		return -1;
-	}
-*/
+
 	return 0;
 
 err_device_put:

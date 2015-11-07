@@ -166,6 +166,7 @@
 #define CONTEXT_BUFF_SIZE   (72)
 #endif /* VDEC_USE_PVDEC */
 
+
 /*!
 ******************************************************************************
  This macro reports a Decoder warning once only.
@@ -179,6 +180,7 @@
         bDone = IMG_TRUE;                                               \
     }                                                                   \
 }
+
 
 /*!
 ******************************************************************************
@@ -256,6 +258,8 @@ typedef struct
     IMG_UINT32                  ui32StrCnt;
 
 } DECODER_sContext;
+
+
 
 /*!
 ******************************************************************************
@@ -368,6 +372,7 @@ typedef struct
 
 } DECODER_sCoreContext;
 
+
 /*!
 ******************************************************************************
  This structure defines the decode picture reference.
@@ -385,6 +390,7 @@ typedef struct
     VDECDD_sStrUnit         * psStrUnit;        /*!< Pointer to stream unit.                                        */
 
 } DECODER_sDecStrUnit;
+
 
 /*!
 ******************************************************************************
@@ -408,6 +414,7 @@ typedef struct
     DECODER_sPictRefRes   * psPictRefRes;       /*!< Pointer to stream resource used for picture.                                   */
 
 } DECODER_sDecodedPict;
+
 
 #ifdef FW_PERFORMANCE_LOGGING
 static IMG_RESULT
@@ -628,6 +635,8 @@ decoder_SetFeatureFlags(
 }
 }
 
+
+
 /*!
 ******************************************************************************
 
@@ -674,6 +683,7 @@ decoder_CoreGetContext(
 
     return (bFound) ? psDecCoreCtx : IMG_NULL;
 }
+
 
 /*!
 ******************************************************************************
@@ -759,6 +769,8 @@ decoder_GetCoreAndLoad(
     return IMG_SUCCESS;
 }
 
+
+
 /*!
 ******************************************************************************
 
@@ -829,6 +841,8 @@ decoder_PictureDestroy(
     return IMG_SUCCESS;
 }
 
+
+
 /*!
 ******************************************************************************
 
@@ -880,6 +894,7 @@ decoder_DecodedPictureDestroy(
 
     return IMG_SUCCESS;
 }
+
 
 #ifdef VDEC_MSVDX_HARDWARE
 
@@ -958,6 +973,7 @@ decoder_GetDecodedPictOfStream(
 }
 
 #endif
+
 
 /*!
 ******************************************************************************
@@ -1093,6 +1109,7 @@ decoder_PictureDisplay(
     return IMG_SUCCESS;
 }
 
+
 /*!
 ******************************************************************************
 
@@ -1129,6 +1146,7 @@ DECODER_GetNextDecPictContiguous(
 
     return psResultDecPict;
 }
+
 
 /*!
 ******************************************************************************
@@ -1746,6 +1764,7 @@ error:
     return ui32Result;
 }
 
+
 static IMG_RESULT decoder_WrapBitStrSegments(
     LST_T *              psBitStrSegList,//VDECDD_sBitStrSeg
     LST_T *              psDecPictSegList,//DECODER_sDecPictSeg
@@ -1965,6 +1984,7 @@ decoder_PictureDecode(
         ui32Result = IMG_ERROR_UNEXPECTED_STATE;
         goto error_ref_res;
     }
+
 
     psDecPict->psStrPtdBufInfo = &psDecStrCtx->sPtdBufInfo;
 #ifdef VDEC_USE_PVDEC
@@ -2242,6 +2262,7 @@ error_segments:
     return ui32Result;
 }
 
+
 /*!
 ******************************************************************************
 
@@ -2273,6 +2294,7 @@ decoder_KickListService(
 
     return IMG_SUCCESS;
 }
+
 
 /*!
 ******************************************************************************
@@ -2371,6 +2393,8 @@ decoder_StreamGetContext(
 {
     return (DECODER_sStrContext *)hDecStrCtx;
 }
+
+
 
 /*!
 ******************************************************************************
@@ -2870,6 +2894,7 @@ decoder_StreamFlush(
                         psCtxData->sLastBField.ui32TransactionId = 0;
                     }
 
+
                     if(psCtxData->sNewRefPic.ui32TransactionId && (!psCtxData->sNewRefPic.bSentForDisplay))
                     {
                         DEBUG_REPORT(REPORT_MODULE_DECODER,
@@ -3309,6 +3334,8 @@ decoder_StreamFlush(
     return IMG_SUCCESS;
 }
 
+
+
 /*!
 ******************************************************************************
 
@@ -3396,6 +3423,8 @@ DECODER_StreamReleaseBuffers(
     return IMG_SUCCESS;
 }
 
+
+
 /*!
 ******************************************************************************
 
@@ -3425,6 +3454,7 @@ decoder_StreamReferenceResourceDestroy(
 
     return IMG_SUCCESS;
 }
+
 
 /*!
 ******************************************************************************
@@ -3509,6 +3539,8 @@ err_out_of_memory:
 
     return IMG_ERROR_OUT_OF_MEMORY;
 }
+
+
 
 /*!
 ******************************************************************************
@@ -3699,6 +3731,7 @@ decoder_StreamDecodeResourceCreate(
                psDecStrCtx->sConfig.ui32UserStrId);
     }
 
+
     return IMG_SUCCESS;
 
 err_out_of_memory:
@@ -3730,6 +3763,8 @@ err_out_of_memory:
 
     return IMG_ERROR_OUT_OF_MEMORY;
 }
+
+
 
 /*!
 ******************************************************************************
@@ -4160,6 +4195,7 @@ decoder_StreamProcessUnit(
     return IMG_SUCCESS;
 }
 
+
 /*!
 ******************************************************************************
 
@@ -4206,6 +4242,7 @@ DECODER_StreamProcessUnit(
 
     return IMG_SUCCESS;
 }
+
 
 /*!
 ******************************************************************************
@@ -4272,6 +4309,8 @@ DECODER_StreamFlushInput(
     return IMG_SUCCESS;
 }
 
+
+
 /*!
 ******************************************************************************
 
@@ -4290,6 +4329,8 @@ DECODER_StreamIsIdle(
 
     return LST_empty(&psDecStrCtx->sPendStrUnitList);
 }
+
+
 
 /*!
 ******************************************************************************
@@ -4312,6 +4353,7 @@ decoder_StreamDestroy(
 
     // Decrement the stream count
     psDecStrCtx->psDecCtx->ui32StrCnt--;
+
 
     // Ensure that there are no pictures for this stream outstanding
     // on any decoder cores.
@@ -4458,6 +4500,7 @@ decoder_StreamDestroy(
     }
     IMG_ASSERT(LST_empty(&psDecStrCtx->sDecResList));
 
+
     // Remove all stream decode resources.
     ui32Result = RESOURCE_ListEmpty(&psDecStrCtx->sRefResList,
                                      IMG_FALSE,
@@ -4487,6 +4530,8 @@ decoder_StreamDestroy(
     return IMG_SUCCESS;
 }
 
+
+
 /*!
 ******************************************************************************
 
@@ -4509,6 +4554,7 @@ DECODER_StreamDestroy(
 
     return IMG_SUCCESS;
 }
+
 
 /*!
 ******************************************************************************
@@ -5033,6 +5079,7 @@ DECODER_CheckSupport(
 
                 }
             }
+
 
             if (psOutputConfig->sScaledPictSize.ui32Width % 2 ||
                 psOutputConfig->sScaledPictSize.ui32Height % 2)
@@ -5657,6 +5704,8 @@ error:
     return ui32Result;
 }
 
+
+
 /*!
 ******************************************************************************
 
@@ -5814,6 +5863,7 @@ error:
 
     return ui32Result;
 }
+
 
 #ifdef USE_REAL_FW
 
@@ -6008,12 +6058,14 @@ decoder_GetFirmware(
     return ui32Result;
 }
 
+
 /*!
 ******************************************************************************
 
  @Function              decoder_DestroyFirmware
 
  @Description
+
 
  @Return    IMG_RESULT : This function returns either IMG_SUCCESS or an
                          error code.
@@ -6145,6 +6197,7 @@ IMG_RESULT DECODER_StackTest(
 }
 #endif
 
+
 /*!
 ******************************************************************************
 
@@ -6260,6 +6313,7 @@ IMG_RESULT DECODER_Deinitialise(
     return IMG_SUCCESS;
 }
 
+
 /*!
 ******************************************************************************
 
@@ -6303,6 +6357,8 @@ IMG_RESULT DECODER_Replay(
     return IMG_SUCCESS;
 }
 
+
+
 /*!
 ******************************************************************************
 
@@ -6335,6 +6391,7 @@ IMG_RESULT DECODER_ResetCores(
 
     return IMG_SUCCESS;
 }
+
 
 /*!
 ******************************************************************************
@@ -6403,6 +6460,7 @@ error:
     return ui32Result;
 }
 
+
 /*!
 ******************************************************************************
 
@@ -6453,6 +6511,7 @@ DECODER_PrePowerOff(
     return IMG_SUCCESS;
 }
 
+
 /*!
 ******************************************************************************
 
@@ -6495,6 +6554,8 @@ DECODER_PostPowerOn(
 
     return IMG_SUCCESS;
 }
+
+
 
 /*!
 ******************************************************************************
@@ -6651,6 +6712,7 @@ DECODER_CoreReplay(
 
     return IMG_SUCCESS;
 }
+
 
 /*!
 ******************************************************************************
@@ -6926,6 +6988,7 @@ DECODER_CoreServiceInterrupt(
     return ui32Result;
 }
 
+
 /*!
 ******************************************************************************
 
@@ -6979,6 +7042,7 @@ decoder_MmuDeviceCallback(
 
     return IMG_SUCCESS;
 }
+
 
 /*!
 ******************************************************************************
@@ -7196,6 +7260,8 @@ error:
     return ui32Result;
 }
 
+
+
 /*!
 ******************************************************************************
 
@@ -7233,6 +7299,8 @@ IMG_RESULT DECODER_HandleInterrupt(
 error:
     return ui32Result;
 }
+
+
 
 /*!
 ******************************************************************************
@@ -7372,6 +7440,7 @@ IMG_RESULT DECODER_IsSupportedFeature(
     return IMG_SUCCESS;
 }
 
+
 /*!
 ******************************************************************************
 
@@ -7423,6 +7492,7 @@ IMG_RESULT DECODER_SupportedFeatures(
     return IMG_SUCCESS;
 }
 
+
 static const VDECDD_sDdDevConfig sDefaultDeviceConfig =
 {
     VDECDD_DECODELEVEL_MAX,      /* eDecodeLevel;            */
@@ -7452,6 +7522,8 @@ static const VDECDD_sDdDevConfig sDefaultDeviceConfig =
     IMG_FALSE,                   /* bCSim;                   */
     IMG_FALSE,                   /* bPdumpAndRes;            */
 };
+
+
 
 /*!
 ******************************************************************************
@@ -7664,6 +7736,7 @@ static IMG_RESULT decoder_SetDeviceConfig(
     }
 #endif
 
+
 #ifdef USE_REAL_FW
 #ifdef INCLUDE_SINGLE_STANDARD_FW
     if (DBGOPTKM_GetSize("SingleStreamFw", DBGOPT_TYPE_BOOL) &&
@@ -7688,6 +7761,8 @@ static IMG_RESULT decoder_SetDeviceConfig(
 
     return IMG_SUCCESS;
 }
+
+
 
 /*!
 ******************************************************************************
@@ -7816,6 +7891,7 @@ IMG_RESULT DECODER_Initialise(
             goto error;
         }
 
+
         /* Enumerate each slave core on the device. */
         for (i = VDECDD_MSVDX_CORE_SLAVE1; i < psDecCtx->ui32NumCores; i++)
         {
@@ -7884,4 +7960,5 @@ error:
 
     return ui32Result;
 }
+
 

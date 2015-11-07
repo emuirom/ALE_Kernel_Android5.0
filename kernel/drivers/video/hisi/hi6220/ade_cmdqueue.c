@@ -551,6 +551,7 @@ static bool isAlphaRGBType(int format)
     return false;
 }
 
+
 static u32 *getCtranYuv2rgbCscArray(u32 yuv_info, int *len)
 {
     switch (yuv_info) {
@@ -965,6 +966,9 @@ void ade_cmdq_wr_blk_rot_wdma1_ctrl_cmd(u32 reg_addr, u32 format)
 
     ade_cmdq_wr_cmd(reg_addr, wr_ch_ctrl.u32);
 }
+
+
+
 
 /************************* scl1,3 *********************************/
 void ade_cmdq_wr_scl_ctrl_cmd(u32 reg_addr, struct overlay_region_info *pipe_info, struct ade_rect *src_rect, struct ade_rect *dst_rect)
@@ -1441,6 +1445,7 @@ void ade_cmdq_wr_scl_vcoef_cmd(void *cmdbuff_vaddr, u32 *cmd_len, u32 reg_addr, 
 
 }
 
+
 /************************* ctrans *********************************/
 void ade_cmdq_wr_ctran_chdc_cmd_with_yuv_info(u32 reg_addr, u32 val, u32 yuv_info)
 {
@@ -1505,6 +1510,7 @@ void ade_cmdq_wr_ctran_csc_cmd(u32 reg_addr, u32 val)
 {
     ade_cmdq_wr_ctran_csc_cmd_with_yuv_info(reg_addr, val, ADE_YUV_601_WIDE);
 }
+
 
 /*
  * Alpha blending formula in different mode:
@@ -1572,6 +1578,7 @@ void ade_cmdq_wr_ovly_ch_ctrl_cmd(u32 reg_addr, struct ovly_ctrl_info ctrl_info)
 
         balongfb_logi_display_debugfs("ade_cmdq_wr_ovly_ch_ctrl_cmd, blending = 0x%x, per_pixel_alpha = %d, panelAlpha = %d \n",\
                                   blending, per_pixel_alpha, panelAlpha);
+
 
         /* first ovly */
         switch(blending & 0xffff) {

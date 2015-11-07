@@ -48,15 +48,12 @@
 #include <linux/string.h>
 
 #include "video_config.h"
-/* Added by w00199382 for isp 2.2 , 2012/10/16, begin */
 
-/*add by zkf78283 for test */
 #define DUMP_CMD_REG
 //#define DUMP_SIZE_REG
 
 //#define DUMP_FILE
 
-/* Added by w00199382 for isp 2.2 , 2012/10/16, end */
 
 #ifdef CONFIG_DEBUG_FS
 #define CAM_DEBUGFS_DIR_NAME            "mit2isp"
@@ -687,7 +684,6 @@ void dump_cmd_reg(void)
 {
 #ifdef	DUMP_CMD_REG
 	int i = 0;
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 
 	/* command set register range : 0x1e800 ~ 0x1e8 */
 	for (i = 0x1e800; i < 0x1e8da; i++)
@@ -705,10 +701,8 @@ void dump_cmd_reg(void)
 	print_info("0x63908=%#x", DBG_GETREG8(0x63908));
 	print_info("0x63909=%#x", DBG_GETREG8(0x63909));
 	print_info("0x6390a=%#x", DBG_GETREG8(0x6390a));
-    /* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 #endif
 }
-/* add by zkf78283 for test isp begin */
 
 void dump_ispzyk_reg(void)
 {
@@ -777,7 +771,6 @@ void dump_ispzyk_reg(void)
 	mntn_print_log(EN_ID_MNTN_CAM_DUMPREG_LOG_MODULE, EN_VIDEO_LOG_LEVLE_INFO, "dump command set reg end++++++++++++++++++++++++++++++\n");
 }
 
-/* add by zkf78283 for test isp end */
 
 void dump_status_after_reg (void)
 {
@@ -1021,6 +1014,7 @@ void dump_isp_cmd_reg(void)
 	print_info("0x1c00d:0x%0x", DBG_GETREG8(0x1c00d));
 	print_info("0x1c00e:0x%0x", DBG_GETREG8(0x1c00e));
 	print_info("0x1c00f:0x%0x", DBG_GETREG8(0x1c00f));
+	print_info("EOF 0x1ca25:0x%0x", DBG_GETREG8(0x1ca25));//add for debug
 
        //SCCB Master 1
 	print_info("0x63600:0x%0x", DBG_GETREG8(0x63600));

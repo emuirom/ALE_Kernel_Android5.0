@@ -25,10 +25,8 @@
 
 #include <linux/time.h>
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, begin */
 #include "../../../../../videocom/mntn/video_mntn_kernel.h"
 
-/* Modified  by w00199382 for isp 2.2 , 2012/10/16, end */
 
 #ifndef DEBUG_DEBUG
 #define DEBUG_DEBUG 0
@@ -88,13 +86,11 @@
 			printk("!!!!!ASSERT ERROR!!!!");	\
 	} while (0)
 
-/* modified by j00179721 20120621 begin */
 #define print_ddr() { \
 	u32 addr = IO_ADDRESS(0xfd005000); \
 	print_info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++"); \
 	print_info("0x%0x:0x%08x", addr + 0x18, (*(volatile unsigned  *)(addr + 0x18))); \
 	print_info("--------------------------------------------------------");\
 	}
-/* modified by j00179721 20120621 end */
 #endif /*LOG_H_INCLUDED */
 /********************************* END ****************************************/

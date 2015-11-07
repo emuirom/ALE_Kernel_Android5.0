@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00145353
+ * Email:	  alan.hefeng@huawei.com
  * Date:	  2013-12-27
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,6 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 
 #include <linux/module.h>
 #include <linux/printk.h>
@@ -183,6 +186,7 @@ static int imx219_i2c_read (hwsensor_intf_t* intf, void * data)
 	return ret;
 }
 
+
 static int
 imx219_match_id(
         hwsensor_intf_t* si, void * data)
@@ -274,6 +278,7 @@ s_imx219_vtbl =
 	.csi_disable = imx219_csi_disable,
 };
 
+
 /*
 SEN_CONFIG_POWER_ON = 0,
 SEN_CONFIG_POWER_OFF = 1,
@@ -351,6 +356,8 @@ imx219_config(
 	cam_debug("%s exit",__func__);
 	return ret;
 }
+
+
 
 static int32_t
 imx219_platform_probe(

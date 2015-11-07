@@ -72,12 +72,14 @@
 /*单独复位模块初始化任务初始化延迟时间*/
 #define RESET_MOUDLE_DELAY_TIME          (2)
 
+
 #define MNTN_PRINTBUF_LEN_MAX		128
 #ifdef CONFIG_ARCH_HI6XXX
 #define MNTN_SAVE_LOG_BY_FILESYS
 #else
 #undef MNTN_SAVE_LOG_BY_FILESYS
 #endif
+
 
 #ifdef CONFIG_ARCH_HI6XXX
 extern void mntn_print_to_ramconsole(const char *fmt, ...);
@@ -122,6 +124,7 @@ typedef struct _sreset_mgr_LLI
     sreset_mgr_callbackfunc cbfuninfo;
     struct _sreset_mgr_LLI	*pnext;
 } sreset_mgr_LLI;
+
 
 typedef struct _sreset_mailbox_msg_ccore
 {

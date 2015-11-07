@@ -75,7 +75,6 @@ static ulong lowmem_kill_count = 0;
 static ulong lowmem_free_mem = 0;
 
 static unsigned long lowmem_deathpending_timeout;
-
 #define lowmem_print(level, x...)			\
 	do {						\
 		if (lowmem_debug_level >= (level))	\
@@ -422,7 +421,7 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		lowmem_free_mem += selected_tasksize * (long)(PAGE_SIZE / 1024) / 1024;
 
 #ifdef CONFIG_HUAWEI_KSTATE
-        kcollect(KCOLLECT_FREEZER_MASK, "[PID %d KILLED][SIG %d]", selected->tgid, SIGKILL);
+        hwkillinfo(selected->tgid, SIGKILL);
 #endif
 		send_sig(SIGKILL, selected, 0);
 		set_tsk_thread_flag(selected, TIF_MEMDIE);

@@ -3,6 +3,8 @@
  *
  *  Copyright (C) Huawei Technology Co., Ltd.
  *
+ * Author:	  h00145353
+ * Email:	  alan.hefeng@huawei.com
  * Date:	  2013-12-11
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,6 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 
 #ifndef __HW_ALAN_KERNEL_EXTISP_INTERFACE_H__
 #define __HW_ALAN_KERNEL_EXTISP_INTERFACE_H__
@@ -44,6 +47,7 @@ typedef struct _tag_hwextisp_notify_intf
 {
     hwextisp_notify_vtbl_t*                        vtbl;
 } hwxetisp_notify_intf_t;
+
 
 typedef struct _tag_hwextisp_vtbl hwextisp_vtbl_t;
 typedef struct _tag_hwextisp_intf hwextisp_intf_t;

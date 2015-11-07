@@ -4,6 +4,7 @@
  * Copyright (C) 2013 Huawei Inc.
  */
 
+
 #ifndef __HISI_COUL_DRV_H
 #define __HISI_COUL_DRV_H
 
@@ -57,6 +58,8 @@ struct hisi_coul_ops {
     int (*is_hisi_coul_read)(void);
 #endif
 };
+
+
 
 extern enum HISI_COULOMETER_TYPE hisi_coulometer_type(void);
 extern void hisi_coul_charger_event_rcv(unsigned int event);

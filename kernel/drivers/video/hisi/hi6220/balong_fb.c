@@ -115,6 +115,7 @@ DEFINE_SEMAPHORE(balong_fb_overlay_sem);
 DEFINE_SEMAPHORE(balong_fb_backlight_sem);
 DEFINE_SEMAPHORE(balong_fb_blank_sem);
 
+
 #ifdef PC_UT_TEST_ON
 volatile unsigned int    g_pc_ut_reg_data[0xffff];          /* used for ut reg test */
 #endif
@@ -241,6 +242,7 @@ int balongfb_frc_get_fps(struct balong_fb_data_type *balongfd)
                 break;
         }
     }
+
 
     return fps;
 }
@@ -1073,6 +1075,7 @@ STATIC irqreturn_t ldi_isr(int irq, void *data)
     return IRQ_HANDLED;
 }
 
+
 /******************************************************************************/
 STATIC int balongfb_vsync_int_set(struct fb_info *info, unsigned long *argp)
 {
@@ -1184,6 +1187,7 @@ STATIC int balongfb_set_virt_disp(struct fb_info *info, unsigned long *argp)
 
     up(&balong_fb_blank_sem);
 
+
     /* when virtual disp is disconnecting and panel was powered down
      *  we need to power down the ADE core
      */
@@ -1197,6 +1201,8 @@ STATIC int balongfb_set_virt_disp(struct fb_info *info, unsigned long *argp)
 
     return ret;
 }
+
+
 
 /******************************************************************************/
 
@@ -1555,6 +1561,7 @@ int balong_fb_init_varinfo(struct balong_fb_data_type *balongfd, int pixel_fmt)
 
     return 0;
 }
+
 
 /******************************************************************************/
 
@@ -2217,6 +2224,7 @@ STATIC int balong_fb_init_par(struct balong_fb_data_type *balongfd, int pixel_fm
         return -EINVAL;
     }
 
+
     if (0 != hisi_ion_get_heap_info(ION_FB_HEAP_ID, &mem_data)) {
         balongfb_loge("fail to get ION_FB_HEAP_ID\n");
         return -EINVAL;
@@ -2270,6 +2278,7 @@ static int recover_esd(struct notifier_block *nb,
     }
     return 0;
 }
+
 
 #ifdef CONFIG_FASTBOOT_DISP_ENABLE
 extern int scharger_register_notifier(struct notifier_block *nb);
@@ -2336,6 +2345,7 @@ int balong_fb_register(struct balong_fb_data_type *balongfd)
 
     balongfd->update_frame = 0;
     init_waitqueue_head(&balongfd->frame_wq);
+
 
     /* request ade irq */
     snprintf(balongfd->ade_irq_name, sizeof(balongfd->ade_irq_name), "%s_ade", fix->id);
@@ -2513,6 +2523,7 @@ int balong_fb_register(struct balong_fb_data_type *balongfd)
         }
 
         ade_set_medianoc_for_dfs(balongfd);
+
 
         /* S1 qos request */
         if (0 != pwrctrl_request_power_state(PWRCTRL_SLEEP_ADE, PWRCTRL_SYS_STAT_S1, &balongfd->pw_state_qos_id)) {
@@ -2805,6 +2816,7 @@ static int balong_fb_resume(struct device *dev)
 }
 #endif
 
+
 static const struct of_device_id balong_fb_match[] = {
     {
         .compatible = "hisilicon,hi6210-fb",
@@ -2890,6 +2902,7 @@ STATIC int balong_fb_clk_get(struct balong_fb_data_type *balongfd,struct platfor
         balongfb_loge("failed to get ade_core_clk_rate!\n");
         balongfd->ade_core_rate = 60000000;
     }
+
 
     ret = of_property_read_u32(np, "media_noc_clk_rate", &balongfd->media_noc_rate);
     if (ret) {
@@ -3000,9 +3013,11 @@ int __init balong_fb_init(void)
 
 module_init(balong_fb_init);
 
+
 #if ADE_DEBUG_LOG_ENABLE
 
 #define FB_DEBUG_STR_LEN_MAX  150
+
 
 ssize_t balong_fb_debug_read(struct file *file, char __user *user_buf, size_t count, loff_t *ppos)
 {
@@ -3134,6 +3149,7 @@ struct file_operations balong_fb_debugfs_ops = {
     .read = balong_fb_debug_read,
     .write = balong_fb_debug_write,
 };
+
 
 int __init balong_fb_debug_init(void)
 {

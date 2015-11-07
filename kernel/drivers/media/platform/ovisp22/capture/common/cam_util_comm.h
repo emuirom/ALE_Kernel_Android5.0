@@ -31,7 +31,7 @@
 #define CAMERA_FLAG_WORKQ       2
 #define CAMERA_FLAG_DONEQ       4
 
-#define MAX_FRAME_NR            8
+#define MAX_FRAME_NR            12//8  change 8 to 12, which is for B_SHUTTER Alog mode preformance for some case, this is just a poniter, so no more extra memory wasted
 #define CAMERA_BUF_RSV_BUF_IDX  0   //reserved buffer index
 
 /* using for ovisp debug added by j00212990*/
@@ -41,7 +41,7 @@
 //#define READ_BACK_RAW
 //#define ISP_ZSL_NO_MEMCPY     /* FIXME:HAL need to be changed */
 #define SUPPORT_ZSL_FLASH  //add by z00174260
-#define ISP_ZSL_ZOOM_FIX   //add by c00144034 for zsl zoom 
+#define ISP_ZSL_ZOOM_FIX
 
 // added by z00299055, macro switch add meta data info to raw image data
 #define META_DATA_INFOSIZE    (128)

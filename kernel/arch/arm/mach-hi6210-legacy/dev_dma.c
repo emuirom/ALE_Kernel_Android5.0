@@ -1,6 +1,7 @@
 /*dma device declare and register*/
 /*
  * Copyright (C) Hisilicon Technologies Co.,Ltd.
+ *	k3<k3dma@huawei.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

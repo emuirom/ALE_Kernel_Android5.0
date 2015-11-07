@@ -3,6 +3,7 @@
  *
  * Copyright (c) 2011 Hisilicon.
  *
+ * Dongbin Yu <yudongbin@huawei.com>
  *
  * this regulator's probe function will be called lots of times,,
  * because of there are lots of regulator nodes in dtb.
@@ -58,5 +59,6 @@ unsigned int hi6xxx_pmic_get_voltage_index(struct hi6xxx_regulator_vset_regs *vs
                                                              unsigned int mask,int shift);
 int  hi6xxx_pmic_set_voltage(struct hi6xxx_regulator_vset_regs *vset_regs,
                              unsigned int mask,int shift,int index);
+
 
 #endif

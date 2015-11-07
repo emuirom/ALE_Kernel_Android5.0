@@ -1,11 +1,4 @@
-/*
- * Huawei Wi-Fi+ TCP Monitor
- * Author:chenwang 00106552
- *
- * Copyright (C) 2013 Huawei Device Co.Ltd
- * License terms: GNU General Public License (GPL) version 2
- *
- */
+
 
 #include <linux/init.h>
 #include <linux/kernel.h>

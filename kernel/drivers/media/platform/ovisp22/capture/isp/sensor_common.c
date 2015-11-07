@@ -142,11 +142,13 @@ vcm_info_s vcm_dw9714 = {
 	.moveLensAddr[0] = 0,
 	.moveLensAddr[1] = 0,
 
+
 	.motorResTime = 10,
 	.motorDelayTime = 12,
 	.strideDivideOffset = 0x60,
 
 	.startCurrentOffset = 0x40,
+
 
 	.moveRange = RANGE_NORMAL,
 };
@@ -300,6 +302,7 @@ void relocate_camera_sensor_by_name(sensor_index_t sensor_index,char *sensor_nam
 	camera_sensor **sensor_array = NULL;
     camera_sensor *target_sensor = NULL;
 
+
 	if (sensor_index >= CAMERA_SENSOR_MAX) {
 		print_error("invalid sensor index [%d]", sensor_index);
 		return ;
@@ -330,6 +333,8 @@ void relocate_camera_sensor_by_name(sensor_index_t sensor_index,char *sensor_nam
 }
 EXPORT_SYMBOL(relocate_camera_sensor_by_name);
 
+
+
 /*
  **************************************************************************
  * FunctionName: get_camera_sensor_from_array;
@@ -344,6 +349,7 @@ camera_sensor *get_camera_sensor_from_array(sensor_index_t sensor_index)
 {
 	int i = 0;
 	camera_sensor **sensor_array = NULL;
+
 
 	if (sensor_index >= CAMERA_SENSOR_MAX) {
 		print_error("invalid sensor index [%d]", sensor_index);
@@ -680,7 +686,6 @@ EXPORT_SYMBOL(unregister_camera_flash);
 int camera_power_core_ldo(camera_power_state power)
 {
 	int ret = 0;
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/17, begin */
 
         /*V9R1 do not need this to power sensor core vcc*/
 
@@ -715,7 +720,6 @@ int camera_power_core_ldo(camera_power_state power)
 		gpio_free(GPIO_21_5);
 	}
 #endif
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/17, end */
 
 	return ret;
 }
@@ -784,7 +788,6 @@ int camera_power_id_gpio(camera_power_state power)
 	int ret = 0;
 
 	print_debug("enter %s", __FUNCTION__);
-        /* Modified  by w00199382 for isp 2.2 , 2012/10/17, begin */
 
         /*FIXME:on V9R1 do not have this id gpio*/
 
@@ -850,7 +853,6 @@ int camera_power_id_gpio(camera_power_state power)
 		}
 	}
 #endif
-                /* Modified  by w00199382 for isp 2.2 , 2012/10/17, end */
 
 	return ret;
 }
@@ -883,6 +885,7 @@ int camera_get_i2c_speed(unsigned int chip_id, i2c_speed_t i2c_speed_idx)
 
 }
 EXPORT_SYMBOL(camera_get_i2c_speed);
+
 
 /*
  **************************************************************************
