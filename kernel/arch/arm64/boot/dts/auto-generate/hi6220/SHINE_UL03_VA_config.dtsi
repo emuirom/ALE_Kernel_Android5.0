@@ -1,0 +1,56 @@
+/*
+ *  Copyright (C) 2014 Hisilicon Ltd.
+ *  Author: Bintian Wang <bintian.wang@huawei.com>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License version 2 as
+ *  publishhed by the Free Software Foundation.
+ */
+
+/include/ "fastboot.dtsi"
+/include/ "SHINE_UL10_VA_config.dtsi"
+/include/ "SHINE_UL03_VA_pin.dtsi"
+/include/ "SHINE_UL03_VA_gpio_logic.dtsi"
+/include/ "SHINE_UL03_VA_pmic.dtsi"
+/include/ "SHINE_UL03_VA_charger.dtsi"
+/ {
+    hisi,boardid = <0 7 5 5>;
+    hisi,boardname = "SHINE_UL03_VA";
+    hisi,modem_id = <0x3D300500>;
+    hisi,product_name = "CHM-U03";
+
+    boardinfo{
+        factory_product_name = "HD1CHMUMBA";
+        normal_product_name = "CHC-U03";
+    };
+	amba {
+	i2c2: i2c@f7102000 {
+			st_lis3dh_acc:acc@18{
+				axis_map_x=<0>;
+				axis_map_y=<1>;
+				axis_map_z=<2>;
+				negate_x=<1>;
+				negate_y=<1>;
+				negate_z=<0>;
+				status = "ok";
+			};
+			rohm_kc023_acc:acc@1E{
+				axis_map_x=<0>;
+				axis_map_y=<1>;
+				axis_map_z=<2>;
+				negate_x=<1>;
+				negate_y=<1>;
+				negate_z=<0>;
+				status = "ok";
+			};
+			akm_akm09911:compass@0d{
+				compass_layout=<4>;
+				status = "ok";
+			};
+		};
+	};
+	hi1101-power {
+	    wifi_sdio_rw = "SDIO_RW_CHC_U03_FEM.bin";
+	    hisi_cfg_ini_file = "/system/etc/hisi_cfg_cherry.ini";
+	};
+};

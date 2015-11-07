@@ -1,0 +1,60 @@
+/*
+ *  Copyright (C) 2014 Hisilicon Ltd.
+ *  Author: Bintian Wang <bintian.wang@huawei.com>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License version 2 as
+ *  publishhed by the Free Software Foundation.
+ */
+
+/include/ "fastboot.dtsi"
+/include/ "ALICE_UL00_VB_config.dtsi"
+/include/ "ALICE_TL21_VB_pin.dtsi"
+/include/ "ALICE_TL21_VB_gpio_logic.dtsi"
+/include/ "ALICE_TL21_VB_pmic.dtsi"
+/include/ "ALICE_TL21_VB_charger.dtsi"
+/ {
+    hisi,boardid = <0 7 1 8>;
+    hisi,boardname = "ALICE_TL21_VB";
+	hisi,platform_num = <2>;
+	hisi,provider0 = "HuaweiB";
+	hisi,sub_platform_info0 = "V8R2";
+	hisi,provider1 = "HuaweiB";
+	hisi,sub_platform_info1 = "HI6361";
+    hisi,modem_id = <0x3DB54500>;
+    hisi,product_name = "ALICE_TL21";
+
+    boardinfo{
+        factory_product_name = "HL3ALICEMAA";
+        normal_product_name = "ALE-L21";
+    };
+
+    amba{
+        i2c0: i2c@f7100000 {
+            pn547_nfc:nfc@28 {
+                compatible = "hisilicon,pn547_nfc";
+                reg = <0x28>;
+                pn547,irq = <&gpio1 4 0>;
+                pn547,dload = <&gpio1 1 0>;
+                pn547,ven = <&gpio1 5 0>;
+                clocks = <&CK19M2_NFC>;
+                clock-names = "CK19M2_NFC";
+                clk_status="ok";
+                status = "ok";
+                nfc_nxp_name = "libnfc-nxp-alice.conf";
+                nfc_brcm_conf_name = "libnfc-brcm-alice.conf";
+                nfc_chip_type = "pn547";
+                nfc_card_num = <0x1>;
+				nfc_fw_version = "FW 8.1.24";
+            };
+        };
+    };
+    nfc_exist {
+        nfc_exist_flag = "1";
+        status = "ok";
+    };
+    hi1101-power {
+        wifi_sdio_rw = "SDIO_RW_ALICE_TL21_FEM.bin";
+        hisi_cfg_ini_file = "/system/etc/hisi_cfg_alice.ini";
+    };
+};

@@ -1,0 +1,36 @@
+/*
+ *  Copyright (C) 2014 Hisilicon Ltd.
+ *  Author: Bintian Wang <bintian.wang@huawei.com>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License version 2 as
+ *  publishhed by the Free Software Foundation.
+ */
+
+/dts-v1/;
+/include/ "fastboot.dtsi"
+/include/ "ALICE_UL00_VB_config.dtsi"
+/include/ "ALICE_TL02_VB_pin.dtsi"
+/include/ "ALICE_TL02_VB_gpio_logic.dtsi"
+/include/ "ALICE_TL02_VB_pmic.dtsi"
+/include/ "ALICE_TL02_VB_charger.dtsi"
+/ {
+    hisi,boardid = <0 7 3 8>;
+    hisi,boardname = "ALICE_TL02_VB";
+    hisi,modem_id = <0x3DB02100>;
+	hisi,platform_num = <2>;
+	hisi,provider0 = "HuaweiB";
+	hisi,sub_platform_info0 = "V8R2";
+	hisi,provider1 = "HuaweiB";
+	hisi,sub_platform_info1 = "HI6361";
+    hisi,product_name = "ALICE_TL02";
+
+    boardinfo{
+        factory_product_name = "HL3ALICEMCA";
+        normal_product_name = "ALE-L02";
+    };
+    hi1101-power {
+        wifi_sdio_rw = "SDIO_RW_ALICE_TL02_FEM.bin";
+        hisi_cfg_ini_file = "/system/etc/hisi_cfg_alice.ini";
+    };
+};

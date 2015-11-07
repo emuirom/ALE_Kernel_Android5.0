@@ -1,0 +1,35 @@
+/*
+ *  Copyright (C) 2014 Hisilicon Ltd.
+ *  Author: Bintian Wang <bintian.wang@huawei.com>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License version 2 as
+ *  publishhed by the Free Software Foundation.
+ */
+
+/include/ "fastboot.dtsi"
+/include/ "ALICE_UL00_VB_config.dtsi"
+/include/ "ALICE_TL23_VB_pin.dtsi"
+/include/ "ALICE_TL23_VB_gpio_logic.dtsi"
+/include/ "ALICE_TL23_VB_pmic.dtsi"
+/include/ "ALICE_TL23_VB_charger.dtsi"
+/ {
+    hisi,boardid = <0 7 4 8>;
+    hisi,boardname = "ALICE_TL23_VB";
+	hisi,platform_num = <2>;
+	hisi,provider0 = "HuaweiB";
+	hisi,sub_platform_info0 = "V8R2";
+	hisi,provider1 = "HuaweiB";
+	hisi,sub_platform_info1 = "HI6361";
+    hisi,modem_id = <0x3DB54D00>;
+    hisi,product_name = "ALICE_TL23";
+
+    boardinfo{
+        factory_product_name = "HL3ALICEMBA";
+        normal_product_name = "ALE-L23";
+    };
+    hi1101-power {
+        wifi_sdio_rw = "SDIO_RW_ALICE_TL23_FEM.bin";
+        hisi_cfg_ini_file = "/system/etc/hisi_cfg_alice.ini";
+    };
+};
